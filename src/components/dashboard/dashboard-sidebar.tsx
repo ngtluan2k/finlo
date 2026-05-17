@@ -14,6 +14,10 @@ import {
   ShieldCheck,
   Target,
   Wallet,
+  Users,
+  History,
+  Sliders,
+  ShieldAlert,
 } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -25,7 +29,20 @@ import { cn } from '@/lib/utils'
 
 const navSections = [
   {
+    titleKey: 'sidebar.system' as const,
+    isDropdown: true,
+    labelKey: 'nav.systemManagement' as const,
+    icon: Settings,
+    items: [
+      { href: routes.systemUsers, icon: Users, labelKey: 'nav.systemUsers' as const },
+      { href: routes.systemRoles, icon: ShieldAlert, labelKey: 'nav.systemRoles' as const },
+      { href: routes.systemActivityLog, icon: History, labelKey: 'nav.systemActivityLog' as const },
+      { href: '#', icon: Sliders, labelKey: 'nav.systemSettings' as const, disabled: true },
+    ],
+  },
+  {
     titleKey: 'sidebar.main' as const,
+    isDropdown: false,
     items: [
       { href: routes.dashboard, icon: LayoutDashboard, labelKey: 'nav.overview' as const },
       { href: '#', icon: Receipt, labelKey: 'nav.transactions' as const, disabled: true },
@@ -35,6 +52,7 @@ const navSections = [
   },
   {
     titleKey: 'sidebar.planning' as const,
+    isDropdown: false,
     items: [
       { href: '#', icon: Target, labelKey: 'nav.goals' as const, disabled: true },
       { href: '#', icon: Landmark, labelKey: 'nav.savings' as const, disabled: true },
@@ -42,18 +60,13 @@ const navSections = [
   },
   {
     titleKey: 'sidebar.analytics' as const,
+    isDropdown: false,
     items: [
       { href: '#', icon: BarChart3, labelKey: 'nav.reports' as const, disabled: true },
       { href: '#', icon: PieChart, labelKey: 'nav.analytics' as const, disabled: true },
     ],
   },
-  {
-    titleKey: 'sidebar.system' as const,
-    items: [
-      { href: '#', icon: Settings, labelKey: 'nav.settings' as const, disabled: true },
-      { href: '#', icon: ShieldCheck, labelKey: 'nav.security' as const, disabled: true },
-    ],
-  },
+  
 ]
 
 type DashboardSidebarProps = {
@@ -64,6 +77,7 @@ export function DashboardSidebar({ open }: DashboardSidebarProps) {
   const t = useTranslations('dashboard')
   const pathname = usePathname()
   
+  const [systemOpen, setSystemOpen] = useState(() => pathname.startsWith('/dashboard/system'))
   const [profileOpen, setProfileOpen] = useState(false)
   const profileRef = useRef<HTMLDivElement>(null)
 
@@ -110,41 +124,104 @@ export function DashboardSidebar({ open }: DashboardSidebarProps) {
         className="flex-1 space-y-6 overflow-y-auto p-4 px-3 [&::-webkit-scrollbar]:hidden" 
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
-        {navSections.map((section) => (
-          <div key={section.titleKey} className="space-y-1">
-            <p className="px-3 pb-2 text-xs font-semibold uppercase tracking-wider text-[#C0E8FB]/70 dark:text-slate-500">
-              {t(section.titleKey)}
-            </p>
-            <div className="space-y-0.5">
-              {section.items.map(({ href, icon: Icon, labelKey, disabled }) => {
-                const active = !disabled && pathname === href
-                const className = cn(
-                  'flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition',
-                  active
-                    ? 'bg-[linear-gradient(135deg,#003f66_0%,#015c97_35%,#2d82b9_70%,#54a4d7_100%)] text-white shadow-md dark:bg-[linear-gradient(135deg,#002b45_0%,#003f66_45%,#015c97_100%)]'
-                    : 'text-[#C0E8FB] hover:bg-white/10 hover:text-white dark:text-slate-300 dark:hover:bg-[#102A43] dark:hover:text-white',
-                  disabled && 'cursor-not-allowed opacity-45 hover:bg-transparent dark:hover:bg-transparent',
-                )
+        {/* Unified Render Sections */}
+        {navSections.map((section) => {
+          if (section.isDropdown) {
+            const Icon = section.icon
+            return (
+              <div key={section.titleKey} className="space-y-1">
+                <p className="px-3 pb-2 text-xs font-semibold uppercase tracking-wider text-[#C0E8FB]/70 dark:text-slate-500">
+                  {t(section.titleKey)}
+                </p>
+                <div className="space-y-0.5">
+                  <button
+                    onClick={() => setSystemOpen(!systemOpen)}
+                    className={cn(
+                      'flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-sm font-medium transition text-left cursor-pointer',
+                      pathname.startsWith('/dashboard/system')
+                        ? 'bg-white/5 text-white dark:bg-[#102A43]/50'
+                        : 'text-[#C0E8FB] hover:bg-white/10 hover:text-white dark:text-slate-300 dark:hover:bg-[#102A43]'
+                    )}
+                  >
+                    <div className="flex items-center gap-3">
+                      {Icon && <Icon className="size-4.5 shrink-0 text-[#C0E8FB]" />}
+                      <span>{t(section.labelKey!) || 'Quản lý hệ thống'}</span>
+                    </div>
+                    <ChevronDown className={cn('size-4 text-[#C0E8FB] transition-transform duration-200', systemOpen && 'rotate-180')} />
+                  </button>
 
-                if (disabled) {
+                  {systemOpen && (
+                    <div className="mt-1 ml-3 pl-3 border-l border-white/10 dark:border-slate-800 space-y-1 transition-all duration-200">
+                      {section.items.map((subItem) => {
+                        const SubIcon = subItem.icon
+                        const active = !subItem.disabled && pathname === subItem.href
+                        const className = cn(
+                          'flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition',
+                          active
+                            ? 'bg-white/15 text-white shadow-sm dark:bg-[#102A43] border border-white/5'
+                            : 'text-[#C0E8FB]/90 hover:bg-white/10 hover:text-white dark:text-slate-400 dark:hover:bg-[#102A43]',
+                          subItem.disabled && 'cursor-not-allowed opacity-45 hover:bg-transparent dark:hover:bg-transparent'
+                        )
+
+                        if (subItem.disabled) {
+                          return (
+                            <span key={subItem.labelKey} className={className} aria-disabled>
+                              <SubIcon className="size-4 shrink-0" aria-hidden />
+                              <span>{t(subItem.labelKey)}</span>
+                            </span>
+                          )
+                        }
+
+                        return (
+                          <Link key={subItem.labelKey} href={subItem.href} className={className}>
+                            <SubIcon className="size-4 shrink-0" />
+                            <span>{t(subItem.labelKey)}</span>
+                          </Link>
+                        )
+                      })}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )
+          }
+
+          return (
+            <div key={section.titleKey} className="space-y-1">
+              <p className="px-3 pb-2 text-xs font-semibold uppercase tracking-wider text-[#C0E8FB]/70 dark:text-slate-500">
+                {t(section.titleKey)}
+              </p>
+              <div className="space-y-0.5">
+                {section.items.map(({ href, icon: Icon, labelKey, disabled }) => {
+                  const active = !disabled && pathname === href
+                  const className = cn(
+                    'flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition',
+                    active
+                      ? 'bg-[linear-gradient(135deg,#003f66_0%,#015c97_35%,#2d82b9_70%,#54a4d7_100%)] text-white shadow-md dark:bg-[linear-gradient(135deg,#002b45_0%,#003f66_45%,#015c97_100%)]'
+                      : 'text-[#C0E8FB] hover:bg-white/10 hover:text-white dark:text-slate-300 dark:hover:bg-[#102A43] dark:hover:text-white',
+                    disabled && 'cursor-not-allowed opacity-45 hover:bg-transparent dark:hover:bg-transparent',
+                  )
+
+                  if (disabled) {
+                    return (
+                      <span key={labelKey} className={className} aria-disabled>
+                        <Icon className="size-4.5 shrink-0" aria-hidden />
+                        {t(labelKey)}
+                      </span>
+                    )
+                  }
+
                   return (
-                    <span key={labelKey} className={className} aria-disabled>
+                    <Link key={labelKey} href={href} className={className}>
                       <Icon className="size-4.5 shrink-0" aria-hidden />
                       {t(labelKey)}
-                    </span>
+                    </Link>
                   )
-                }
-
-                return (
-                  <Link key={labelKey} href={href} className={className}>
-                    <Icon className="size-4.5 shrink-0" aria-hidden />
-                    {t(labelKey)}
-                  </Link>
-                )
-              })}
+                })}
+              </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </nav>
 
       <div className="p-3" ref={profileRef}>

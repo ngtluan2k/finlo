@@ -5,6 +5,7 @@ import {
   updateUserSettings,
 } from '@/services/settings.service'
 import { patchSettingsSchema } from '@/validations/settings.schema'
+import { logActivity } from '@/lib/rbac'
 
 export async function GET() {
   const userId = await getAuthenticatedUserId()
@@ -39,5 +40,12 @@ export async function PATCH(request: Request) {
   }
 
   const settings = await updateUserSettings(userId, parsed.data)
+
+  await logActivity(
+    userId,
+    'UPDATE_SETTINGS',
+    `Cập nhật cấu hình giao diện/tùy chọn cá nhân${parsed.data.theme ? ` (Giao diện: ${parsed.data.theme})` : ''}`
+  )
+
   return NextResponse.json(settings)
 }

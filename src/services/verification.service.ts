@@ -9,6 +9,7 @@ import {
   VERIFICATION_TOKEN_TTL_MS,
 } from '@/lib/verification-token'
 import { sendVerificationEmail } from '@/services/email.service'
+import { logActivity } from '@/lib/rbac'
 
 export class VerificationError extends Error {
   constructor(
@@ -107,6 +108,8 @@ export async function verifyEmailByToken(rawToken: string) {
     })
   })
 
+  await logActivity(record.userId, 'VERIFY_EMAIL', 'Xác thực email thành công')
+
   return { email: record.target }
 }
 
@@ -161,6 +164,8 @@ export async function resendEmailVerification(email: string, locale: Locale) {
   if (!user.email) {
     throw new VerificationError('Không tìm thấy tài khoản', 'USER_NOT_FOUND')
   }
+
+  await logActivity(user.id, 'RESEND_VERIFICATION_EMAIL', `Yêu cầu gửi lại email xác thực tới ${normalized}`)
 
   return issueEmailVerification(user.id, user.email, locale)
 }

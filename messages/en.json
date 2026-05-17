@@ -121,7 +121,12 @@
       "reports": "Reports",
       "analytics": "Analytics",
       "settings": "Settings",
-      "security": "Security"
+      "security": "Security",
+      "systemManagement": "System Management",
+      "systemUsers": "Users",
+      "systemRoles": "Roles & Permissions",
+      "systemActivityLog": "Activity Logs",
+      "systemSettings": "System Settings"
     },
     "header": {
       "menu": "Dashboard",
