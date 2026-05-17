@@ -45,9 +45,16 @@ export default async function NotificationsPage() {
     promotion: counts[5],
   }
 
+  const serializedNotifications = notifications.map((n) => ({
+    ...n,
+    createdAt: n.createdAt.toISOString(),
+    updatedAt: n.updatedAt.toISOString(),
+    readAt: n.readAt ? n.readAt.toISOString() : null,
+  }))
+
   return (
       <NotificationsClient 
-        initialNotifications={notifications} 
+        initialNotifications={serializedNotifications} 
         initialSummary={summary}
         initialTotalCount={totalCount}
         limit={limit}
