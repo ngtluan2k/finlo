@@ -825,7 +825,8 @@
       "suggestion1Title": "You could increase budget for {category}",
       "suggestion1Desc": "Based on past spending",
       "suggestion2Title": "Set up recurring budgets",
-      "suggestion2Desc": "Helps you control spending better"
+      "suggestion2Desc": "Helps you control spending better",
+      "noAlerts": "No alerts"
     },
     "form": {
       "addTitle": "Add Budget",
