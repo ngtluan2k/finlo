@@ -224,6 +224,7 @@ model User {
   rolesAssignedByMe     UserRole[]             @relation("UserRoleAssignedBy")
   verificationTokens    VerificationToken[]
   activityLogs          ActivityLog[]
+  notifications         Notification[]
 
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @updatedAt @map("updated_at")
@@ -499,4 +500,51 @@ model ActivityLog {
   @@index([userId])
   @@index([createdAt])
   @@map("activity_logs")
+}
+
+// =========================================================
+// NOTIFICATIONS
+// =========================================================
+
+enum NotificationType {
+  SYSTEM
+  TRANSACTION
+  BUDGET
+  WALLET
+  SECURITY
+  REMINDER
+}
+
+enum NotificationStatus {
+  UNREAD
+  READ
+  ARCHIVED
+}
+
+model Notification {
+  id        String             @id @default(uuid()) @db.Uuid
+  userId    String             @map("user_id") @db.Uuid
+
+  type      NotificationType   @default(SYSTEM)
+  status    NotificationStatus @default(UNREAD)
+
+  title     String             @db.VarChar(255)
+  message   String             @db.Text
+  data      Json?
+
+  readAt    DateTime?          @map("read_at")
+
+  deleted   Boolean            @default(false)
+  createdAt DateTime           @default(now()) @map("created_at")
+  updatedAt DateTime           @updatedAt @map("updated_at")
+
+  user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@index([type])
+  @@index([deleted])
+  @@index([createdAt])
+
+  @@map("notifications")
 }

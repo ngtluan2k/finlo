@@ -620,5 +620,48 @@
       "failAdd": "Thêm giao dịch thất bại",
       "validationError": "Vui lòng nhập đầy đủ các trường bắt buộc!"
     }
+  },
+  "notifications": {
+    "title": "Thông báo",
+    "subtitle": "Cập nhật các thông báo và hoạt động quan trọng",
+    "searchPlaceholder": "Tìm kiếm thông báo...",
+    "unreadOnly": "Chưa đọc",
+    "all": "Tất cả",
+    "viewAll": "Xem tất cả",
+    "markAllRead": "Đánh dấu tất cả là đã đọc",
+    "noNotifications": "Không có thông báo nào.",
+    "clear": "Xóa",
+    "emptyState": "Hộp thư thông báo trống",
+    "loading": "Đang tải thông báo...",
+    "types": {
+      "SYSTEM": "Hệ thống",
+      "TRANSACTION": "Giao dịch",
+      "BUDGET": "Ngân sách",
+      "WALLET": "Tài khoản & Ví",
+      "SECURITY": "Bảo mật",
+      "REMINDER": "Khuyến mãi"
+    },
+    "group": {
+      "today": "Hôm nay",
+      "yesterday": "Hôm qua",
+      "older": "Cũ hơn"
+    },
+    "details": {
+      "amount": "Số tiền",
+      "account": "Tài khoản",
+      "time": "Thời gian",
+      "content": "Nội dung",
+      "balanceAfter": "Số dư sau giao dịch"
+    },
+    "actions": {
+      "title": "Thao tác",
+      "viewTransaction": "Xem chi tiết giao dịch",
+      "transferMoney": "Chuyển tiền",
+      "exportReceipt": "Xuất biên lai",
+      "deleteNotification": "Xóa thông báo"
+    },
+    "pagination": "Hiển thị {start} - {end} trong {total} thông báo",
+    "perPage": "{count} / trang",
+    "selectToView": "Chọn một thông báo để xem chi tiết"
   }
 }
