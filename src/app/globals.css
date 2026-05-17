@@ -103,7 +103,52 @@
 body {
   background: var(--bg-body);
   color: var(--text-primary);
-  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+/* Custom premium system scrollbar overrides */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--text-muted, #cbd5e1); /* Sleek scrollbar thumb from system */
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary, #94a3b8); /* Hover state from system */
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+/* Dark mode scrollbars */
+.dark ::-webkit-scrollbar-thumb {
+  background: var(--border-soft, #334155); /* Dark mode thumb from system */
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary, #cbd5e1); /* Dark mode hover state */
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+/* Firefox scrollbar compatibility */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--text-muted, #cbd5e1) transparent;
+}
+
+.dark * {
+  scrollbar-color: var(--border-soft, #334155) transparent;
 }
 
 @keyframes auth-orb-1 {

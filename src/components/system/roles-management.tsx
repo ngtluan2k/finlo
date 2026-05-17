@@ -91,6 +91,7 @@ export function RolesManagement() {
   // Filtering & Pagination (Roles Tab)
   const [rolesSearch, setRolesSearch] = useState('')
   const [rolesStatusFilter, setRolesStatusFilter] = useState<'ALL' | 'ACTIVE' | 'INACTIVE'>('ALL')
+  const [isStatusFilterOpen, setIsStatusFilterOpen] = useState(false)
   const [rolesPage, setRolesPage] = useState(1)
   const [rolesLimit] = useState(10)
 
@@ -740,18 +741,55 @@ export function RolesManagement() {
             </div>
 
             <div className="flex flex-wrap items-center gap-3">
-              <select
-                value={rolesStatusFilter}
-                onChange={(e) => {
-                  setRolesStatusFilter(e.target.value as any)
-                  setRolesPage(1)
-                }}
-                className="rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm focus:outline-none dark:border-zinc-800 dark:bg-[#0c0c0e] text-zinc-700 dark:text-zinc-300"
-              >
-                <option value="ALL">{tCommon('statuses.all')}</option>
-                <option value="ACTIVE">{tCommon('statuses.ACTIVE')}</option>
-                <option value="INACTIVE">{tCommon('statuses.INACTIVE')}</option>
-              </select>
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setIsStatusFilterOpen(!isStatusFilterOpen)}
+                  className="flex items-center justify-between gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm focus:outline-none dark:border-zinc-800 dark:bg-[#0c0c0e] text-zinc-700 dark:text-zinc-300 select-none cursor-pointer"
+                >
+                  <span>
+                    {rolesStatusFilter === 'ALL' && tCommon('statuses.all')}
+                    {rolesStatusFilter === 'ACTIVE' && tCommon('statuses.ACTIVE')}
+                    {rolesStatusFilter === 'INACTIVE' && tCommon('statuses.INACTIVE')}
+                  </span>
+                  <ChevronDown className="size-4 text-zinc-400 shrink-0 ml-0.5" />
+                </button>
+
+                {isStatusFilterOpen && (
+                  <>
+                    <div
+                      onClick={() => setIsStatusFilterOpen(false)}
+                      className="fixed inset-0 z-30"
+                    />
+                    <div className="absolute z-40 left-0 mt-1 min-w-[140px] rounded-xl border border-zinc-200 bg-white py-1.5 shadow-xl dark:border-zinc-850 dark:bg-[#0c0c0e] animate-in fade-in slide-in-from-top-1 duration-150">
+                      {[
+                        { val: 'ALL', label: tCommon('statuses.all') },
+                        { val: 'ACTIVE', label: tCommon('statuses.ACTIVE') },
+                        { val: 'INACTIVE', label: tCommon('statuses.INACTIVE') }
+                      ].map((item) => (
+                        <button
+                          key={item.val}
+                          type="button"
+                          onClick={() => {
+                            setRolesStatusFilter(item.val as any)
+                            setRolesPage(1)
+                            setIsStatusFilterOpen(false)
+                          }}
+                          className={cn(
+                            "w-full px-3 py-2 text-left text-sm font-semibold hover:bg-zinc-50 dark:hover:bg-zinc-900/50 flex items-center justify-between cursor-pointer",
+                            rolesStatusFilter === item.val
+                              ? "text-blue-600 bg-blue-50/20 dark:text-blue-400 dark:bg-blue-950/20"
+                              : "text-zinc-700 dark:text-zinc-300"
+                          )}
+                        >
+                          <span>{item.label}</span>
+                          {rolesStatusFilter === item.val && <Check className="size-4 text-blue-600 dark:text-blue-400" />}
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
 
               <button className="flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-[#0c0c0e] dark:text-zinc-300 dark:hover:bg-zinc-900/40">
                 <SlidersHorizontal className="size-4" />
