@@ -664,5 +664,117 @@
     "pagination": "Hiển thị {start} - {end} trong {total} thông báo",
     "perPage": "{count} / trang",
     "selectToView": "Chọn một thông báo để xem chi tiết"
+  },
+  "wallets": {
+    "title": "Ví & tài khoản",
+    "subtitle": "Quản lý tất cả ví tiền, tài khoản ngân hàng và phương thức thanh toán của bạn",
+    "searchPlaceholder": "Tìm kiếm ví, tài khoản...",
+    "addWallet": "Thêm ví / tài khoản",
+    "stats": {
+      "totalBalance": "Tổng số dư",
+      "monthTrend": "so với tháng trước",
+      "wallets": "Ví",
+      "banks": "Tài khoản ngân hàng",
+      "creditCards": "Thẻ tín dụng",
+      "walletCount": "{count} ví",
+      "bankCount": "{count} tài khoản",
+      "cardCount": "{count} thẻ"
+    },
+    "tabs": {
+      "all": "Tất cả ({count})",
+      "wallets": "Ví ({count})",
+      "banks": "Ngân hàng ({count})",
+      "creditCards": "Thẻ tín dụng ({count})"
+    },
+    "table": {
+      "name": "Tên",
+      "type": "Loại",
+      "balance": "Số dư",
+      "currency": "Tiền tệ",
+      "status": "Trạng thái",
+      "actions": "Thao tác",
+      "noData": "Không có ví hoặc tài khoản nào.",
+      "showing": "Hiển thị {start} - {end} trong {total}"
+    },
+    "types": {
+      "wallet": "Ví",
+      "bank": "Ngân hàng",
+      "creditCard": "Thẻ tín dụng"
+    },
+    "status": {
+      "active": "Hoạt động",
+      "inactive": "Ngừng hoạt động"
+    },
+    "details": {
+      "default": "Mặc định",
+      "totalBalance": "Tổng số dư",
+      "deposit": "Nạp tiền",
+      "withdraw": "Rút tiền",
+      "transfer": "Chuyển tiền",
+      "other": "Khác",
+      "typeLabel": "Loại ví",
+      "goal": "Mục tiêu",
+      "createdAt": "Ngày tạo",
+      "currency": "Tiền tệ",
+      "description": "Mô tả",
+      "notes": "Ghi chú",
+      "recentTransactions": "Giao dịch gần đây",
+      "viewAll": "Xem tất cả",
+      "viewAllTransactions": "Xem tất cả giao dịch"
+    },
+    "form": {
+      "addTitle": "Thêm ví / Tài khoản",
+      "editTitle": "Chỉnh sửa ví",
+      "addSubtitle": "Tạo ví mới hoặc tài khoản ngân hàng để bắt đầu theo dõi tài chính.",
+      "editSubtitle": "Cập nhật thông tin cho ví hoặc tài khoản này.",
+      "name": "Tên ví",
+      "namePlaceholder": "VD: Ví chính, Vietcombank...",
+      "type": "Loại tài khoản",
+      "initialBalance": "Số dư ban đầu",
+      "initialBalancePlaceholder": "0",
+      "status": "Trạng thái",
+      "description": "Mô tả",
+      "descriptionPlaceholder": "Ghi chú tuỳ chọn về ví này...",
+      "cancel": "Huỷ",
+      "save": "Lưu ví",
+      "saving": "Đang lưu...",
+      "typeOptions": {
+        "CASH": "Ví tiền mặt",
+        "BANK": "Tài khoản ngân hàng",
+        "E_WALLET": "Ví điện tử",
+        "CREDIT_CARD": "Thẻ tín dụng",
+        "OTHER": "Khác"
+      },
+      "metadata": {
+        "bankName": "Tên ngân hàng",
+        "bankNamePlaceholder": "VD: Vietcombank, Techcombank",
+        "accountNumber": "Số tài khoản",
+        "accountNumberPlaceholder": "Số tài khoản của bạn",
+        "accountName": "Tên chủ thẻ / tài khoản",
+        "accountNamePlaceholder": "Tên in trên thẻ/tài khoản",
+        "provider": "Nhà cung cấp ví",
+        "providerPlaceholder": "VD: MoMo, ZaloPay, ViettelPay",
+        "phoneNumber": "Số điện thoại liên kết",
+        "phoneNumberPlaceholder": "Số điện thoại dùng cho ví",
+        "cardNumber": "Số thẻ (4 số cuối)",
+        "cardNumberPlaceholder": "VD: 1234",
+        "creditLimit": "Hạn mức tín dụng",
+        "creditLimitPlaceholder": "0",
+        "statementDate": "Ngày chốt sao kê (1-31)",
+        "statementDatePlaceholder": "Ngày trong tháng (VD: 20)",
+        "paymentDueDate": "Ngày đến hạn thanh toán (1-31)",
+        "paymentDueDatePlaceholder": "Ngày trong tháng (VD: 5)"
+      },
+      "statusOptions": {
+        "ACTIVE": "Hoạt động",
+        "INACTIVE": "Ngừng hoạt động"
+      },
+      "errors": {
+        "nameRequired": "Vui lòng nhập tên ví.",
+        "balanceInvalid": "Vui lòng nhập số dư hợp lệ.",
+        "saveFailed": "Lưu ví thất bại. Vui lòng thử lại."
+      },
+      "success": "Lưu ví thành công!"
+    }
   }
 }

@@ -26,7 +26,7 @@ export default async function DashboardPage() {
   const t = await getTranslations('dashboard')
 
   return (
-    <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 text-zinc-900 dark:text-zinc-50 pb-10">
+    <div className="mx-auto flex w-full flex-col gap-6 text-zinc-900 dark:text-zinc-50 pb-10">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">

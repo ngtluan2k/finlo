@@ -266,7 +266,7 @@ export function NotificationsClient({
   const totalPages = Math.ceil(totalCount / limit) || 1
 
   return (
-    <div className="flex flex-col w-full h-[calc(100vh-64px)] p-6 lg:p-8 bg-zinc-50/30 dark:bg-slate-900/10">
+    <div className="mx-auto flex w-full flex-col gap-6 text-zinc-900 dark:text-zinc-50 pb-10">
       
       {/* Page Header Section */}
       <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-8 shrink-0">

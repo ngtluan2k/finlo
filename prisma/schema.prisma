@@ -350,6 +350,7 @@ model Wallet {
   balance Decimal      @default(0) @db.Decimal(15, 2)
   type    WalletType   @default(CASH)
   status  RecordStatus @default(ACTIVE)
+  metadata Json?
 
   user                  User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
   transactions          Transaction[]

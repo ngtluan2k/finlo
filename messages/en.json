@@ -664,5 +664,117 @@
     "pagination": "Showing {start} - {end} of {total} notifications",
     "perPage": "{count} / page",
     "selectToView": "Select a notification to view details"
+  },
+  "wallets": {
+    "title": "Wallets & Accounts",
+    "subtitle": "Manage all your wallets, bank accounts, and payment methods",
+    "searchPlaceholder": "Search wallets, accounts...",
+    "addWallet": "Add Wallet / Account",
+    "stats": {
+      "totalBalance": "Total Balance",
+      "monthTrend": "vs last month",
+      "wallets": "Wallets",
+      "banks": "Bank Accounts",
+      "creditCards": "Credit Cards",
+      "walletCount": "{count} wallets",
+      "bankCount": "{count} accounts",
+      "cardCount": "{count} cards"
+    },
+    "tabs": {
+      "all": "All ({count})",
+      "wallets": "Wallets ({count})",
+      "banks": "Banks ({count})",
+      "creditCards": "Credit Cards ({count})"
+    },
+    "table": {
+      "name": "Name",
+      "type": "Type",
+      "balance": "Balance",
+      "currency": "Currency",
+      "status": "Status",
+      "actions": "Actions",
+      "noData": "No wallets or accounts found.",
+      "showing": "Showing {start} - {end} of {total}"
+    },
+    "types": {
+      "wallet": "Wallet",
+      "bank": "Bank",
+      "creditCard": "Credit Card"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "details": {
+      "default": "Default",
+      "totalBalance": "Total Balance",
+      "deposit": "Deposit",
+      "withdraw": "Withdraw",
+      "transfer": "Transfer",
+      "other": "Other",
+      "typeLabel": "Wallet Type",
+      "goal": "Goal",
+      "createdAt": "Created At",
+      "currency": "Currency",
+      "description": "Description",
+      "notes": "Notes",
+      "recentTransactions": "Recent Transactions",
+      "viewAll": "View all",
+      "viewAllTransactions": "View all transactions"
+    },
+    "form": {
+      "addTitle": "Add Wallet / Account",
+      "editTitle": "Edit Wallet",
+      "addSubtitle": "Set up a new wallet or bank account to start tracking your finances.",
+      "editSubtitle": "Update the details for this wallet or account.",
+      "name": "Wallet Name",
+      "namePlaceholder": "e.g. Main Wallet, Vietcombank...",
+      "type": "Account Type",
+      "initialBalance": "Opening Balance",
+      "initialBalancePlaceholder": "0",
+      "status": "Status",
+      "description": "Description",
+      "descriptionPlaceholder": "Optional notes about this wallet...",
+      "cancel": "Cancel",
+      "save": "Save Wallet",
+      "saving": "Saving...",
+      "typeOptions": {
+        "CASH": "Cash Wallet",
+        "BANK": "Bank Account",
+        "E_WALLET": "E-Wallet",
+        "CREDIT_CARD": "Credit Card",
+        "OTHER": "Other"
+      },
+      "metadata": {
+        "bankName": "Bank Name",
+        "bankNamePlaceholder": "e.g. Vietcombank, Techcombank",
+        "accountNumber": "Account Number",
+        "accountNumberPlaceholder": "Your bank account number",
+        "accountName": "Cardholder / Account Name",
+        "accountNamePlaceholder": "Name on the account",
+        "provider": "E-Wallet Provider",
+        "providerPlaceholder": "e.g. MoMo, ZaloPay, ViettelPay",
+        "phoneNumber": "Linked Phone Number",
+        "phoneNumberPlaceholder": "Phone number used for wallet",
+        "cardNumber": "Card Number (Last 4 digits)",
+        "cardNumberPlaceholder": "e.g. 1234",
+        "creditLimit": "Credit Limit",
+        "creditLimitPlaceholder": "0",
+        "statementDate": "Statement Date (1-31)",
+        "statementDatePlaceholder": "Day of month (e.g. 20)",
+        "paymentDueDate": "Payment Due Date (1-31)",
+        "paymentDueDatePlaceholder": "Day of month (e.g. 5)"
+      },
+      "statusOptions": {
+        "ACTIVE": "Active",
+        "INACTIVE": "Inactive"
+      },
+      "errors": {
+        "nameRequired": "Wallet name is required.",
+        "balanceInvalid": "Please enter a valid balance.",
+        "saveFailed": "Failed to save wallet. Please try again."
+      },
+      "success": "Wallet saved successfully!"
+    }
   }
 }
