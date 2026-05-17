@@ -14,17 +14,25 @@
         "Track wallets and transactions in real time",
         "Visual budgets and charts",
         "Secure sync across all your devices"
-      ]
+      ],
+      "featureDescriptions": [
+        "Stay updated on every change instantly",
+        "Easily manage your spending",
+        "Your data is always protected"
+      ],
+      "ssl": "Secured with SSL 256-bit encryption"
     },
     "login": {
       "title": "Sign in",
       "subtitle": "Manage your personal finances with Finlo",
       "identifierLabel": "Email / Phone / Username",
       "passwordLabel": "Password",
+      "forgotPassword": "Forgot password?",
       "submit": "Sign in",
       "submitting": "Signing in...",
       "noAccount": "Don't have an account?",
-      "registerLink": "Sign up",
+      "registerLink": "Sign up now",
+      "socialDivider": "Or sign in with",
       "invalidCredentials": "Invalid email or password",
       "emailNotVerified": "Email not verified. Check your inbox or resend the link.",
       "verifyLink": "Verify email",
@@ -38,11 +46,18 @@
       "firstNameLabel": "First name",
       "lastNameLabel": "Last name",
       "emailLabel": "Email",
+      "phoneLabel": "Phone number (optional)",
       "passwordLabel": "Password",
-      "submit": "Sign up",
+      "confirmPasswordLabel": "Confirm password",
+      "termsText": "I agree to the",
+      "termsLink": "Terms of Service",
+      "termsAnd": "and",
+      "privacyLink": "Privacy Policy",
+      "submit": "Create account",
       "submitting": "Signing up...",
       "hasAccount": "Already have an account?",
-      "loginLink": "Sign in",
+      "loginLink": "Sign in now",
+      "socialDivider": "Or sign up with",
       "failed": "Registration failed"
     },
     "signOut": "Sign out",
@@ -50,6 +65,7 @@
       "emailInvalid": "Invalid email address",
       "passwordMin": "Password must be at least 8 characters",
       "passwordMax": "Password must be at most 128 characters",
+      "passwordMismatch": "Passwords do not match",
       "firstNameRequired": "First name is required",
       "firstNameMax": "First name must be at most 100 characters",
       "lastNameRequired": "Last name is required",
@@ -90,13 +106,22 @@
     "greeting": "Hello, {name}",
     "placeholder": "Signed in successfully. Wallets, transactions, and budgets are coming soon.",
     "sidebar": {
-      "label": "Menu"
+      "main": "MAIN",
+      "planning": "PLANNING",
+      "analytics": "ANALYTICS",
+      "system": "SYSTEM"
     },
     "nav": {
       "overview": "Overview",
       "wallets": "Wallets",
       "transactions": "Transactions",
-      "budgets": "Budgets"
+      "budgets": "Budgets",
+      "goals": "Goals",
+      "savings": "Savings",
+      "reports": "Reports",
+      "analytics": "Analytics",
+      "settings": "Settings",
+      "security": "Security"
     },
     "header": {
       "menu": "Dashboard",

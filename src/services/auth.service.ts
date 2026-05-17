@@ -73,6 +73,7 @@ export async function registerUser(input: RegisterInput, locale: Locale) {
         userId: created.id,
         firstName: input.firstName.trim(),
         lastName: input.lastName.trim(),
+        locale,
       },
     })
 

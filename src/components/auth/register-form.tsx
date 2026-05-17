@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Loader2, UserPlus } from 'lucide-react'
+import { Loader2, Lock, Mail, Phone, User, UserPlus } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import {
   createRegisterSchema,
@@ -14,9 +14,13 @@ import {
   AuthErrorBanner,
   AuthField,
   AuthFooterLink,
+  AuthInput,
+  AuthPasswordInput,
+  AuthSocialButtons,
+  AuthSocialDivider,
   AuthSubmitButton,
+  AuthTermsCheckbox,
   authFormValidationOptions,
-  authInputClass,
 } from '@/components/auth/auth-field'
 import { routes } from '@/lib/routes'
 
@@ -39,6 +43,7 @@ export function RegisterForm() {
   const tErrors = useTranslations('auth.errors')
   const router = useRouter()
   const [error, setError] = useState<string | null>(null)
+  const [termsAccepted, setTermsAccepted] = useState(false)
 
   const registerSchema = useMemo(
     () =>
@@ -95,7 +100,7 @@ export function RegisterForm() {
   }
 
   return (
-    <form noValidate onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+    <form noValidate onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       {error && <AuthErrorBanner>{error}</AuthErrorBanner>}
 
       <div className="grid grid-cols-2 gap-3">
@@ -104,12 +109,12 @@ export function RegisterForm() {
           id="lastName"
           error={errors.lastName?.message}
         >
-          <input
+          <AuthInput
+            icon={User}
             id="lastName"
-            type="text"
             autoComplete="family-name"
-            placeholder="Nguyen Thanh"
-            className={authInputClass(errors.lastName)}
+            placeholder="Nguyen"
+            hasError={errors.lastName}
             {...register('lastName')}
           />
         </AuthField>
@@ -119,40 +124,69 @@ export function RegisterForm() {
           id="firstName"
           error={errors.firstName?.message}
         >
-          <input
+          <AuthInput
+            icon={User}
             id="firstName"
-            type="text"
             autoComplete="given-name"
             placeholder="Luan"
-            className={authInputClass(errors.firstName)}
+            hasError={errors.firstName}
             {...register('firstName')}
           />
         </AuthField>
       </div>
 
       <AuthField label={t('emailLabel')} id="email" error={errors.email?.message}>
-        <input
+        <AuthInput
+          icon={Mail}
           id="email"
           type="email"
           autoComplete="email"
           placeholder="email@example.com"
-          className={authInputClass(errors.email)}
+          hasError={errors.email}
           {...register('email')}
         />
       </AuthField>
 
+      <AuthField label={t('phoneLabel')} id="phone">
+        <AuthInput
+          icon={Phone}
+          id="phone"
+          type="tel"
+          autoComplete="tel"
+          placeholder="0123 456 789"
+        />
+      </AuthField>
+
       <AuthField label={t('passwordLabel')} id="password" error={errors.password?.message}>
-        <input
+        <AuthPasswordInput
+          icon={Lock}
           id="password"
-          type="password"
           autoComplete="new-password"
-          placeholder="********"
-          className={authInputClass(errors.password)}
+          placeholder="••••••••"
+          hasError={errors.password}
           {...register('password')}
         />
       </AuthField>
 
-      <AuthSubmitButton disabled={isSubmitting}>
+      <AuthField label={t('confirmPasswordLabel')} id="confirmPassword">
+        <AuthPasswordInput
+          icon={Lock}
+          id="confirmPassword"
+          autoComplete="new-password"
+          placeholder="••••••••"
+        />
+      </AuthField>
+
+      <AuthTermsCheckbox
+        checked={termsAccepted}
+        onChange={setTermsAccepted}
+        termsText={t('termsText')}
+        termsLink={t('termsLink')}
+        termsAnd={t('termsAnd')}
+        privacyLink={t('privacyLink')}
+      />
+
+      <AuthSubmitButton disabled={isSubmitting || !termsAccepted}>
         {isSubmitting ? (
           <>
             <Loader2 className="size-4 animate-spin" aria-hidden />
@@ -165,6 +199,9 @@ export function RegisterForm() {
           </>
         )}
       </AuthSubmitButton>
+
+      <AuthSocialDivider text={t('socialDivider')} />
+      <AuthSocialButtons />
 
       <AuthFooterLink
         prompt={t('hasAccount')}

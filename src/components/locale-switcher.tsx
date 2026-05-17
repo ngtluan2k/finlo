@@ -5,53 +5,21 @@ import { useLocale, useTranslations } from 'next-intl'
 import { Check, ChevronDown, Globe } from 'lucide-react'
 import { locales, type Locale } from '@/i18n/config'
 import { cn } from '@/lib/utils'
-
-const variants = {
-  default: {
-    trigger:
-      'border-zinc-200 bg-white text-zinc-900 shadow-sm hover:border-zinc-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:border-zinc-600',
-    menu: 'border-zinc-200 bg-white shadow-xl dark:border-white/10 dark:bg-zinc-900/95 dark:shadow-black/50',
-    item: 'text-zinc-700 hover:bg-zinc-100 dark:text-zinc-200 dark:hover:bg-white/10',
-    itemActive: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400',
-    icon: 'text-zinc-500 dark:text-zinc-400',
-    chevron: 'text-zinc-400',
-  },
-  glass: {
-    trigger:
-      'border-white/15 bg-white/5 text-zinc-100 backdrop-blur-md hover:border-white/25 hover:bg-white/10',
-    menu: 'border-white/10 bg-zinc-950/95 shadow-2xl shadow-black/50 backdrop-blur-xl',
-    item: 'text-zinc-300 hover:bg-white/10',
-    itemActive: 'bg-emerald-500/15 text-emerald-400',
-    icon: 'text-emerald-400/80',
-    chevron: 'text-zinc-400',
-  },
-} as const
+import { useSession } from 'next-auth/react'
 
 type LocaleSwitcherProps = {
   className?: string
-  variant?: keyof typeof variants
 }
 
-export function LocaleSwitcher({
-  className,
-  variant = 'default',
-}: LocaleSwitcherProps) {
+export function LocaleSwitcher({ className }: LocaleSwitcherProps) {
   const locale = useLocale() as Locale
   const t = useTranslations('locale')
-  const [isPending, startTransition] = useTransition()
   const [open, setOpen] = useState(false)
+  const [isPending, startTransition] = useTransition()
+  const { data: session } = useSession()
+  
   const rootRef = useRef<HTMLDivElement>(null)
-  const listboxId = useId()
-  const styles = variants[variant]
-
-  function selectLocale(nextLocale: Locale) {
-    if (nextLocale === locale || isPending) return
-    setOpen(false)
-    startTransition(() => {
-      document.cookie = `locale=${nextLocale};path=/;max-age=31536000;samesite=lax`
-      window.location.reload()
-    })
-  }
+  const menuId = useId()
 
   useEffect(() => {
     if (!open) return
@@ -74,72 +42,95 @@ export function LocaleSwitcher({
     }
   }, [open])
 
+  function handleLocaleChange(nextLocale: Locale) {
+    if (nextLocale === locale || isPending) return
+    
+    startTransition(async () => {
+      document.cookie = `locale=${nextLocale};path=/;max-age=31536000;samesite=lax`
+      
+      if (session?.user) {
+        try {
+          await fetch('/api/profile/locale', {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ locale: nextLocale }),
+          })
+        } catch (error) {
+          console.error('Failed to update database profile locale:', error)
+        }
+      }
+      
+      window.location.reload()
+    })
+    setOpen(false)
+  }
+
   return (
-    <div ref={rootRef} className={cn('relative', className)}>
+    <div ref={rootRef} className={cn('relative inline-flex items-center', className)}>
       <button
         type="button"
-        disabled={isPending}
-        aria-haspopup="listbox"
+        aria-haspopup="menu"
         aria-expanded={open}
-        aria-controls={listboxId}
-        aria-label={t('label')}
-        onClick={() => setOpen((value) => !value)}
+        aria-controls={menuId}
+        disabled={isPending}
+        onClick={() => setOpen((prev) => !prev)}
         className={cn(
-          'inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-medium transition',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/40',
+          'flex h-9 items-center gap-2 rounded-full border border-white/20 bg-transparent pl-3 pr-2.5 text-xs font-bold text-white transition hover:bg-white/10',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/40',
           'disabled:cursor-wait disabled:opacity-60',
-          styles.trigger,
+          'dark:border-zinc-700/60 dark:bg-zinc-900/40 dark:hover:border-zinc-600 dark:hover:bg-zinc-800/60',
+          open && 'bg-white/10 dark:bg-zinc-800/60'
         )}
       >
-        <Globe className={cn('size-4 shrink-0', styles.icon)} aria-hidden />
-        <span className="max-w-28 truncate">{t(locale)}</span>
+        <Globe className="size-4 shrink-0 text-[#C0E8FB]" aria-hidden />
+        <span className="uppercase tracking-wider">{locale}</span>
         <ChevronDown
           className={cn(
-            'size-4 shrink-0 transition-transform duration-200',
-            styles.chevron,
-            open && 'rotate-180',
+            'size-3.5 shrink-0 text-white/70 transition-transform duration-200',
+            open && 'rotate-180'
           )}
           aria-hidden
         />
       </button>
 
       {open && (
-        <ul
-          id={listboxId}
-          role="listbox"
-          aria-label={t('label')}
+        <div
+          id={menuId}
+          role="menu"
           className={cn(
-            'absolute right-0 z-50 mt-2 min-w-44 overflow-hidden rounded-xl border p-1',
-            'origin-top-right transition-opacity',
-            styles.menu,
+            'absolute right-0 top-full z-50 mt-2 w-44 origin-top-right overflow-hidden rounded-xl border border-zinc-200/80 bg-white/95 p-1 shadow-xl backdrop-blur-md transition-all duration-150',
+            'dark:border-zinc-700/60 dark:bg-[#0f1c2b]/95',
           )}
         >
           {locales.map((value) => {
-            const selected = value === locale
+            const isActive = value === locale
             return (
-              <li key={value} role="presentation">
-                <button
-                  type="button"
-                  role="option"
-                  aria-selected={selected}
-                  disabled={isPending}
-                  onClick={() => selectLocale(value)}
-                  className={cn(
-                    'flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2 text-left text-sm transition',
-                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/40 focus-visible:ring-inset',
-                    'disabled:cursor-wait disabled:opacity-60',
-                    selected ? styles.itemActive : styles.item,
-                  )}
-                >
+              <button
+                key={value}
+                type="button"
+                role="menuitem"
+                disabled={isPending}
+                onClick={() => handleLocaleChange(value)}
+                className={cn(
+                  'flex w-full items-center justify-between rounded-lg px-2.5 py-2 text-xs font-semibold text-zinc-700 transition',
+                  'hover:bg-primary-50 hover:text-primary-700 disabled:opacity-50 disabled:cursor-wait',
+                  'dark:text-zinc-300 dark:hover:bg-[#102a43] dark:hover:text-white',
+                  isActive && 'bg-primary-50/70 text-primary-700 dark:bg-[#102a43]/70 dark:text-white'
+                )}
+              >
+                <span className="flex items-center gap-2">
+                  <span className="uppercase text-[9px] bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 px-1 py-0.5 rounded font-bold tracking-wider text-zinc-500 dark:text-zinc-400">
+                    {value}
+                  </span>
                   <span>{t(value)}</span>
-                  {selected && (
-                    <Check className="size-4 shrink-0 text-emerald-500" aria-hidden />
-                  )}
-                </button>
-              </li>
+                </span>
+                {isActive && <Check className="size-3.5 shrink-0 text-primary-600 dark:text-brand-primary" />}
+              </button>
             )
           })}
-        </ul>
+        </div>
       )}
     </div>
   )

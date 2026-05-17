@@ -76,7 +76,7 @@ export function UserMenu({ user }: UserMenuProps) {
         className={cn(
           'inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white py-1 pl-1 pr-2 text-sm transition',
           'hover:border-zinc-300 hover:bg-zinc-50',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/40',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/40',
           'dark:border-zinc-700 dark:bg-zinc-900 dark:hover:border-zinc-600 dark:hover:bg-zinc-800',
         )}
       >
@@ -88,7 +88,7 @@ export function UserMenu({ user }: UserMenuProps) {
             className="size-8 rounded-md object-cover"
           />
         ) : (
-          <span className="flex size-8 items-center justify-center rounded-md bg-linear-to-br from-emerald-400 to-cyan-400 text-xs font-semibold text-zinc-950">
+          <span className="flex size-8 items-center justify-center rounded-md bg-linear-to-br from-blue-400 to-cyan-400 text-xs font-semibold text-zinc-950">
             {initials}
           </span>
         )}
