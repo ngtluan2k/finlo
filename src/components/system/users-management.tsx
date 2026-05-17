@@ -28,6 +28,7 @@ import {
   Globe,
   Clock,
   ChevronDown,
+  Check,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -119,6 +120,12 @@ export function UsersManagement() {
   // Drawer loading states
   const [drawerLoading, setDrawerLoading] = useState(false)
   const [roleUpdating, setRoleUpdating] = useState(false)
+  
+  // Custom dropdown toggle states
+  const [isRoleFilterOpen, setIsRoleFilterOpen] = useState(false)
+  const [isStatusFilterOpen, setIsStatusFilterOpen] = useState(false)
+  const [isChangeRoleOpen, setIsChangeRoleOpen] = useState(false)
+  const [isRoleDropdownOpen, setIsRoleDropdownOpen] = useState(false)
 
   // Create form state
   const [createForm, setCreateForm] = useState({
@@ -526,36 +533,121 @@ export function UsersManagement() {
 
         <div className="flex flex-wrap items-center gap-3">
           {/* Role Filter */}
-          <select
-            value={roleFilter}
-            onChange={(e) => {
-              setRoleFilter(e.target.value)
-              setPage(1)
-            }}
-            className="rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm focus:outline-none dark:border-zinc-800 dark:bg-[#0c0c0e] text-zinc-700 dark:text-zinc-300"
-          >
-            <option value="">{t('toolbar.roleAll')}</option>
-            {roles.map((role) => (
-              <option key={role.id} value={role.id}>
-                {translateRoleName(role.code, role.name)}
-              </option>
-            ))}
-          </select>
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setIsRoleFilterOpen(!isRoleFilterOpen)}
+              className="flex items-center justify-between gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm focus:outline-none dark:border-zinc-800 dark:bg-[#0c0c0e] text-zinc-700 dark:text-zinc-300 select-none cursor-pointer"
+            >
+              <span>
+                {roleFilter
+                  ? translateRoleName(roles.find(r => r.id === roleFilter)?.code || '', roles.find(r => r.id === roleFilter)?.name || '')
+                  : t('toolbar.roleAll')}
+              </span>
+              <ChevronDown className="size-4 text-zinc-400 shrink-0" />
+            </button>
+
+            {isRoleFilterOpen && (
+              <>
+                <div
+                  onClick={() => setIsRoleFilterOpen(false)}
+                  className="fixed inset-0 z-30"
+                />
+                <div className="absolute z-40 left-0 mt-1 min-w-[200px] max-h-60 overflow-y-auto rounded-xl border border-zinc-200 bg-white py-1.5 shadow-xl dark:border-zinc-850 dark:bg-[#0c0c0e] animate-in fade-in slide-in-from-top-1 duration-150">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setRoleFilter('')
+                      setPage(1)
+                      setIsRoleFilterOpen(false)
+                    }}
+                    className={cn(
+                      "w-full px-3 py-2 text-left text-sm font-semibold hover:bg-zinc-50 dark:hover:bg-zinc-900/50 flex items-center justify-between cursor-pointer",
+                      roleFilter === ''
+                        ? "text-blue-600 bg-blue-50/20 dark:text-blue-400 dark:bg-blue-950/20"
+                        : "text-zinc-700 dark:text-zinc-300"
+                    )}
+                  >
+                    <span>{t('toolbar.roleAll')}</span>
+                    {roleFilter === '' && <Check className="size-4 text-blue-600 dark:text-blue-400" />}
+                  </button>
+                  {roles.map((role) => (
+                    <button
+                      key={role.id}
+                      type="button"
+                      onClick={() => {
+                        setRoleFilter(role.id)
+                        setPage(1)
+                        setIsRoleFilterOpen(false)
+                      }}
+                      className={cn(
+                        "w-full px-3 py-2 text-left text-sm font-semibold hover:bg-zinc-50 dark:hover:bg-zinc-900/50 flex items-center justify-between cursor-pointer",
+                        roleFilter === role.id
+                          ? "text-blue-600 bg-blue-50/20 dark:text-blue-400 dark:bg-blue-950/20"
+                          : "text-zinc-700 dark:text-zinc-300"
+                      )}
+                    >
+                      <span>{translateRoleName(role.code, role.name)}</span>
+                      {roleFilter === role.id && <Check className="size-4 text-blue-600 dark:text-blue-400" />}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
 
           {/* Status Filter */}
-          <select
-            value={statusFilter}
-            onChange={(e) => {
-              setStatusFilter(e.target.value)
-              setPage(1)
-            }}
-            className="rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm focus:outline-none dark:border-zinc-800 dark:bg-[#0c0c0e] text-zinc-700 dark:text-zinc-300"
-          >
-            <option value="">{t('toolbar.statusAll')}</option>
-            <option value="ACTIVE">{tCommon('statuses.ACTIVE')}</option>
-            <option value="SUSPENDED">{tCommon('statuses.SUSPENDED')}</option>
-            <option value="INACTIVE">{tCommon('statuses.INACTIVE')}</option>
-          </select>
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setIsStatusFilterOpen(!isStatusFilterOpen)}
+              className="flex items-center justify-between gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm focus:outline-none dark:border-zinc-800 dark:bg-[#0c0c0e] text-zinc-700 dark:text-zinc-300 select-none cursor-pointer"
+            >
+              <span>
+                {statusFilter === 'ACTIVE' && tCommon('statuses.ACTIVE')}
+                {statusFilter === 'SUSPENDED' && tCommon('statuses.SUSPENDED')}
+                {statusFilter === 'INACTIVE' && tCommon('statuses.INACTIVE')}
+                {statusFilter === '' && t('toolbar.statusAll')}
+              </span>
+              <ChevronDown className="size-4 text-zinc-400 shrink-0" />
+            </button>
+
+            {isStatusFilterOpen && (
+              <>
+                <div
+                  onClick={() => setIsStatusFilterOpen(false)}
+                  className="fixed inset-0 z-30"
+                />
+                <div className="absolute z-40 left-0 mt-1 min-w-[160px] rounded-xl border border-zinc-200 bg-white py-1.5 shadow-xl dark:border-zinc-850 dark:bg-[#0c0c0e] animate-in fade-in slide-in-from-top-1 duration-150">
+                  {[
+                    { val: '', label: t('toolbar.statusAll') },
+                    { val: 'ACTIVE', label: tCommon('statuses.ACTIVE') },
+                    { val: 'SUSPENDED', label: tCommon('statuses.SUSPENDED') },
+                    { val: 'INACTIVE', label: tCommon('statuses.INACTIVE') }
+                  ].map((item) => (
+                    <button
+                      key={item.val}
+                      type="button"
+                      onClick={() => {
+                        setStatusFilter(item.val)
+                        setPage(1)
+                        setIsStatusFilterOpen(false)
+                      }}
+                      className={cn(
+                        "w-full px-3 py-2 text-left text-sm font-semibold hover:bg-zinc-50 dark:hover:bg-zinc-900/50 flex items-center justify-between cursor-pointer",
+                        statusFilter === item.val
+                          ? "text-blue-600 bg-blue-50/20 dark:text-blue-400 dark:bg-blue-950/20"
+                          : "text-zinc-700 dark:text-zinc-300"
+                      )}
+                    >
+                      <span>{item.label}</span>
+                      {statusFilter === item.val && <Check className="size-4 text-blue-600 dark:text-blue-400" />}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
 
@@ -904,18 +996,58 @@ export function UsersManagement() {
                           {t('drawer.info.rbacDesc')}
                         </p>
                         <div className="flex items-center gap-3">
-                          <select
-                            defaultValue={selectedUser.userRoles[0]?.role.id}
-                            onChange={(e) => handleUpdateRole(selectedUser.id, e.target.value)}
-                            disabled={!!(roleUpdating || (currentUserEmail && selectedUser.email === currentUserEmail))}
-                            className="flex-1 rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm focus:outline-none dark:border-zinc-800 dark:bg-[#0c0c0e]"
-                          >
-                            {roles.map((role) => (
-                              <option key={role.id} value={role.id}>
-                                {translateRoleName(role.code, role.name)} ({role.code})
-                              </option>
-                            ))}
-                          </select>
+                          <div className="relative flex-1">
+                            <button
+                              type="button"
+                              disabled={!!(roleUpdating || (currentUserEmail && selectedUser.email === currentUserEmail))}
+                              onClick={() => setIsChangeRoleOpen(!isChangeRoleOpen)}
+                              className="w-full flex items-center justify-between rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm focus:outline-none dark:border-zinc-800 dark:bg-[#0c0c0e] text-left disabled:opacity-50 select-none cursor-pointer"
+                            >
+                              <span>
+                                {selectedUser.userRoles[0]?.role
+                                  ? `${translateRoleName(selectedUser.userRoles[0].role.code, selectedUser.userRoles[0].role.name)} (${selectedUser.userRoles[0].role.code})`
+                                  : t('drawer.info.noRole')}
+                              </span>
+                              <ChevronDown className="size-4 text-zinc-400 shrink-0 ml-2" />
+                            </button>
+
+                            {isChangeRoleOpen && (
+                              <>
+                                <div
+                                  onClick={() => setIsChangeRoleOpen(false)}
+                                  className="fixed inset-0 z-30"
+                                />
+                                <div className="absolute z-40 left-0 right-0 mt-1 max-h-60 overflow-y-auto rounded-xl border border-zinc-200 bg-white py-1.5 shadow-xl dark:border-zinc-850 dark:bg-[#0c0c0e] animate-in fade-in slide-in-from-top-1 duration-150">
+                                  {roles.map((role) => {
+                                    const isCurrent = selectedUser.userRoles[0]?.role.id === role.id
+                                    return (
+                                      <button
+                                        key={role.id}
+                                        type="button"
+                                        onClick={() => {
+                                          handleUpdateRole(selectedUser.id, role.id)
+                                          setIsChangeRoleOpen(false)
+                                        }}
+                                        className={cn(
+                                          "w-full px-3 py-2 text-left text-sm font-semibold hover:bg-zinc-50 dark:hover:bg-zinc-900/50 flex items-center justify-between cursor-pointer",
+                                          isCurrent
+                                            ? "text-blue-600 bg-blue-50/20 dark:text-blue-400 dark:bg-blue-950/20"
+                                            : "text-zinc-700 dark:text-zinc-300"
+                                        )}
+                                      >
+                                        <span>
+                                          {translateRoleName(role.code, role.name)} ({role.code})
+                                        </span>
+                                        {isCurrent && (
+                                          <Check className="size-4 text-blue-600 dark:text-blue-400" />
+                                        )}
+                                      </button>
+                                    )
+                                  })}
+                                </div>
+                              </>
+                            )}
+                          </div>
                           {roleUpdating && <Loader2 className="size-4 animate-spin text-zinc-500" />}
                         </div>
                         {currentUserEmail && selectedUser.email === currentUserEmail && (
@@ -1085,19 +1217,54 @@ export function UsersManagement() {
                 </div>
                 <div>
                   <label className="text-xs font-semibold text-zinc-500 mb-1 block">{t('createModal.role')}</label>
-                  <select
-                    value={createForm.roleId}
-                    onChange={(e) => setCreateForm({ ...createForm, roleId: e.target.value })}
-                    required
-                    className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-3 py-2 text-sm focus:outline-none dark:border-zinc-800 dark:bg-zinc-900/50"
-                  >
-                    <option value="" disabled>{t('createModal.roleSelect')}</option>
-                    {roles.map((role) => (
-                      <option key={role.id} value={role.id}>
-                        {translateRoleName(role.code, role.name)} ({role.code})
-                      </option>
-                    ))}
-                  </select>
+                  <div className="relative">
+                    <button
+                      type="button"
+                      onClick={() => setIsRoleDropdownOpen(!isRoleDropdownOpen)}
+                      className="w-full flex items-center justify-between rounded-xl border border-zinc-200 bg-zinc-50/50 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-zinc-800 dark:bg-[#0c0c0e] text-left select-none cursor-pointer"
+                    >
+                      <span className={cn(!createForm.roleId && "text-zinc-400 dark:text-zinc-500")}>
+                        {createForm.roleId
+                          ? `${translateRoleName(roles.find(r => r.id === createForm.roleId)?.code || '', roles.find(r => r.id === createForm.roleId)?.name || '')} (${roles.find(r => r.id === createForm.roleId)?.code})`
+                          : t('createModal.roleSelect')}
+                      </span>
+                      <ChevronDown className="size-4 text-zinc-400 shrink-0 ml-2" />
+                    </button>
+
+                    {isRoleDropdownOpen && (
+                      <>
+                        <div
+                          onClick={() => setIsRoleDropdownOpen(false)}
+                          className="fixed inset-0 z-30"
+                        />
+                        <div className="absolute z-45 left-0 right-0 mt-1 max-h-60 overflow-y-auto rounded-xl border border-zinc-200 bg-white py-1.5 shadow-xl dark:border-zinc-850 dark:bg-[#0c0c0e] animate-in fade-in slide-in-from-top-1 duration-150">
+                          {roles.map((role) => (
+                            <button
+                              key={role.id}
+                              type="button"
+                              onClick={() => {
+                                setCreateForm({ ...createForm, roleId: role.id })
+                                setIsRoleDropdownOpen(false)
+                              }}
+                              className={cn(
+                                "w-full px-3 py-2 text-left text-sm font-semibold hover:bg-zinc-50 dark:hover:bg-zinc-900/50 flex items-center justify-between cursor-pointer",
+                                createForm.roleId === role.id
+                                  ? "text-blue-600 bg-blue-50/20 dark:text-blue-400 dark:bg-blue-950/20"
+                                  : "text-zinc-700 dark:text-zinc-300"
+                              )}
+                            >
+                              <span>
+                                {translateRoleName(role.code, role.name)} ({role.code})
+                              </span>
+                              {createForm.roleId === role.id && (
+                                <Check className="size-4 text-blue-600 dark:text-blue-400" />
+                              )}
+                            </button>
+                          ))}
+                        </div>
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
 
