@@ -1,6 +1,6 @@
 'use client'
 
-import { PanelLeft } from 'lucide-react'
+import { ChevronsLeft, Menu } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { cn } from '@/lib/utils'
 
@@ -24,16 +24,20 @@ export function DashboardSidebarToggle({
       aria-expanded={open}
       aria-label={open ? t('header.closeSidebar') : t('header.openSidebar')}
       className={cn(
-        'inline-flex size-9 items-center justify-center rounded-lg border transition',
-        'border-zinc-200 bg-zinc-50 text-zinc-700 shadow-sm',
-        'hover:border-zinc-300 hover:bg-zinc-100',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/40',
-        'dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200',
-        'dark:hover:border-zinc-600 dark:hover:bg-zinc-700',
+        'inline-flex size-9 items-center justify-center rounded-xl border transition',
+        'border-white/20 bg-transparent text-white shadow-sm',
+        'hover:border-white/30 hover:bg-white/10',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#54A4D7]',
+        'dark:border-[#1E293B] dark:bg-transparent dark:text-slate-300',
+        'dark:hover:bg-[#102A43] dark:hover:text-white',
         className,
       )}
     >
-      <PanelLeft className="size-4" aria-hidden />
+      {open ? (
+        <ChevronsLeft className="size-4" aria-hidden />
+      ) : (
+        <Menu className="size-4" aria-hidden />
+      )}
     </button>
   )
 }

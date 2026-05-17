@@ -10,8 +10,10 @@ import {
   User,
 } from 'lucide-react'
 import { useTranslations } from 'next-intl'
+import Link from 'next/link'
 import { routes } from '@/lib/routes'
 import { cn } from '@/lib/utils'
+import { getInitials } from '@/lib/string'
 
 type UserMenuProps = {
   user: {
@@ -21,17 +23,8 @@ type UserMenuProps = {
   }
 }
 
-function getInitials(name?: string | null, email?: string | null) {
-  const source = name?.trim() || email?.trim() || '?'
-  const parts = source.split(/\s+/).filter(Boolean)
-  if (parts.length >= 2) {
-    return `${parts[0][0]}${parts[1][0]}`.toUpperCase()
-  }
-  return source.slice(0, 2).toUpperCase()
-}
-
 const menuItems = [
-  { key: 'profile' as const, icon: User, href: '#' },
+  { key: 'profile' as const, icon: User, href: routes.profile },
   { key: 'settings' as const, icon: Settings, href: '#' },
   { key: 'docs' as const, icon: BookOpen, href: '#' },
 ]
@@ -76,7 +69,7 @@ export function UserMenu({ user }: UserMenuProps) {
         className={cn(
           'inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white py-1 pl-1 pr-2 text-sm transition',
           'hover:border-zinc-300 hover:bg-zinc-50',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/40',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/40',
           'dark:border-zinc-700 dark:bg-zinc-900 dark:hover:border-zinc-600 dark:hover:bg-zinc-800',
         )}
       >
@@ -88,7 +81,7 @@ export function UserMenu({ user }: UserMenuProps) {
             className="size-8 rounded-md object-cover"
           />
         ) : (
-          <span className="flex size-8 items-center justify-center rounded-md bg-linear-to-br from-emerald-400 to-cyan-400 text-xs font-semibold text-zinc-950">
+          <span className="flex size-8 items-center justify-center rounded-md bg-linear-to-br from-blue-400 to-cyan-400 text-xs font-semibold text-zinc-950">
             {initials}
           </span>
         )}
@@ -125,7 +118,7 @@ export function UserMenu({ user }: UserMenuProps) {
           </div>
 
           {menuItems.map(({ key, icon: Icon, href }) => (
-            <a
+            <Link
               key={key}
               href={href}
               role="menuitem"
@@ -137,7 +130,7 @@ export function UserMenu({ user }: UserMenuProps) {
             >
               <Icon className="size-4 shrink-0 text-zinc-500" aria-hidden />
               {t(key)}
-            </a>
+            </Link>
           ))}
 
           <button

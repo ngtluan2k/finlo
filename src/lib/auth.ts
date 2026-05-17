@@ -4,6 +4,7 @@ import { routes } from '@/lib/routes'
 import { formatProfileDisplayName } from '@/lib/profile-name'
 import { loginSchema } from '@/validations/auth.schema'
 import { AuthError, verifyCredentials } from '@/services/auth.service'
+import { logActivity } from '@/lib/rbac'
 
 export const authOptions: NextAuthOptions = {
   session: { strategy: 'jwt' },
@@ -36,6 +37,7 @@ export const authOptions: NextAuthOptions = {
               ? formatProfileDisplayName(
                   user.profile.firstName,
                   user.profile.lastName,
+                  user.profile.displayName,
                 )
               : user.email,
           }
@@ -43,6 +45,15 @@ export const authOptions: NextAuthOptions = {
           if (error instanceof AuthError) {
             if (error.code === 'EMAIL_NOT_VERIFIED') {
               throw new Error('EMAIL_NOT_VERIFIED')
+            }
+            if (error.code === 'USER_SUSPENDED') {
+              throw new Error('USER_SUSPENDED')
+            }
+            if (error.code === 'USER_INACTIVE') {
+              throw new Error('USER_INACTIVE')
+            }
+            if (error.code === 'USER_DELETED') {
+              throw new Error('USER_DELETED')
             }
             return null
           }
@@ -63,6 +74,13 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.id as string
       }
       return session
+    },
+  },
+  events: {
+    async signIn({ user }) {
+      if (user && user.id) {
+        await logActivity(user.id, 'LOGIN', 'Đăng nhập vào hệ thống thành công')
+      }
     },
   },
 }

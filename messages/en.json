@@ -14,23 +14,34 @@
         "Track wallets and transactions in real time",
         "Visual budgets and charts",
         "Secure sync across all your devices"
-      ]
+      ],
+      "featureDescriptions": [
+        "Stay updated on every change instantly",
+        "Easily manage your spending",
+        "Your data is always protected"
+      ],
+      "ssl": "Secured with SSL 256-bit encryption"
     },
     "login": {
       "title": "Sign in",
       "subtitle": "Manage your personal finances with Finlo",
       "identifierLabel": "Email / Phone / Username",
       "passwordLabel": "Password",
+      "forgotPassword": "Forgot password?",
       "submit": "Sign in",
       "submitting": "Signing in...",
       "noAccount": "Don't have an account?",
-      "registerLink": "Sign up",
+      "registerLink": "Sign up now",
+      "socialDivider": "Or sign in with",
       "invalidCredentials": "Invalid email or password",
       "emailNotVerified": "Email not verified. Check your inbox or resend the link.",
       "verifyLink": "Verify email",
       "verifiedSuccess": "Email verified. You can sign in now.",
       "verifyExpired": "Verification link expired. Resend the email below.",
-      "verifyInvalid": "Invalid verification link."
+      "verifyInvalid": "Invalid verification link.",
+      "userSuspended": "Your account has been temporarily suspended. Please contact the administrator.",
+      "userInactive": "Your account has been deactivated or is no longer active.",
+      "userDeleted": "This account does not exist or has been deleted from the system."
     },
     "register": {
       "title": "Sign up",
@@ -38,11 +49,18 @@
       "firstNameLabel": "First name",
       "lastNameLabel": "Last name",
       "emailLabel": "Email",
+      "phoneLabel": "Phone number (optional)",
       "passwordLabel": "Password",
-      "submit": "Sign up",
+      "confirmPasswordLabel": "Confirm password",
+      "termsText": "I agree to the",
+      "termsLink": "Terms of Service",
+      "termsAnd": "and",
+      "privacyLink": "Privacy Policy",
+      "submit": "Create account",
       "submitting": "Signing up...",
       "hasAccount": "Already have an account?",
-      "loginLink": "Sign in",
+      "loginLink": "Sign in now",
+      "socialDivider": "Or sign up with",
       "failed": "Registration failed"
     },
     "signOut": "Sign out",
@@ -50,12 +68,15 @@
       "emailInvalid": "Invalid email address",
       "passwordMin": "Password must be at least 8 characters",
       "passwordMax": "Password must be at most 128 characters",
+      "passwordMismatch": "Passwords do not match",
       "firstNameRequired": "First name is required",
       "firstNameMax": "First name must be at most 100 characters",
       "lastNameRequired": "Last name is required",
       "lastNameMax": "Last name must be at most 100 characters",
       "identifierRequired": "Enter email, phone number, or username",
-      "passwordRequired": "Password is required"
+      "passwordRequired": "Password is required",
+      "confirmPasswordRequired": "Please confirm your password",
+      "phoneInvalid": "Invalid phone number (minimum 7 digits)"
     },
     "errors": {
       "invalidData": "Invalid data",
@@ -90,13 +111,27 @@
     "greeting": "Hello, {name}",
     "placeholder": "Signed in successfully. Wallets, transactions, and budgets are coming soon.",
     "sidebar": {
-      "label": "Menu"
+      "main": "MAIN",
+      "planning": "PLANNING",
+      "analytics": "ANALYTICS",
+      "system": "SYSTEM"
     },
     "nav": {
       "overview": "Overview",
       "wallets": "Wallets",
       "transactions": "Transactions",
-      "budgets": "Budgets"
+      "budgets": "Budgets",
+      "goals": "Goals",
+      "savings": "Savings",
+      "reports": "Reports",
+      "analytics": "Analytics",
+      "settings": "Settings",
+      "security": "Security",
+      "systemManagement": "System Management",
+      "systemUsers": "Users",
+      "systemRoles": "Roles & Permissions",
+      "systemActivityLog": "Activity Logs",
+      "systemSettings": "System Settings"
     },
     "header": {
       "menu": "Dashboard",
@@ -119,5 +154,698 @@
     "light": "Light",
     "dark": "Dark",
     "system": "System"
+  },
+  "system": {
+    "common": {
+      "actions": {
+        "LOGIN": "Sign in",
+        "UPDATE_PROFILE": "Update profile",
+        "UPDATE_USER_STATUS": "Change status",
+        "CHANGE_ROLE": "Change role",
+        "CREATE_USER": "Create new account",
+        "DELETE_USER": "Delete account",
+        "EXPORT_REPORT": "Export financial report",
+        "APPROVE_BUDGET": "Approve budget spending",
+        "CREATE_TRANSACTION": "Create transaction",
+        "UPDATE_ROLE_PERMISSIONS": "Update permission matrix",
+        "CREATE_ROLE": "Create new role",
+        "DELETE_ROLE": "Delete system role"
+      },
+      "roles": {
+        "SUPER_ADMIN": "Super Admin",
+        "ADMIN": "Admin",
+        "CHIEF_ACCOUNTANT": "Chief Accountant",
+        "ACCOUNTANT": "Accountant",
+        "CASHIER": "Cashier",
+        "USER": "User",
+        "system": "System",
+        "custom": "Custom",
+        "none": "No role"
+      },
+      "statuses": {
+        "ACTIVE": "Active",
+        "SUSPENDED": "Suspended",
+        "INACTIVE": "Inactive",
+        "all": "All statuses"
+      },
+      "search": "Search...",
+      "filter": "Filter",
+      "refresh": "Refresh",
+      "loading": "Loading...",
+      "noRecords": "No matching data found.",
+      "noDetails": "No detailed description.",
+      "confirmDelete": "Are you sure you want to delete?",
+      "cancel": "Cancel",
+      "save": "Save Config",
+      "submitting": "Processing...",
+      "viewDetail": "View Details",
+      "actionsLabel": "Actions"
+    },
+    "activityLog": {
+      "title": "Activity Logs",
+      "subtitle": "Audit history logs of administrators and staff. Monitor system security events in real-time.",
+      "placeholder": "Search by action, user, details...",
+      "table": {
+        "member": "Member",
+        "action": "Action",
+        "details": "Event Details",
+        "ip": "IP Address",
+        "time": "Time",
+        "loading": "Loading audit history...",
+        "noRecords": "No matching activity log events found.",
+        "noDetails": "No additional description.",
+        "pagination": "Showing {start}-{end} of {total} events"
+      }
+    },
+    "roles": {
+      "title": "Roles & Permissions",
+      "subtitle": "Manage roles and configure permission matrices in the system",
+      "searchPlaceholder": "Search roles...",
+      "addRole": "Add Role",
+      "tabList": "Role List",
+      "tabLogs": "Change Log",
+      "stats": {
+        "total": "Total Roles",
+        "totalDesc": "Roles in the system",
+        "active": "Active Roles",
+        "activeDesc": "Currently in use",
+        "system": "System Roles",
+        "systemDesc": "Cannot be deleted",
+        "custom": "Custom Roles",
+        "customDesc": "Can edit and delete"
+      },
+      "table": {
+        "name": "Role Name",
+        "description": "Description",
+        "type": "Role Type",
+        "userCount": "{count} users",
+        "status": "Status",
+        "action": "Actions",
+        "matrixTooltip": "Manage permission matrix",
+        "loading": "Loading roles & permissions...",
+        "noRecords": "No roles found matching the filter.",
+        "viewDetail": "View Details",
+        "setPermissions": "Set Permissions",
+        "deleteRole": "Delete Role",
+        "pagination": "Showing {start} - {end} of {total} roles"
+      },
+      "logs": {
+        "searchPlaceholder": "Search by user, action...",
+        "table": {
+          "user": "Performed By",
+          "action": "Action",
+          "details": "Change Details",
+          "ip": "IP Address",
+          "time": "Time",
+          "loading": "Loading activity logs...",
+          "noRecords": "No activity logs found.",
+          "pagination": "Showing {start} - {end} of {total} log entries"
+        }
+      },
+      "drawer": {
+        "title": "Role Config",
+        "code": "Code: {code}",
+        "tabInfo": "Role Details",
+        "tabMatrix": "Permission Matrix",
+        "form": {
+          "name": "Role Name",
+          "level": "Level",
+          "levelDesc": "* Level is used for privilege comparison. Higher level roles can assign lower level ones.",
+          "description": "Detailed Description",
+          "userCount": "{count} members",
+          "userCountDesc": "Are currently assigned this role",
+          "saveInfo": "Save Role Info"
+        },
+        "matrix": {
+          "subtitle": "Check the boxes below to assign specific operating privileges to this role.",
+          "save": "Save Configuration",
+          "superAdminTitle": "Supreme Super Admin Privilege",
+          "superAdminDesc": "The Super Administrator role possesses all platform privileges to ensure platform integrity and cannot be modified.",
+          "checkAll": "Check All",
+          "uncheckAll": "Uncheck All"
+        },
+        "modules": {
+          "wallet": "Overview (Dashboard)",
+          "transaction": "Cashflow (Transactions)",
+          "budget": "Reports (Reports & Budgets)",
+          "category": "Categories",
+          "user": "Users (System Users)",
+          "role": "Roles & Permissions (RBAC)",
+          "permission": "System Settings"
+        }
+      },
+      "createModal": {
+        "title": "Add New System Role",
+        "name": "Role Name",
+        "namePlaceholder": "Chief Accountant",
+        "code": "Role Code (UPPERCASE)",
+        "codePlaceholder": "CHIEF_ACCOUNTANT",
+        "level": "Level",
+        "levelDesc": "* Higher level roles can manage lower level ones.",
+        "description": "Role Description",
+        "descriptionPlaceholder": "Role for managing budget approval and cashflow matching.",
+        "cancel": "Cancel",
+        "submit": "Create Role"
+      },
+      "messages": {
+        "fetchFailed": "Failed to load roles or permissions",
+        "fetchLogsFailed": "Failed to load activity logs",
+        "updateSuccess": "Role details updated successfully!",
+        "updateFailed": "Failed to update role details",
+        "updateMatrixSuccess": "Permission matrix updated successfully!",
+        "updateMatrixFailed": "Failed to update permissions",
+        "codeExists": "Role code already exists in the system",
+        "createSuccess": "New role created successfully!",
+        "createFailed": "Failed to create role",
+        "systemError": "System error occurred while creating role",
+        "protectedRole": "System role \"{name}\" is protected and cannot be deleted.",
+        "assignedMembers": "Cannot delete this role because there are {count} active members assigned. Please change their roles first.",
+        "confirmDelete": "Are you sure you want to delete role \"{name}\" from the system?",
+        "deleteSuccess": "Role deleted successfully",
+        "deleteFailed": "Failed to delete role"
+      }
+    },
+    "users": {
+      "title": "User Management",
+      "subtitle": "Administer accounts, hierarchy roles, and monitor user activity logs within the system.",
+      "addUser": "Add Member",
+      "stats": {
+        "total": "Total Members",
+        "totalDesc": "Registered accounts in the system",
+        "active": "Active",
+        "activeDesc": "Online, active accounts",
+        "suspended": "Suspended",
+        "suspendedDesc": "Temporarily suspended due to violations or request",
+        "inactive": "Deactivated",
+        "inactiveDesc": "Permanently deactivated accounts"
+      },
+      "toolbar": {
+        "searchPlaceholder": "Search users (name, email, phone...)",
+        "roleAll": "Role: All",
+        "statusAll": "Status: All"
+      },
+      "table": {
+        "user": "User",
+        "role": "Role",
+        "status": "Status",
+        "created": "Date Created",
+        "actions": "Actions",
+        "loading": "Loading user list...",
+        "noRecords": "No members found matching the filter.",
+        "you": "You",
+        "noRole": "No Role",
+        "viewDetail": "View Details",
+        "suspend": "Suspend Account",
+        "activate": "Activate Account",
+        "delete": "Delete Account",
+        "pagination": "Showing {start}-{end} of {total} members"
+      },
+      "drawer": {
+        "title": "User Details",
+        "tabInfo": "Info",
+        "tabRoles": "Role & Permissions",
+        "tabLogs": "Activity Logs",
+        "info": {
+          "name": "Full Name",
+          "username": "Username",
+          "email": "Email Address",
+          "phone": "Phone Number",
+          "phoneEmpty": "Not Provided",
+          "language": "Language",
+          "timezone": "Timezone",
+          "rbac": "Role Access Configuration",
+          "rbacDesc": "Changing the role will instantly adjust the user's access privileges across the system.",
+          "rbacSelfWarning": "* You cannot change your own role to prevent administrative lockout."
+        },
+        "permissions": {
+          "title": "Role Permission Matrix Table",
+          "roleLabel": "Role: {name}",
+          "moduleHeader": "Management Module",
+          "read": "View",
+          "create": "Add",
+          "update": "Edit",
+          "delete": "Delete",
+          "desc": "* User privileges are inherited directly from their role. To adjust privileges, please edit the role settings in the \"Roles & permissions\" page.",
+          "modules": {
+            "wallet": "Overview (Dashboard)",
+            "transaction": "Cashflow (Transactions)",
+            "budget": "Reports (Reports & Budgets)",
+            "category": "Categories"
+          }
+        },
+        "logs": {
+          "title": "Member Activity Logs",
+          "noRecords": "No activities recorded for this member."
+        }
+      },
+      "createModal": {
+        "title": "Add New Member",
+        "lastName": "Last Name",
+        "lastNamePlaceholder": "John",
+        "firstName": "First Name",
+        "firstNamePlaceholder": "Doe",
+        "email": "Email Address",
+        "emailPlaceholder": "johndoe@finlo.vn",
+        "username": "Username",
+        "usernamePlaceholder": "johndoe",
+        "password": "Initial Password",
+        "passwordPlaceholder": "••••••••",
+        "phone": "Phone Number (optional)",
+        "phonePlaceholder": "0912345678",
+        "role": "Initial Assigned Role",
+        "roleSelect": "Select Role",
+        "cancel": "Cancel",
+        "submit": "Save Account"
+      },
+      "messages": {
+        "fetchFailed": "Failed to load user list",
+        "fetchDetailsFailed": "Failed to load user details",
+        "statusSuccess": "User status updated successfully",
+        "statusFailed": "Failed to update status",
+        "roleSuccess": "User role updated successfully",
+        "roleFailed": "Failed to change role",
+        "confirmDelete": "Are you sure you want to delete this member? This action will suspend the account and archive their data.",
+        "deleteSelfError": "You cannot delete your own account!",
+        "deleteSuccess": "User deleted successfully",
+        "deleteFailed": "Failed to delete user",
+        "emailExists": "Email already exists in the system",
+        "usernameExists": "Username already exists in the system",
+        "createFailed": "Failed to add member",
+        "createSuccess": "New member added successfully!",
+        "systemError": "A system error occurred"
+      }
+    }
+  },
+  "profile": {
+    "title": "User Profile",
+    "personalProfile": "Personal Profile",
+    "subtitle": "Manage your account information and security settings",
+    "editProfile": "Edit Profile",
+    "changePassword": "Change Password",
+    "active": "Active",
+    "other": "Other",
+    "tabs": {
+      "overview": "Overview",
+      "roles": "Roles & Permissions",
+      "logs": "Activity Log",
+      "security": "Security"
+    },
+    "info": {
+      "username": "Username",
+      "department": "Department",
+      "role": "Role",
+      "staffId": "Employee ID",
+      "address": "Address",
+      "notes": "Notes",
+      "email": "Email",
+      "phone": "Phone Number",
+      "joined": "Joined",
+      "lastUpdated": "Last Updated",
+      "bio": "Bio",
+      "dob": "Date of Birth",
+      "gender": "Gender",
+      "city": "City",
+      "country": "Country",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "displayName": "Display Name",
+      "genderMale": "Male",
+      "genderFemale": "Female",
+      "genderOther": "Other",
+      "genderNone": "Not selected"
+    },
+    "security": {
+      "password": "Password",
+      "passwordDesc": "Updated on {date}",
+      "twoFactor": "Two-Factor Auth (2FA)",
+      "twoFactorActive": "Enabled",
+      "twoFactorInactive": "Disabled",
+      "devices": "Login Devices",
+      "devicesCount": "{count} devices",
+      "currentSession": "Current Session",
+      "activeBadge": "Active",
+      "recentSessions": "Recent Sessions",
+      "viewAll": "View All",
+      "currentDevice": "Current Device"
+    },
+    "stats": {
+      "title": "Activity Statistics",
+      "logins": "Logins",
+      "operations": "Operations",
+      "dataCreated": "Created Items",
+      "dataUpdated": "Updated Items",
+      "timeRange": "Last 30 days"
+    },
+    "messages": {
+      "updateSuccess": "Profile updated successfully!",
+      "updateFailed": "Failed to update profile",
+      "passwordSuccess": "Password changed successfully!",
+      "passwordFailed": "Failed to change password",
+      "passwordMismatch": "Confirm password does not match",
+      "passwordMin": "New password must be at least 8 characters",
+      "passwordIncorrect": "Current password is incorrect"
+    },
+    "editModal": {
+      "title": "Update Personal Information",
+      "cancel": "Cancel",
+      "submit": "Save Changes",
+      "lastNamePlaceholder": "Enter your last name",
+      "firstNamePlaceholder": "Enter your first name",
+      "displayNamePlaceholder": "Enter public display name",
+      "phonePlaceholder": "Enter phone number",
+      "dobPlaceholder": "Select date of birth",
+      "addressPlaceholder": "Enter residential address",
+      "cityPlaceholder": "City / State",
+      "countryPlaceholder": "Country (Example: VN)",
+      "bioPlaceholder": "Write a short bio about yourself, skills and interests...",
+      "uploadLocal": "Upload avatar from computer",
+      "orCustomUrl": "Or custom image URL",
+      "step": "Step {step} of {total}:",
+      "step1Title": "Basic Information",
+      "step2Title": "Contact & Address",
+      "step3Title": "Avatar & Bio",
+      "step1Label": "Basic",
+      "step1Sub": "Personal Profile",
+      "step2Label": "Contact",
+      "step2Sub": "Address & Phone",
+      "step3Label": "Personal",
+      "step3Sub": "Bio & Avatar",
+      "back": "Back",
+      "next": "Next"
+    },
+    "passwordModal": {
+      "title": "Change Account Password",
+      "currentPassword": "Current Password",
+      "currentPasswordPlaceholder": "Enter current password",
+      "newPassword": "New Password",
+      "newPasswordPlaceholder": "Enter new password",
+      "confirmPassword": "Confirm New Password",
+      "confirmPasswordPlaceholder": "Re-enter new password",
+      "cancel": "Cancel",
+      "submit": "Change Password"
+    }
+  },
+  "transactions": {
+    "title": "Transactions",
+    "subtitle": "Manage all of your income, expense and transfer transactions",
+    "searchPlaceholder": "Search transactions, categories, tags...",
+    "addTransaction": "Add Transaction",
+    "stats": {
+      "income": "Total Income",
+      "expense": "Total Expense",
+      "balance": "Balance",
+      "savings": "Savings",
+      "monthTrend": "vs last month"
+    },
+    "filters": {
+      "type": "All Types",
+      "wallet": "All Accounts",
+      "category": "All Categories",
+      "addFilter": "Add Filter",
+      "clearFilter": "Clear Filter",
+      "income": "Income",
+      "expense": "Expense",
+      "transfer": "Transfer"
+    },
+    "table": {
+      "date": "Date",
+      "note": "Description",
+      "category": "Category",
+      "wallet": "Account",
+      "amount": "Amount",
+      "status": "Status",
+      "actions": "Actions",
+      "completed": "Completed",
+      "pending": "Pending",
+      "cancelled": "Cancelled",
+      "failed": "Failed",
+      "noData": "No transactions match the filter criteria.",
+      "showing": "Showing {start} - {end} of {total} transactions",
+      "perPage": "/ page"
+    },
+    "chart": {
+      "allocation": "Expense Allocation",
+      "viewReport": "View detailed report",
+      "totalExpense": "Total Spend"
+    },
+    "budget": {
+      "title": "Spending Budget",
+      "viewAll": "View all",
+      "usedOf": "Used {used} of {limit}"
+    },
+    "recent": {
+      "title": "Recent Transactions",
+      "viewAll": "View all"
+    },
+    "modal": {
+      "title": "Add New Transaction",
+      "typeSelection": "1. Select Type",
+      "amountWallet": "2. Amount & Account",
+      "descComplete": "3. Description & Notes",
+      "step": "Step {step} of {total}:",
+      "amount": "Amount (đ) *",
+      "amountPlaceholder": "Enter transaction amount",
+      "wallet": "Source Account *",
+      "walletPlaceholder": "Select source account",
+      "category": "Transaction Category *",
+      "categoryPlaceholder": "Select category",
+      "date": "Transaction Date *",
+      "note": "Notes & Description",
+      "notePlaceholder": "Enter transaction notes...",
+      "cancel": "Cancel",
+      "back": "Back",
+      "next": "Next",
+      "submit": "Finish",
+      "successAdd": "New transaction added successfully!",
+      "failAdd": "Failed to add transaction",
+      "validationError": "Please fill in all required fields!"
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "subtitle": "Updates and important activities",
+    "searchPlaceholder": "Search notifications...",
+    "unreadOnly": "Unread",
+    "all": "All",
+    "viewAll": "View all",
+    "settings": "Settings",
+    "markAllRead": "Mark all as read",
+    "noNotifications": "No notifications found.",
+    "clear": "Clear",
+    "emptyState": "Your inbox is clear",
+    "loading": "Loading notifications...",
+    "types": {
+      "SYSTEM": "System",
+      "TRANSACTION": "Transaction",
+      "BUDGET": "Budget",
+      "WALLET": "Wallet",
+      "SECURITY": "Security",
+      "REMINDER": "Promotion"
+    },
+    "group": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "older": "Older"
+    },
+    "details": {
+      "amount": "Amount",
+      "account": "Account",
+      "time": "Time",
+      "content": "Content",
+      "balanceAfter": "Balance after transaction"
+    },
+    "actions": {
+      "title": "Actions",
+      "viewTransaction": "View transaction details",
+      "transferMoney": "Transfer money",
+      "exportReceipt": "Export receipt",
+      "deleteNotification": "Delete notification"
+    },
+    "pagination": "Showing {start} - {end} of {total} notifications",
+    "perPage": "{count} / page",
+    "selectToView": "Select a notification to view details"
+  },
+  "wallets": {
+    "title": "Wallets & Accounts",
+    "subtitle": "Manage all your wallets, bank accounts, and payment methods",
+    "searchPlaceholder": "Search wallets, accounts...",
+    "addWallet": "Add Wallet / Account",
+    "stats": {
+      "totalBalance": "Total Balance",
+      "monthTrend": "vs last month",
+      "wallets": "Wallets",
+      "banks": "Bank Accounts",
+      "creditCards": "Credit Cards",
+      "walletCount": "{count} wallets",
+      "bankCount": "{count} accounts",
+      "cardCount": "{count} cards"
+    },
+    "tabs": {
+      "all": "All ({count})",
+      "wallets": "Wallets ({count})",
+      "banks": "Banks ({count})",
+      "creditCards": "Credit Cards ({count})"
+    },
+    "table": {
+      "name": "Name",
+      "type": "Type",
+      "balance": "Balance",
+      "currency": "Currency",
+      "status": "Status",
+      "actions": "Actions",
+      "noData": "No wallets or accounts found.",
+      "showing": "Showing {start} - {end} of {total}"
+    },
+    "types": {
+      "wallet": "Wallet",
+      "bank": "Bank",
+      "creditCard": "Credit Card"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "details": {
+      "default": "Default",
+      "totalBalance": "Total Balance",
+      "deposit": "Deposit",
+      "withdraw": "Withdraw",
+      "transfer": "Transfer",
+      "other": "Other",
+      "typeLabel": "Wallet Type",
+      "goal": "Goal",
+      "createdAt": "Created At",
+      "currency": "Currency",
+      "description": "Description",
+      "notes": "Notes",
+      "recentTransactions": "Recent Transactions",
+      "viewAll": "View all",
+      "viewAllTransactions": "View all transactions"
+    },
+    "form": {
+      "addTitle": "Add Wallet / Account",
+      "editTitle": "Edit Wallet",
+      "addSubtitle": "Set up a new wallet or bank account to start tracking your finances.",
+      "editSubtitle": "Update the details for this wallet or account.",
+      "name": "Wallet Name",
+      "namePlaceholder": "e.g. Main Wallet, Vietcombank...",
+      "type": "Account Type",
+      "initialBalance": "Opening Balance",
+      "initialBalancePlaceholder": "0",
+      "status": "Status",
+      "description": "Description",
+      "descriptionPlaceholder": "Optional notes about this wallet...",
+      "cancel": "Cancel",
+      "save": "Save Wallet",
+      "saving": "Saving...",
+      "typeOptions": {
+        "CASH": "Cash Wallet",
+        "BANK": "Bank Account",
+        "E_WALLET": "E-Wallet",
+        "CREDIT_CARD": "Credit Card",
+        "OTHER": "Other"
+      },
+      "metadata": {
+        "bankName": "Bank Name",
+        "bankNamePlaceholder": "e.g. Vietcombank, Techcombank",
+        "accountNumber": "Account Number",
+        "accountNumberPlaceholder": "Your bank account number",
+        "accountName": "Cardholder / Account Name",
+        "accountNamePlaceholder": "Name on the account",
+        "provider": "E-Wallet Provider",
+        "providerPlaceholder": "e.g. MoMo, ZaloPay, ViettelPay",
+        "phoneNumber": "Linked Phone Number",
+        "phoneNumberPlaceholder": "Phone number used for wallet",
+        "cardNumber": "Card Number (Last 4 digits)",
+        "cardNumberPlaceholder": "e.g. 1234",
+        "creditLimit": "Credit Limit",
+        "creditLimitPlaceholder": "0",
+        "statementDate": "Statement Date (1-31)",
+        "statementDatePlaceholder": "Day of month (e.g. 20)",
+        "paymentDueDate": "Payment Due Date (1-31)",
+        "paymentDueDatePlaceholder": "Day of month (e.g. 5)"
+      },
+      "statusOptions": {
+        "ACTIVE": "Active",
+        "INACTIVE": "Inactive"
+      },
+      "errors": {
+        "nameRequired": "Wallet name is required.",
+        "balanceInvalid": "Please enter a valid balance.",
+        "saveFailed": "Failed to save wallet. Please try again."
+      },
+      "success": "Wallet saved successfully!"
+    }
+  },
+  "budgets": {
+    "title": "Budgets",
+    "subtitle": "Plan your spending and track your budget",
+    "monthPrefix": "Month",
+    "filter": "Filter",
+    "createBudget": "Create budget",
+    "summary": {
+      "totalBudget": "Total Budget",
+      "spent": "Spent",
+      "remaining": "Remaining",
+      "exceeded": "Over Budget",
+      "comparedToPlan": "{percent}% of plan",
+      "categoriesCount": "{count} categories"
+    },
+    "tabs": {
+      "all": "All ({count})",
+      "expense": "Expense ({count})",
+      "saving": "Saving ({count})",
+      "investment": "Investment ({count})"
+    },
+    "table": {
+      "category": "Category",
+      "budget": "Budget",
+      "spent": "Spent",
+      "remaining": "Remaining",
+      "progress": "Progress",
+      "status": "Status",
+      "showing": "Showing {start} - {end} of {total} categories"
+    },
+    "status": {
+      "good": "Good",
+      "warning": "Warning",
+      "exceeded": "Exceeded",
+      "completed": "Completed"
+    },
+    "sidebar": {
+      "overview": "Budget Overview",
+      "spent": "Spent",
+      "saving": "Saving",
+      "investment": "Investment",
+      "comparedToLastMonth": "Compared to last month",
+      "alerts": "Alerts",
+      "viewAll": "View all",
+      "alertMessage": "You exceeded budget in {count} categories",
+      "suggestions": "Suggestions for you",
+      "suggestion1Title": "You could increase budget for {category}",
+      "suggestion1Desc": "Based on past spending",
+      "suggestion2Title": "Set up recurring budgets",
+      "suggestion2Desc": "Helps you control spending better",
+      "noAlerts": "No alerts"
+    },
+    "form": {
+      "addTitle": "Add Budget",
+      "addSubtitle": "Set a new budget for the month",
+      "editTitle": "Edit Budget",
+      "editSubtitle": "Modify existing budget",
+      "category": "Category",
+      "categoryPlaceholder": "Select category",
+      "amount": "Budget Amount",
+      "amountPlaceholder": "Enter amount",
+      "cancel": "Cancel",
+      "save": "Save",
+      "saving": "Saving...",
+      "success": "Budget saved successfully!",
+      "errors": {
+        "categoryRequired": "Please select a category",
+        "amountRequired": "Please enter a valid amount",
+        "saveFailed": "An error occurred while saving"
+      }
+    }
   }
 }

@@ -18,7 +18,6 @@ export async function proxy(request: NextRequest) {
   return NextResponse.next()
 }
 
-/** Keep in sync with routes under `src/app/(app)/`. */
 export const config = {
   matcher: ['/dashboard/:path*'],
 }

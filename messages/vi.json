@@ -14,23 +14,34 @@
         "Theo dõi ví và giao dịch realtime",
         "Ngân sách & biểu đồ trực quan",
         "Bảo mật, đồng bộ mọi thiết bị"
-      ]
+      ],
+      "featureDescriptions": [
+        "Cập nhật mọi biến động ngay lập tức",
+        "Dễ dàng kiểm soát chi tiêu",
+        "Dữ liệu của bạn luôn được bảo vệ"
+      ],
+      "ssl": "Được bảo mật với mã hóa SSL 256-bit"
     },
     "login": {
       "title": "Đăng nhập",
       "subtitle": "Quản lý tài chính cá nhân với Finlo",
       "identifierLabel": "Email / SĐT / Tên đăng nhập",
       "passwordLabel": "Mật khẩu",
+      "forgotPassword": "Quên mật khẩu?",
       "submit": "Đăng nhập",
       "submitting": "Đang đăng nhập...",
       "noAccount": "Chưa có tài khoản?",
-      "registerLink": "Đăng ký",
+      "registerLink": "Đăng ký ngay",
+      "socialDivider": "Hoặc đăng nhập với",
       "invalidCredentials": "Email hoặc mật khẩu không đúng",
       "emailNotVerified": "Email chưa được xác thực. Kiểm tra hộp thư hoặc gửi lại liên kết.",
       "verifyLink": "Xác thực email",
       "verifiedSuccess": "Email đã xác thực. Bạn có thể đăng nhập.",
       "verifyExpired": "Liên kết xác thực đã hết hạn. Gửi lại email bên dưới.",
-      "verifyInvalid": "Liên kết xác thực không hợp lệ."
+      "verifyInvalid": "Liên kết xác thực không hợp lệ.",
+      "userSuspended": "Tài khoản của bạn đã bị khóa tạm thời. Vui lòng liên hệ quản trị viên.",
+      "userInactive": "Tài khoản của bạn đã bị vô hiệu hóa hoặc ngừng hoạt động.",
+      "userDeleted": "Tài khoản này không tồn tại hoặc đã bị xóa khỏi hệ thống."
     },
     "register": {
       "title": "Đăng ký",
@@ -38,11 +49,18 @@
       "firstNameLabel": "Tên",
       "lastNameLabel": "Họ",
       "emailLabel": "Email",
+      "phoneLabel": "Số điện thoại (tùy chọn)",
       "passwordLabel": "Mật khẩu",
-      "submit": "Đăng ký",
+      "confirmPasswordLabel": "Xác nhận mật khẩu",
+      "termsText": "Tôi đồng ý với",
+      "termsLink": "Điều khoản sử dụng",
+      "termsAnd": "và",
+      "privacyLink": "Chính sách bảo mật",
+      "submit": "Tạo tài khoản",
       "submitting": "Đang đăng ký...",
       "hasAccount": "Đã có tài khoản?",
-      "loginLink": "Đăng nhập",
+      "loginLink": "Đăng nhập ngay",
+      "socialDivider": "Hoặc đăng ký với",
       "failed": "Đăng ký thất bại"
     },
     "signOut": "Đăng xuất",
@@ -50,12 +68,15 @@
       "emailInvalid": "Email không hợp lệ",
       "passwordMin": "Mật khẩu tối thiểu 8 ký tự",
       "passwordMax": "Mật khẩu tối đa 128 ký tự",
+      "passwordMismatch": "Mật khẩu xác nhận không khớp",
       "firstNameRequired": "Tên là bắt buộc",
       "firstNameMax": "Tên tối đa 100 ký tự",
       "lastNameRequired": "Họ là bắt buộc",
       "lastNameMax": "Họ tối đa 100 ký tự",
       "identifierRequired": "Nhập email, số điện thoại hoặc tên đăng nhập",
-      "passwordRequired": "Mật khẩu là bắt buộc"
+      "passwordRequired": "Mật khẩu là bắt buộc",
+      "confirmPasswordRequired": "Vui lòng xác nhận mật khẩu",
+      "phoneInvalid": "Số điện thoại không hợp lệ (tối thiểu 7 chữ số)"
     },
     "errors": {
       "invalidData": "Dữ liệu không hợp lệ",
@@ -90,13 +111,27 @@
     "greeting": "Xin chào, {name}",
     "placeholder": "Đăng nhập thành công. Các tính năng ví, giao dịch và ngân sách sẽ được bổ sung tiếp theo.",
     "sidebar": {
-      "label": "Menu"
+      "main": "MAIN",
+      "planning": "PLANNING",
+      "analytics": "ANALYTICS",
+      "system": "SYSTEM"
     },
     "nav": {
       "overview": "Tổng quan",
       "wallets": "Ví",
       "transactions": "Giao dịch",
-      "budgets": "Ngân sách"
+      "budgets": "Ngân sách",
+      "goals": "Mục tiêu",
+      "savings": "Tiết kiệm",
+      "reports": "Báo cáo",
+      "analytics": "Phân tích",
+      "settings": "Cài đặt",
+      "security": "Bảo mật",
+      "systemManagement": "Quản lý hệ thống",
+      "systemUsers": "Người dùng",
+      "systemRoles": "Vai trò & quyền",
+      "systemActivityLog": "Nhật ký hoạt động",
+      "systemSettings": "Cài đặt hệ thống"
     },
     "header": {
       "menu": "Bảng điều khiển",
@@ -119,5 +154,698 @@
     "light": "Sáng",
     "dark": "Tối",
     "system": "Hệ thống"
+  },
+  "system": {
+    "common": {
+      "actions": {
+        "LOGIN": "Đăng nhập",
+        "UPDATE_PROFILE": "Cập nhật hồ sơ",
+        "UPDATE_USER_STATUS": "Thay đổi trạng thái",
+        "CHANGE_ROLE": "Thay đổi vai trò",
+        "CREATE_USER": "Tạo tài khoản mới",
+        "DELETE_USER": "Xóa tài khoản",
+        "EXPORT_REPORT": "Xuất báo cáo tài chính",
+        "APPROVE_BUDGET": "Duyệt ngân sách chi tiêu",
+        "CREATE_TRANSACTION": "Ghi nhận giao dịch",
+        "UPDATE_ROLE_PERMISSIONS": "Cập nhật ma trận quyền",
+        "CREATE_ROLE": "Tạo vai trò mới",
+        "DELETE_ROLE": "Xóa vai trò hệ thống"
+      },
+      "roles": {
+        "SUPER_ADMIN": "Super Admin",
+        "ADMIN": "Admin",
+        "CHIEF_ACCOUNTANT": "Kế toán trưởng",
+        "ACCOUNTANT": "Kế toán viên",
+        "CASHIER": "Thủ quỹ",
+        "USER": "Người dùng",
+        "system": "Hệ thống",
+        "custom": "Tùy chỉnh",
+        "none": "Không có vai trò"
+      },
+      "statuses": {
+        "ACTIVE": "Đang hoạt động",
+        "SUSPENDED": "Tạm khóa",
+        "INACTIVE": "Vô hiệu hóa",
+        "all": "Trạng thái: Tất cả"
+      },
+      "search": "Tìm kiếm...",
+      "filter": "Bộ lọc",
+      "refresh": "Làm mới",
+      "loading": "Đang tải...",
+      "noRecords": "Không tìm thấy dữ liệu phù hợp.",
+      "noDetails": "Không có mô tả chi tiết.",
+      "confirmDelete": "Bạn có chắc chắn muốn xóa?",
+      "cancel": "Hủy",
+      "save": "Lưu cấu hình",
+      "submitting": "Đang xử lý...",
+      "viewDetail": "Xem chi tiết",
+      "actionsLabel": "Thao tác"
+    },
+    "activityLog": {
+      "title": "Nhật ký hoạt động",
+      "subtitle": "Tra cứu lịch sử kiểm toán của các quản trị viên và nhân viên. Giám sát các biến động hệ thống bảo mật thời gian thực.",
+      "placeholder": "Tìm kiếm theo hành động, người dùng, chi tiết...",
+      "table": {
+        "member": "Thành viên",
+        "action": "Hành động",
+        "details": "Chi tiết sự kiện",
+        "ip": "Địa chỉ IP",
+        "time": "Thời gian",
+        "loading": "Đang tải lịch sử nhật ký...",
+        "noRecords": "Chưa ghi nhận sự kiện hoạt động nào phù hợp.",
+        "noDetails": "Không có mô tả thêm.",
+        "pagination": "Đang xem {start}-{end} trong số {total} sự kiện"
+      }
+    },
+    "roles": {
+      "title": "Vai trò & quyền",
+      "subtitle": "Quản lý các vai trò và phân quyền trong hệ thống",
+      "searchPlaceholder": "Tìm kiếm vai trò...",
+      "addRole": "Thêm vai trò",
+      "tabList": "Danh sách vai trò",
+      "tabLogs": "Nhật ký thay đổi",
+      "stats": {
+        "total": "Tổng số vai trò",
+        "totalDesc": "Vai trò trong hệ thống",
+        "active": "Vai trò đang hoạt động",
+        "activeDesc": "Đang được sử dụng",
+        "system": "Vai trò hệ thống",
+        "systemDesc": "Không thể xóa",
+        "custom": "Vai trò tùy chỉnh",
+        "customDesc": "Có thể chỉnh sửa, xóa"
+      },
+      "table": {
+        "name": "Tên vai trò",
+        "description": "Mô tả",
+        "type": "Loại vai trò",
+        "userCount": "{count} người dùng",
+        "status": "Trạng thái",
+        "action": "Thao tác",
+        "matrixTooltip": "Quản lý ma trận quyền hạn",
+        "loading": "Đang tải cấu hình vai trò & quyền hạn...",
+        "noRecords": "Không tìm thấy vai trò nào khớp với bộ lọc.",
+        "viewDetail": "Xem chi tiết",
+        "setPermissions": "Phân quyền",
+        "deleteRole": "Xóa vai trò",
+        "pagination": "Hiển thị {start} - {end} trong {total} vai trò"
+      },
+      "logs": {
+        "searchPlaceholder": "Tìm theo người dùng, hành động...",
+        "table": {
+          "user": "Người thực hiện",
+          "action": "Hành động",
+          "details": "Chi tiết thay đổi",
+          "ip": "Địa chỉ IP",
+          "time": "Thời gian",
+          "loading": "Đang tải nhật ký hoạt động...",
+          "noRecords": "Không tìm thấy nhật ký hoạt động nào.",
+          "pagination": "Hiển thị {start} - {end} trong {total} bản ghi nhật ký"
+        }
+      },
+      "drawer": {
+        "title": "Cấu hình vai trò",
+        "code": "Mã: {code}",
+        "tabInfo": "Thông tin vai trò",
+        "tabMatrix": "Ma trận quyền hạn",
+        "form": {
+          "name": "Tên vai trò",
+          "level": "Cấp bậc (Level)",
+          "levelDesc": "* Level dùng để so sánh quyền hạn. Chỉ vai trò cấp cao mới gán được vai trò cấp dưới.",
+          "description": "Mô tả chi tiết",
+          "userCount": "{count} thành viên",
+          "userCountDesc": "Đang được gán vai trò này",
+          "saveInfo": "Lưu thông tin vai trò"
+        },
+        "matrix": {
+          "subtitle": "Tích chọn các ô dưới đây để gán quyền thao tác cụ thể cho vai trò này.",
+          "save": "Lưu cấu hình",
+          "superAdminTitle": "Đặc quyền Super Admin tối cao",
+          "superAdminDesc": "Vai trò Super Administrator sở hữu toàn bộ các đặc quyền của hệ thống nhằm bảo toàn tính toàn vẹn của nền tảng và không thể bị sửa đổi.",
+          "checkAll": "Chọn tất cả",
+          "uncheckAll": "Hủy chọn tất cả"
+        },
+        "modules": {
+          "wallet": "Tổng quan (Dashboard)",
+          "transaction": "Thu chi (Transactions)",
+          "budget": "Báo cáo (Reports & Budgets)",
+          "category": "Danh mục (Categories)",
+          "user": "Người dùng (System Users)",
+          "role": "Vai trò & Quyền (RBAC Roles)",
+          "permission": "Hệ thống (Platform Settings)"
+        }
+      },
+      "createModal": {
+        "title": "Thêm vai trò hệ thống mới",
+        "name": "Tên vai trò",
+        "namePlaceholder": "Kế toán trưởng",
+        "code": "Mã vai trò (IN HOA)",
+        "codePlaceholder": "CHIEF_ACCOUNTANT",
+        "level": "Cấp bậc (Level)",
+        "levelDesc": "* Cấp bậc cao hơn có thể quản lý được cấp bậc thấp hơn.",
+        "description": "Mô tả vai trò",
+        "descriptionPlaceholder": "Vai trò quản lý phê duyệt ngân sách và đối soát thu chi.",
+        "cancel": "Hủy",
+        "submit": "Tạo vai trò"
+      },
+      "messages": {
+        "fetchFailed": "Không thể tải danh sách vai trò hoặc quyền",
+        "fetchLogsFailed": "Không thể tải nhật ký hoạt động",
+        "updateSuccess": "Cập nhật thông tin vai trò thành công!",
+        "updateFailed": "Cập nhật thông tin vai trò thất bại",
+        "updateMatrixSuccess": "Cập nhật ma trận phân quyền thành công!",
+        "updateMatrixFailed": "Cập nhật quyền hạn thất bại",
+        "codeExists": "Mã vai trò đã tồn tại trong hệ thống",
+        "createSuccess": "Tạo vai trò mới thành công!",
+        "createFailed": "Tạo vai trò thất bại",
+        "systemError": "Lỗi hệ thống khi tạo vai trò",
+        "protectedRole": "Vai trò hệ thống \"{name}\" được bảo vệ và không thể xóa.",
+        "assignedMembers": "Không thể xóa vai trò này vì đang có {count} thành viên được gán. Vui lòng chuyển vai trò của họ trước.",
+        "confirmDelete": "Bạn có chắc chắn muốn xóa vai trò \"{name}\" khỏi hệ thống?",
+        "deleteSuccess": "Xóa vai trò thành công",
+        "deleteFailed": "Xóa vai trò thất bại"
+      }
+    },
+    "users": {
+      "title": "Quản lý người dùng",
+      "subtitle": "Quản trị tài khoản, phân cấp vai trò và giám sát nhật ký hành động trong hệ thống.",
+      "addUser": "Thêm thành viên",
+      "stats": {
+        "total": "Tổng thành viên",
+        "totalDesc": "Tài khoản được đăng ký trong hệ thống",
+        "active": "Đang hoạt động",
+        "activeDesc": "Tài khoản trực tuyến, hoạt động bình thường",
+        "suspended": "Tạm khóa",
+        "suspendedDesc": "Tài khoản tạm ngưng do vi phạm hoặc yêu cầu",
+        "inactive": "Vô hiệu hóa",
+        "inactiveDesc": "Tài khoản ngưng hoạt động vĩnh viễn"
+      },
+      "toolbar": {
+        "searchPlaceholder": "Tìm kiếm người dùng (tên, email, SĐT...)",
+        "roleAll": "Vai trò: Tất cả",
+        "statusAll": "Trạng thái: Tất cả"
+      },
+      "table": {
+        "user": "Người dùng",
+        "role": "Vai trò",
+        "status": "Trạng thái",
+        "created": "Ngày tạo",
+        "actions": "Thao tác",
+        "loading": "Đang tải danh sách người dùng...",
+        "noRecords": "Không tìm thấy thành viên nào khớp với bộ lọc.",
+        "you": "Bạn",
+        "noRole": "Không có vai trò",
+        "viewDetail": "Xem chi tiết",
+        "suspend": "Tạm khóa tài khoản",
+        "activate": "Mở khóa tài khoản",
+        "delete": "Xóa tài khoản",
+        "pagination": "Đang xem {start}-{end} trong số {total} thành viên"
+      },
+      "drawer": {
+        "title": "Chi tiết người dùng",
+        "tabInfo": "Thông tin",
+        "tabRoles": "Vai trò & quyền",
+        "tabLogs": "Nhật ký hoạt động",
+        "info": {
+          "name": "Họ và Tên",
+          "username": "Tên tài khoản",
+          "email": "Email",
+          "phone": "Số điện thoại",
+          "phoneEmpty": "Chưa cung cấp",
+          "language": "Ngôn ngữ",
+          "timezone": "Múi giờ",
+          "rbac": "Phân cấp phân quyền vai trò",
+          "rbacDesc": "Thay đổi vai trò sẽ điều chỉnh lập tức quyền hạn truy cập của người dùng trên toàn bộ hệ thống.",
+          "rbacSelfWarning": "* Bạn không thể thay đổi vai trò của chính mình để tránh mất quyền quản trị."
+        },
+        "permissions": {
+          "title": "Bảng ma trận phân quyền vai trò",
+          "roleLabel": "Vai trò: {name}",
+          "moduleHeader": "Mô đun quản lý",
+          "read": "Xem",
+          "create": "Thêm",
+          "update": "Sửa",
+          "delete": "Xóa",
+          "desc": "* Quyền hạn của người dùng được kế thừa trực tiếp từ vai trò của họ. Để điều chỉnh quyền hạn, vui lòng chỉnh sửa cấu hình trong trang \"Vai trò & quyền\".",
+          "modules": {
+            "wallet": "Tổng quan (Dashboard)",
+            "transaction": "Thu chi (Transactions)",
+            "budget": "Báo cáo (Reports & Budgets)",
+            "category": "Danh mục (Categories)"
+          }
+        },
+        "logs": {
+          "title": "Nhật ký hoạt động của thành viên",
+          "noRecords": "Chưa ghi nhận hoạt động nào của thành viên này."
+        }
+      },
+      "createModal": {
+        "title": "Thêm thành viên mới",
+        "lastName": "Họ",
+        "lastNamePlaceholder": "Nguyễn Văn",
+        "firstName": "Tên",
+        "firstNamePlaceholder": "A",
+        "email": "Địa chỉ Email",
+        "emailPlaceholder": "nguyenvana@finlo.vn",
+        "username": "Tên đăng nhập (Username)",
+        "usernamePlaceholder": "nguyenvana",
+        "password": "Mật khẩu ban đầu",
+        "passwordPlaceholder": "••••••••",
+        "phone": "Số điện thoại (tùy chọn)",
+        "phonePlaceholder": "0912345678",
+        "role": "Vai trò gán ban đầu",
+        "roleSelect": "Chọn vai trò",
+        "cancel": "Hủy",
+        "submit": "Lưu tài khoản"
+      },
+      "messages": {
+        "fetchFailed": "Không thể tải danh sách người dùng",
+        "fetchDetailsFailed": "Không thể tải chi tiết người dùng",
+        "statusSuccess": "Cập nhật trạng thái người dùng thành công",
+        "statusFailed": "Cập nhật trạng thái thất bại",
+        "roleSuccess": "Thay đổi vai trò người dùng thành công",
+        "roleFailed": "Thay đổi vai trò thất bại",
+        "confirmDelete": "Bạn có chắc chắn muốn xóa thành viên này? Hành động này sẽ khóa tài khoản và lưu trữ lịch sử dữ liệu.",
+        "deleteSelfError": "Bạn không thể tự xóa tài khoản của chính mình!",
+        "deleteSuccess": "Xóa người dùng thành công",
+        "deleteFailed": "Xóa người dùng thất bại",
+        "emailExists": "Email đã tồn tại trong hệ thống",
+        "usernameExists": "Tên đăng nhập đã tồn tại trong hệ thống",
+        "createFailed": "Thêm thành viên thất bại",
+        "createSuccess": "Thêm thành viên mới thành công!",
+        "systemError": "Đã xảy ra lỗi hệ thống"
+      }
+    }
+  },
+  "profile": {
+    "title": "Hồ sơ người dùng",
+    "personalProfile": "Hồ sơ cá nhân",
+    "subtitle": "Quản lý thông tin tài khoản và cấu hình bảo mật",
+    "editProfile": "Chỉnh sửa hồ sơ",
+    "changePassword": "Đổi mật khẩu",
+    "active": "Đang hoạt động",
+    "other": "Khác",
+    "tabs": {
+      "overview": "Tổng quan",
+      "roles": "Vai trò & quyền",
+      "logs": "Nhật ký hoạt động",
+      "security": "Bảo mật"
+    },
+    "info": {
+      "username": "Tên đăng nhập",
+      "department": "Phòng ban",
+      "role": "Chức vụ",
+      "staffId": "Mã nhân viên",
+      "address": "Địa chỉ",
+      "notes": "Ghi chú",
+      "email": "Email",
+      "phone": "Số điện thoại",
+      "joined": "Tham gia",
+      "lastUpdated": "Cập nhật lần cuối",
+      "bio": "Mô tả",
+      "dob": "Ngày sinh",
+      "gender": "Giới tính",
+      "city": "Thành phố",
+      "country": "Quốc gia",
+      "firstName": "Tên",
+      "lastName": "Họ",
+      "displayName": "Tên hiển thị",
+      "genderMale": "Nam",
+      "genderFemale": "Nữ",
+      "genderOther": "Khác",
+      "genderNone": "Chưa chọn"
+    },
+    "security": {
+      "password": "Mật khẩu",
+      "passwordDesc": "Đã cập nhật {date}",
+      "twoFactor": "Xác thực 2 lớp (2FA)",
+      "twoFactorActive": "Đã bật",
+      "twoFactorInactive": "Chưa bật",
+      "devices": "Thiết bị đăng nhập",
+      "devicesCount": "{count} thiết bị",
+      "currentSession": "Phiên đăng nhập hiện tại",
+      "activeBadge": "Hoạt động",
+      "recentSessions": "Phiên đăng nhập gần đây",
+      "viewAll": "Xem tất cả",
+      "currentDevice": "Thiết bị hiện tại"
+    },
+    "stats": {
+      "title": "Thống kê hoạt động",
+      "logins": "Đăng nhập",
+      "operations": "Thao tác",
+      "dataCreated": "Dữ liệu tạo",
+      "dataUpdated": "Dữ liệu cập nhật",
+      "timeRange": "30 ngày qua"
+    },
+    "messages": {
+      "updateSuccess": "Cập nhật hồ sơ thành công!",
+      "updateFailed": "Cập nhật hồ sơ thất bại",
+      "passwordSuccess": "Thay đổi mật khẩu thành công!",
+      "passwordFailed": "Thay đổi mật khẩu thất bại",
+      "passwordMismatch": "Mật khẩu xác nhận không khớp",
+      "passwordMin": "Mật khẩu mới phải từ 8 ký tự trở lên",
+      "passwordIncorrect": "Mật khẩu hiện tại không chính xác"
+    },
+    "editModal": {
+      "title": "Cập nhật thông tin cá nhân",
+      "cancel": "Hủy",
+      "submit": "Lưu thay đổi",
+      "lastNamePlaceholder": "Nhập họ của bạn",
+      "firstNamePlaceholder": "Nhập tên của bạn",
+      "displayNamePlaceholder": "Nhập tên hiển thị công khai",
+      "phonePlaceholder": "Nhập số điện thoại",
+      "dobPlaceholder": "Chọn ngày sinh",
+      "addressPlaceholder": "Nhập địa chỉ cư trú",
+      "cityPlaceholder": "Tỉnh / Thành phố",
+      "countryPlaceholder": "Quốc gia (Ví dụ: VN)",
+      "bioPlaceholder": "Viết mô tả ngắn gọn giới thiệu về bản thân, kỹ năng và sở thích...",
+      "uploadLocal": "Tải ảnh lên từ máy tính",
+      "orCustomUrl": "Hoặc đường dẫn ảnh tùy chỉnh",
+      "step": "Bước {step} của {total}:",
+      "step1Title": "Thông tin cơ bản",
+      "step2Title": "Liên hệ & Địa chỉ",
+      "step3Title": "Ảnh đại diện & Ghi chú",
+      "step1Label": "Cơ bản",
+      "step1Sub": "Hồ sơ cá nhân",
+      "step2Label": "Liên hệ",
+      "step2Sub": "Địa chỉ & SĐT",
+      "step3Label": "Cá nhân",
+      "step3Sub": "Mô tả & Avatar",
+      "back": "Quay lại",
+      "next": "Tiếp tục"
+    },
+    "passwordModal": {
+      "title": "Thay đổi mật khẩu tài khoản",
+      "currentPassword": "Mật khẩu hiện tại",
+      "currentPasswordPlaceholder": "Nhập mật khẩu hiện tại",
+      "newPassword": "Mật khẩu mới",
+      "newPasswordPlaceholder": "Nhập mật khẩu mới",
+      "confirmPassword": "Xác nhận mật khẩu mới",
+      "confirmPasswordPlaceholder": "Nhập lại mật khẩu mới",
+      "cancel": "Hủy",
+      "submit": "Đổi mật khẩu"
+    }
+  },
+  "transactions": {
+    "title": "Giao dịch",
+    "subtitle": "Quản lý tất cả giao dịch thu, chi và chuyển khoản",
+    "searchPlaceholder": "Tìm kiếm giao dịch, danh mục, tag...",
+    "addTransaction": "Thêm giao dịch",
+    "stats": {
+      "income": "Tổng thu",
+      "expense": "Tổng chi",
+      "balance": "Số dư",
+      "savings": "Tiết kiệm",
+      "monthTrend": "so với tháng trước"
+    },
+    "filters": {
+      "type": "Tất cả loại",
+      "wallet": "Tất cả tài khoản",
+      "category": "Tất cả danh mục",
+      "addFilter": "Thêm bộ lọc",
+      "clearFilter": "Xóa lọc",
+      "income": "Thu nhập",
+      "expense": "Chi tiêu",
+      "transfer": "Chuyển khoản"
+    },
+    "table": {
+      "date": "Ngày",
+      "note": "Nội dung",
+      "category": "Danh mục",
+      "wallet": "Tài khoản",
+      "amount": "Số tiền",
+      "status": "Trạng thái",
+      "actions": "Thao tác",
+      "completed": "Hoàn thành",
+      "pending": "Chờ duyệt",
+      "cancelled": "Đã hủy",
+      "failed": "Thất bại",
+      "noData": "Không có giao dịch nào khớp với điều kiện lọc.",
+      "showing": "Hiển thị {start} - {end} trong {total} giao dịch",
+      "perPage": "/ trang"
+    },
+    "chart": {
+      "allocation": "Phân bổ chi tiêu",
+      "viewReport": "Xem chi tiết báo cáo",
+      "totalExpense": "Tổng chi"
+    },
+    "budget": {
+      "title": "Ngân sách chi tiêu",
+      "viewAll": "Xem tất cả",
+      "usedOf": "Đã dùng {used} trên {limit}"
+    },
+    "recent": {
+      "title": "Giao dịch gần đây",
+      "viewAll": "Xem tất cả"
+    },
+    "modal": {
+      "title": "Thêm giao dịch mới",
+      "typeSelection": "1. Chọn loại",
+      "amountWallet": "2. Số tiền & Tài khoản",
+      "descComplete": "3. Mô tả & Hoàn tất",
+      "step": "Bước {step} của {total}:",
+      "amount": "Số tiền (đ) *",
+      "amountPlaceholder": "Nhập số tiền giao dịch",
+      "wallet": "Tài khoản nguồn *",
+      "walletPlaceholder": "Chọn tài khoản nguồn",
+      "category": "Danh mục giao dịch *",
+      "categoryPlaceholder": "Chọn danh mục",
+      "date": "Ngày giao dịch *",
+      "note": "Ghi chú mô tả",
+      "notePlaceholder": "Nhập ghi chú giao dịch...",
+      "cancel": "Hủy bỏ",
+      "back": "Quay lại",
+      "next": "Tiếp tục",
+      "submit": "Hoàn thành",
+      "successAdd": "Thêm giao dịch mới thành công!",
+      "failAdd": "Thêm giao dịch thất bại",
+      "validationError": "Vui lòng nhập đầy đủ các trường bắt buộc!"
+    }
+  },
+  "notifications": {
+    "title": "Thông báo",
+    "subtitle": "Cập nhật các thông báo và hoạt động quan trọng",
+    "searchPlaceholder": "Tìm kiếm thông báo...",
+    "unreadOnly": "Chưa đọc",
+    "all": "Tất cả",
+    "viewAll": "Xem tất cả",
+    "settings": "Cài đặt",
+    "markAllRead": "Đánh dấu tất cả là đã đọc",
+    "noNotifications": "Không có thông báo nào.",
+    "clear": "Xóa",
+    "emptyState": "Hộp thư thông báo trống",
+    "loading": "Đang tải thông báo...",
+    "types": {
+      "SYSTEM": "Hệ thống",
+      "TRANSACTION": "Giao dịch",
+      "BUDGET": "Ngân sách",
+      "WALLET": "Tài khoản & Ví",
+      "SECURITY": "Bảo mật",
+      "REMINDER": "Khuyến mãi"
+    },
+    "group": {
+      "today": "Hôm nay",
+      "yesterday": "Hôm qua",
+      "older": "Cũ hơn"
+    },
+    "details": {
+      "amount": "Số tiền",
+      "account": "Tài khoản",
+      "time": "Thời gian",
+      "content": "Nội dung",
+      "balanceAfter": "Số dư sau giao dịch"
+    },
+    "actions": {
+      "title": "Thao tác",
+      "viewTransaction": "Xem chi tiết giao dịch",
+      "transferMoney": "Chuyển tiền",
+      "exportReceipt": "Xuất biên lai",
+      "deleteNotification": "Xóa thông báo"
+    },
+    "pagination": "Hiển thị {start} - {end} trong {total} thông báo",
+    "perPage": "{count} / trang",
+    "selectToView": "Chọn một thông báo để xem chi tiết"
+  },
+  "wallets": {
+    "title": "Ví & tài khoản",
+    "subtitle": "Quản lý tất cả ví tiền, tài khoản ngân hàng và phương thức thanh toán của bạn",
+    "searchPlaceholder": "Tìm kiếm ví, tài khoản...",
+    "addWallet": "Thêm ví / tài khoản",
+    "stats": {
+      "totalBalance": "Tổng số dư",
+      "monthTrend": "so với tháng trước",
+      "wallets": "Ví",
+      "banks": "Tài khoản ngân hàng",
+      "creditCards": "Thẻ tín dụng",
+      "walletCount": "{count} ví",
+      "bankCount": "{count} tài khoản",
+      "cardCount": "{count} thẻ"
+    },
+    "tabs": {
+      "all": "Tất cả ({count})",
+      "wallets": "Ví ({count})",
+      "banks": "Ngân hàng ({count})",
+      "creditCards": "Thẻ tín dụng ({count})"
+    },
+    "table": {
+      "name": "Tên",
+      "type": "Loại",
+      "balance": "Số dư",
+      "currency": "Tiền tệ",
+      "status": "Trạng thái",
+      "actions": "Thao tác",
+      "noData": "Không có ví hoặc tài khoản nào.",
+      "showing": "Hiển thị {start} - {end} trong {total}"
+    },
+    "types": {
+      "wallet": "Ví",
+      "bank": "Ngân hàng",
+      "creditCard": "Thẻ tín dụng"
+    },
+    "status": {
+      "active": "Hoạt động",
+      "inactive": "Ngừng hoạt động"
+    },
+    "details": {
+      "default": "Mặc định",
+      "totalBalance": "Tổng số dư",
+      "deposit": "Nạp tiền",
+      "withdraw": "Rút tiền",
+      "transfer": "Chuyển tiền",
+      "other": "Khác",
+      "typeLabel": "Loại ví",
+      "goal": "Mục tiêu",
+      "createdAt": "Ngày tạo",
+      "currency": "Tiền tệ",
+      "description": "Mô tả",
+      "notes": "Ghi chú",
+      "recentTransactions": "Giao dịch gần đây",
+      "viewAll": "Xem tất cả",
+      "viewAllTransactions": "Xem tất cả giao dịch"
+    },
+    "form": {
+      "addTitle": "Thêm ví / Tài khoản",
+      "editTitle": "Chỉnh sửa ví",
+      "addSubtitle": "Tạo ví mới hoặc tài khoản ngân hàng để bắt đầu theo dõi tài chính.",
+      "editSubtitle": "Cập nhật thông tin cho ví hoặc tài khoản này.",
+      "name": "Tên ví",
+      "namePlaceholder": "VD: Ví chính, Vietcombank...",
+      "type": "Loại tài khoản",
+      "initialBalance": "Số dư ban đầu",
+      "initialBalancePlaceholder": "0",
+      "status": "Trạng thái",
+      "description": "Mô tả",
+      "descriptionPlaceholder": "Ghi chú tuỳ chọn về ví này...",
+      "cancel": "Huỷ",
+      "save": "Lưu ví",
+      "saving": "Đang lưu...",
+      "typeOptions": {
+        "CASH": "Ví tiền mặt",
+        "BANK": "Tài khoản ngân hàng",
+        "E_WALLET": "Ví điện tử",
+        "CREDIT_CARD": "Thẻ tín dụng",
+        "OTHER": "Khác"
+      },
+      "metadata": {
+        "bankName": "Tên ngân hàng",
+        "bankNamePlaceholder": "VD: Vietcombank, Techcombank",
+        "accountNumber": "Số tài khoản",
+        "accountNumberPlaceholder": "Số tài khoản của bạn",
+        "accountName": "Tên chủ thẻ / tài khoản",
+        "accountNamePlaceholder": "Tên in trên thẻ/tài khoản",
+        "provider": "Nhà cung cấp ví",
+        "providerPlaceholder": "VD: MoMo, ZaloPay, ViettelPay",
+        "phoneNumber": "Số điện thoại liên kết",
+        "phoneNumberPlaceholder": "Số điện thoại dùng cho ví",
+        "cardNumber": "Số thẻ (4 số cuối)",
+        "cardNumberPlaceholder": "VD: 1234",
+        "creditLimit": "Hạn mức tín dụng",
+        "creditLimitPlaceholder": "0",
+        "statementDate": "Ngày chốt sao kê (1-31)",
+        "statementDatePlaceholder": "Ngày trong tháng (VD: 20)",
+        "paymentDueDate": "Ngày đến hạn thanh toán (1-31)",
+        "paymentDueDatePlaceholder": "Ngày trong tháng (VD: 5)"
+      },
+      "statusOptions": {
+        "ACTIVE": "Hoạt động",
+        "INACTIVE": "Ngừng hoạt động"
+      },
+      "errors": {
+        "nameRequired": "Vui lòng nhập tên ví.",
+        "balanceInvalid": "Vui lòng nhập số dư hợp lệ.",
+        "saveFailed": "Lưu ví thất bại. Vui lòng thử lại."
+      },
+      "success": "Lưu ví thành công!"
+    }
+  },
+  "budgets": {
+    "title": "Ngân sách",
+    "subtitle": "Lập kế hoạch chi tiêu và theo dõi ngân sách của bạn",
+    "monthPrefix": "Tháng",
+    "filter": "Bộ lọc",
+    "createBudget": "Tạo ngân sách",
+    "summary": {
+      "totalBudget": "Tổng ngân sách",
+      "spent": "Đã chi tiêu",
+      "remaining": "Còn lại",
+      "exceeded": "Vượt ngân sách",
+      "comparedToPlan": "{percent}% so với kế hoạch",
+      "categoriesCount": "{count} danh mục"
+    },
+    "tabs": {
+      "all": "Tất cả ({count})",
+      "expense": "Chi tiêu ({count})",
+      "saving": "Tiết kiệm ({count})",
+      "investment": "Đầu tư ({count})"
+    },
+    "table": {
+      "category": "Danh mục",
+      "budget": "Ngân sách",
+      "spent": "Đã chi tiêu",
+      "remaining": "Còn lại",
+      "progress": "Tiến độ",
+      "status": "Trạng thái",
+      "showing": "Hiển thị {start} - {end} trong {total} danh mục"
+    },
+    "status": {
+      "good": "Tốt",
+      "warning": "Cần chú ý",
+      "exceeded": "Vượt",
+      "completed": "Hoàn thành"
+    },
+    "sidebar": {
+      "overview": "Tổng quan ngân sách",
+      "spent": "Đã chi tiêu",
+      "saving": "Tiết kiệm",
+      "investment": "Đầu tư",
+      "comparedToLastMonth": "So với tháng trước",
+      "alerts": "Cảnh báo",
+      "viewAll": "Xem tất cả",
+      "alertMessage": "Bạn đã vượt ngân sách ở {count} danh mục",
+      "suggestions": "Gợi ý cho bạn",
+      "suggestion1Title": "Bạn có thể tăng ngân sách cho danh mục {category}",
+      "suggestion1Desc": "Dựa trên chi tiêu các tháng trước",
+      "suggestion2Title": "Thiết lập ngân sách định kỳ",
+      "suggestion2Desc": "Giúp bạn kiểm soát chi tiêu tốt hơn",
+      "noAlerts": "Không có cảnh báo nào."
+    },
+    "form": {
+      "addTitle": "Thêm ngân sách",
+      "addSubtitle": "Thiết lập ngân sách mới cho tháng",
+      "editTitle": "Sửa ngân sách",
+      "editSubtitle": "Chỉnh sửa ngân sách hiện tại",
+      "category": "Danh mục",
+      "categoryPlaceholder": "Chọn danh mục",
+      "amount": "Số tiền ngân sách",
+      "amountPlaceholder": "Nhập số tiền",
+      "cancel": "Huỷ",
+      "save": "Lưu",
+      "saving": "Đang lưu...",
+      "success": "Lưu ngân sách thành công!",
+      "errors": {
+        "categoryRequired": "Vui lòng chọn danh mục",
+        "amountRequired": "Vui lòng nhập số tiền hợp lệ",
+        "saveFailed": "Có lỗi xảy ra khi lưu"
+      }
+    }
   }
 }

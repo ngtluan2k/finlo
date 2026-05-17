@@ -1,11 +1,12 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+import Link from 'next/link'
 import { signIn } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Loader2, LogIn } from 'lucide-react'
+import { Loader2, Lock, LogIn, Mail } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import {
   createLoginSchema,
@@ -15,9 +16,12 @@ import {
   AuthErrorBanner,
   AuthField,
   AuthFooterLink,
+  AuthInput,
+  AuthPasswordInput,
+  AuthSocialButtons,
+  AuthSocialDivider,
   AuthSubmitButton,
   authFormValidationOptions,
-  authInputClass,
 } from '@/components/auth/auth-field'
 import { routes } from '@/lib/routes'
 
@@ -85,6 +89,21 @@ export function LoginForm() {
       return
     }
 
+    if (result?.error === 'USER_SUSPENDED') {
+      setError(t('userSuspended'))
+      return
+    }
+
+    if (result?.error === 'USER_INACTIVE') {
+      setError(t('userInactive'))
+      return
+    }
+
+    if (result?.error === 'USER_DELETED') {
+      setError(t('userDeleted'))
+      return
+    }
+
     if (result?.error) {
       setError(t('invalidCredentials'))
       return
@@ -111,23 +130,35 @@ export function LoginForm() {
         id="identifier"
         error={errors.identifier?.message}
       >
-        <input
+        <AuthInput
+          icon={Mail}
           id="identifier"
-          type="text"
           autoComplete="username"
           placeholder="email@example.com"
-          className={authInputClass(errors.identifier)}
+          hasError={errors.identifier}
           {...register('identifier')}
         />
       </AuthField>
 
-      <AuthField label={t('passwordLabel')} id="password" error={errors.password?.message}>
-        <input
+      <AuthField
+        label={t('passwordLabel')}
+        id="password"
+        error={errors.password?.message}
+        trailing={
+          <Link
+            href="#"
+            className="text-xs font-medium text-[#8bc8f6] transition-colors hover:text-[#c0e8fb]"
+          >
+            {t('forgotPassword')}
+          </Link>
+        }
+      >
+        <AuthPasswordInput
+          icon={Lock}
           id="password"
-          type="password"
           autoComplete="current-password"
-          placeholder="********"
-          className={authInputClass(errors.password)}
+          placeholder="••••••••"
+          hasError={errors.password}
           {...register('password')}
         />
       </AuthField>
@@ -145,6 +176,9 @@ export function LoginForm() {
           </>
         )}
       </AuthSubmitButton>
+
+      <AuthSocialDivider text={t('socialDivider')} />
+      <AuthSocialButtons />
 
       <AuthFooterLink
         prompt={t('noAccount')}

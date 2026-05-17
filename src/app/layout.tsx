@@ -8,6 +8,10 @@ import { ThemeProvider } from '@/components/providers/theme-provider'
 import { ThemeScript } from '@/components/theme-script'
 import { authOptions } from '@/lib/auth'
 import { getOrCreateUserSettings } from '@/services/settings.service'
+import { prisma } from '@/lib/prisma'
+import { LocaleSync } from '@/components/locale-sync'
+import { CurrencyProvider } from '@/hooks/use-currency'
+import type { Locale } from '@/i18n/config'
 import './globals.css'
 
 const geistSans = Geist({
@@ -33,13 +37,22 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const locale = await getLocale()
+  const locale = (await getLocale()) as Locale
   const messages = await getMessages()
   const session = await getServerSession(authOptions)
   const userId = session?.user?.id ?? null
   const initialTheme = userId
     ? (await getOrCreateUserSettings(userId)).theme
     : null
+
+  let userLocale: Locale | null = null
+  if (userId) {
+    const profile = await prisma.profile.findUnique({
+      where: { userId },
+      select: { locale: true },
+    })
+    userLocale = (profile?.locale as Locale) || null
+  }
 
   return (
     <html
@@ -52,9 +65,12 @@ export default async function RootLayout({
         className="flex min-h-full flex-col font-sans"
       >
         <ThemeScript />
+        <LocaleSync userLocale={userLocale} currentLocale={locale} />
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider userId={userId} initialTheme={initialTheme}>
-            <AuthSessionProvider>{children}</AuthSessionProvider>
+            <AuthSessionProvider>
+              <CurrencyProvider>{children}</CurrencyProvider>
+            </AuthSessionProvider>
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>
