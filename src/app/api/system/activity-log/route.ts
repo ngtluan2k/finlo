@@ -29,19 +29,23 @@ export async function GET(request: Request) {
         { details: { contains: query, mode: 'insensitive' } },
         {
           user: {
-            OR: [
-              { email: { contains: query, mode: 'insensitive' } },
-              { username: { contains: query, mode: 'insensitive' } },
-              {
-                profile: {
-                  OR: [
-                    { firstName: { contains: query, mode: 'insensitive' } },
-                    { lastName: { contains: query, mode: 'insensitive' } },
-                    { displayName: { contains: query, mode: 'insensitive' } },
-                  ],
+            is: {
+              OR: [
+                { email: { contains: query, mode: 'insensitive' } },
+                { username: { contains: query, mode: 'insensitive' } },
+                {
+                  profile: {
+                    is: {
+                      OR: [
+                        { firstName: { contains: query, mode: 'insensitive' } },
+                        { lastName: { contains: query, mode: 'insensitive' } },
+                        { displayName: { contains: query, mode: 'insensitive' } },
+                      ],
+                    },
+                  },
                 },
-              },
-            ],
+              ],
+            },
           },
         },
       ]

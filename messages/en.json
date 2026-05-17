@@ -38,7 +38,10 @@
       "verifyLink": "Verify email",
       "verifiedSuccess": "Email verified. You can sign in now.",
       "verifyExpired": "Verification link expired. Resend the email below.",
-      "verifyInvalid": "Invalid verification link."
+      "verifyInvalid": "Invalid verification link.",
+      "userSuspended": "Your account has been temporarily suspended. Please contact the administrator.",
+      "userInactive": "Your account has been deactivated or is no longer active.",
+      "userDeleted": "This account does not exist or has been deleted from the system."
     },
     "register": {
       "title": "Sign up",
@@ -71,7 +74,9 @@
       "lastNameRequired": "Last name is required",
       "lastNameMax": "Last name must be at most 100 characters",
       "identifierRequired": "Enter email, phone number, or username",
-      "passwordRequired": "Password is required"
+      "passwordRequired": "Password is required",
+      "confirmPasswordRequired": "Please confirm your password",
+      "phoneInvalid": "Invalid phone number (minimum 7 digits)"
     },
     "errors": {
       "invalidData": "Invalid data",

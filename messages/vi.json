@@ -38,7 +38,10 @@
       "verifyLink": "Xác thực email",
       "verifiedSuccess": "Email đã xác thực. Bạn có thể đăng nhập.",
       "verifyExpired": "Liên kết xác thực đã hết hạn. Gửi lại email bên dưới.",
-      "verifyInvalid": "Liên kết xác thực không hợp lệ."
+      "verifyInvalid": "Liên kết xác thực không hợp lệ.",
+      "userSuspended": "Tài khoản của bạn đã bị khóa tạm thời. Vui lòng liên hệ quản trị viên.",
+      "userInactive": "Tài khoản của bạn đã bị vô hiệu hóa hoặc ngừng hoạt động.",
+      "userDeleted": "Tài khoản này không tồn tại hoặc đã bị xóa khỏi hệ thống."
     },
     "register": {
       "title": "Đăng ký",
@@ -71,7 +74,9 @@
       "lastNameRequired": "Họ là bắt buộc",
       "lastNameMax": "Họ tối đa 100 ký tự",
       "identifierRequired": "Nhập email, số điện thoại hoặc tên đăng nhập",
-      "passwordRequired": "Mật khẩu là bắt buộc"
+      "passwordRequired": "Mật khẩu là bắt buộc",
+      "confirmPasswordRequired": "Vui lòng xác nhận mật khẩu",
+      "phoneInvalid": "Số điện thoại không hợp lệ (tối thiểu 7 chữ số)"
     },
     "errors": {
       "invalidData": "Dữ liệu không hợp lệ",

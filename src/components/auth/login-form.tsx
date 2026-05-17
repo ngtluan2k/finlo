@@ -89,6 +89,21 @@ export function LoginForm() {
       return
     }
 
+    if (result?.error === 'USER_SUSPENDED') {
+      setError(t('userSuspended'))
+      return
+    }
+
+    if (result?.error === 'USER_INACTIVE') {
+      setError(t('userInactive'))
+      return
+    }
+
+    if (result?.error === 'USER_DELETED') {
+      setError(t('userDeleted'))
+      return
+    }
+
     if (result?.error) {
       setError(t('invalidCredentials'))
       return

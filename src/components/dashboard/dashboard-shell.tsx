@@ -9,9 +9,12 @@ import { cn } from '@/lib/utils'
 
 type DashboardShellProps = {
   user: {
+    id?: string
     name?: string | null
     email?: string | null
     image?: string | null
+    permissions?: string[]
+    isSuperAdmin?: boolean
   }
   children: React.ReactNode
 }
@@ -21,7 +24,7 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
 
   return (
     <div className="flex h-dvh overflow-hidden bg-[linear-gradient(135deg,#002b45_0%,#003f66_45%,#015c97_100%)] dark:bg-[linear-gradient(135deg,#020810_0%,#06111d_45%,#0f1c2b_100%)]">
-      <DashboardSidebar open={sidebarOpen} />
+      <DashboardSidebar open={sidebarOpen} user={user} />
 
       {sidebarOpen && (
         <button

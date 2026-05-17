@@ -8,6 +8,9 @@ export type RegisterValidationMessages = {
   firstNameMax: string
   lastNameRequired: string
   lastNameMax: string
+  confirmPasswordRequired: string
+  passwordMismatch: string
+  phoneInvalid?: string
 }
 
 export type LoginValidationMessages = {
@@ -26,15 +29,28 @@ const nameField = (
     .max(100, max)
 
 export function createRegisterSchema(messages: RegisterValidationMessages) {
-  return z.object({
-    email: z.email(messages.emailInvalid),
-    password: z
-      .string()
-      .min(8, messages.passwordMin)
-      .max(128, messages.passwordMax),
-    firstName: nameField(messages.firstNameRequired, messages.firstNameMax),
-    lastName: nameField(messages.lastNameRequired, messages.lastNameMax),
-  })
+  return z
+    .object({
+      email: z.string().trim().email(messages.emailInvalid),
+      password: z
+        .string()
+        .min(8, messages.passwordMin)
+        .max(128, messages.passwordMax),
+      confirmPassword: z.string().min(1, messages.confirmPasswordRequired),
+      firstName: nameField(messages.firstNameRequired, messages.firstNameMax),
+      lastName: nameField(messages.lastNameRequired, messages.lastNameMax),
+      phone: z
+        .string()
+        .optional()
+        .or(z.literal(''))
+        .refine((val) => !val || /^\+?\d[\d\s-]{7,}$/.test(val), {
+          message: messages.phoneInvalid || 'Invalid phone number',
+        }),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: messages.passwordMismatch,
+      path: ['confirmPassword'],
+    })
 }
 
 export function createLoginSchema(messages: LoginValidationMessages) {
@@ -55,6 +71,9 @@ export const registerSchema = createRegisterSchema({
   firstNameMax: 'First name max 100',
   lastNameRequired: 'Last name required',
   lastNameMax: 'Last name max 100',
+  confirmPasswordRequired: 'Confirm password is required',
+  passwordMismatch: 'Passwords do not match',
+  phoneInvalid: 'Invalid phone number',
 })
 
 export const loginSchema = createLoginSchema({

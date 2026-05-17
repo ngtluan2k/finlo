@@ -55,6 +55,9 @@ export function RegisterForm() {
         firstNameMax: tValidation('firstNameMax'),
         lastNameRequired: tValidation('lastNameRequired'),
         lastNameMax: tValidation('lastNameMax'),
+        confirmPasswordRequired: tValidation('confirmPasswordRequired'),
+        passwordMismatch: tValidation('passwordMismatch'),
+        phoneInvalid: tValidation('phoneInvalid'),
       }),
     [tValidation],
   )
@@ -66,7 +69,7 @@ export function RegisterForm() {
   } = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
     ...authFormValidationOptions,
-    defaultValues: { email: '', password: '', firstName: '', lastName: '' },
+    defaultValues: { email: '', password: '', confirmPassword: '', firstName: '', lastName: '', phone: '' },
   })
 
   function resolveApiError(code: string) {
@@ -147,13 +150,15 @@ export function RegisterForm() {
         />
       </AuthField>
 
-      <AuthField label={t('phoneLabel')} id="phone">
+      <AuthField label={t('phoneLabel')} id="phone" error={errors.phone?.message}>
         <AuthInput
           icon={Phone}
           id="phone"
           type="tel"
           autoComplete="tel"
           placeholder="0123 456 789"
+          hasError={errors.phone}
+          {...register('phone')}
         />
       </AuthField>
 
@@ -168,12 +173,14 @@ export function RegisterForm() {
         />
       </AuthField>
 
-      <AuthField label={t('confirmPasswordLabel')} id="confirmPassword">
+      <AuthField label={t('confirmPasswordLabel')} id="confirmPassword" error={errors.confirmPassword?.message}>
         <AuthPasswordInput
           icon={Lock}
           id="confirmPassword"
           autoComplete="new-password"
           placeholder="••••••••"
+          hasError={errors.confirmPassword}
+          {...register('confirmPassword')}
         />
       </AuthField>
 
