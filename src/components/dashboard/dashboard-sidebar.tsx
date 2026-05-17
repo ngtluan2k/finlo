@@ -49,7 +49,7 @@ const navSections = [
     items: [
       { href: routes.dashboard, icon: LayoutDashboard, labelKey: 'nav.overview' as const },
       { href: routes.transactions, icon: Receipt, labelKey: 'nav.transactions' as const, requiredPermissions: ['transaction:read'] },
-      { href: '#', icon: Wallet, labelKey: 'nav.wallets' as const, disabled: true, requiredPermissions: ['wallet:read'] },
+      { href: routes.wallets, icon: Wallet, labelKey: 'nav.wallets' as const, requiredPermissions: ['wallet:read'] },
       { href: '#', icon: PiggyBank, labelKey: 'nav.budgets' as const, disabled: true, requiredPermissions: ['budget:read'] },
     ],
   },

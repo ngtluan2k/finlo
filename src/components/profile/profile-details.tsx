@@ -421,7 +421,7 @@ export function ProfileDetails() {
   const primaryRole = user.roles[0]
 
   return (
-    <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 text-zinc-900 dark:text-zinc-50 pb-10">
+    <div className="mx-auto flex w-full flex-col gap-6 text-zinc-900 dark:text-zinc-50 pb-10">
       
       {/* Page Title & Breadcrumbs */}
       <div className="flex items-center justify-between px-1">
