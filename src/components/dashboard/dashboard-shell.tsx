@@ -20,33 +20,32 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true)
 
   return (
-    <div className="flex h-dvh overflow-hidden bg-zinc-100 dark:bg-zinc-900">
+    <div className="flex h-dvh overflow-hidden bg-[linear-gradient(135deg,#002b45_0%,#003f66_45%,#015c97_100%)] dark:bg-[linear-gradient(135deg,#020810_0%,#06111d_45%,#0f1c2b_100%)]">
       <DashboardSidebar open={sidebarOpen} />
 
       {sidebarOpen && (
         <button
           type="button"
           aria-label="Close sidebar"
-          className="fixed inset-0 z-30 bg-black/40 lg:hidden"
+          className="fixed inset-0 z-30 bg-[#002b45]/60 lg:hidden dark:bg-black/60"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       <div className="flex min-w-0 flex-1 flex-col overflow-visible">
         <div className="relative shrink-0 overflow-visible">
-          <DashboardShellCorner />
-          <DashboardSidebarToggle
-            open={sidebarOpen}
-            onToggle={() => setSidebarOpen((value) => !value)}
-            className="absolute bottom-0 left-0 z-50 -translate-x-1/2 translate-y-1/2"
+          <DashboardHeader 
+            user={user} 
+            sidebarOpen={sidebarOpen} 
+            onToggleSidebar={() => setSidebarOpen((value) => !value)} 
           />
-          <DashboardHeader user={user} />
         </div>
 
         <main
           className={cn(
-            'flex-1 overflow-y-auto bg-zinc-50 p-4 sm:p-6',
-            'dark:bg-zinc-950',
+            'flex-1 overflow-y-auto p-4 sm:p-6',
+            'bg-[#f5f9fc] dark:bg-[#08131f]',
+            'rounded-tl-[2rem] border-t border-l border-white/20 dark:border-[#1E293B]',
           )}
         >
           {children}

@@ -14,17 +14,25 @@
         "Theo dõi ví và giao dịch realtime",
         "Ngân sách & biểu đồ trực quan",
         "Bảo mật, đồng bộ mọi thiết bị"
-      ]
+      ],
+      "featureDescriptions": [
+        "Cập nhật mọi biến động ngay lập tức",
+        "Dễ dàng kiểm soát chi tiêu",
+        "Dữ liệu của bạn luôn được bảo vệ"
+      ],
+      "ssl": "Được bảo mật với mã hóa SSL 256-bit"
     },
     "login": {
       "title": "Đăng nhập",
       "subtitle": "Quản lý tài chính cá nhân với Finlo",
       "identifierLabel": "Email / SĐT / Tên đăng nhập",
       "passwordLabel": "Mật khẩu",
+      "forgotPassword": "Quên mật khẩu?",
       "submit": "Đăng nhập",
       "submitting": "Đang đăng nhập...",
       "noAccount": "Chưa có tài khoản?",
-      "registerLink": "Đăng ký",
+      "registerLink": "Đăng ký ngay",
+      "socialDivider": "Hoặc đăng nhập với",
       "invalidCredentials": "Email hoặc mật khẩu không đúng",
       "emailNotVerified": "Email chưa được xác thực. Kiểm tra hộp thư hoặc gửi lại liên kết.",
       "verifyLink": "Xác thực email",
@@ -38,11 +46,18 @@
       "firstNameLabel": "Tên",
       "lastNameLabel": "Họ",
       "emailLabel": "Email",
+      "phoneLabel": "Số điện thoại (tùy chọn)",
       "passwordLabel": "Mật khẩu",
-      "submit": "Đăng ký",
+      "confirmPasswordLabel": "Xác nhận mật khẩu",
+      "termsText": "Tôi đồng ý với",
+      "termsLink": "Điều khoản sử dụng",
+      "termsAnd": "và",
+      "privacyLink": "Chính sách bảo mật",
+      "submit": "Tạo tài khoản",
       "submitting": "Đang đăng ký...",
       "hasAccount": "Đã có tài khoản?",
-      "loginLink": "Đăng nhập",
+      "loginLink": "Đăng nhập ngay",
+      "socialDivider": "Hoặc đăng ký với",
       "failed": "Đăng ký thất bại"
     },
     "signOut": "Đăng xuất",
@@ -50,6 +65,7 @@
       "emailInvalid": "Email không hợp lệ",
       "passwordMin": "Mật khẩu tối thiểu 8 ký tự",
       "passwordMax": "Mật khẩu tối đa 128 ký tự",
+      "passwordMismatch": "Mật khẩu xác nhận không khớp",
       "firstNameRequired": "Tên là bắt buộc",
       "firstNameMax": "Tên tối đa 100 ký tự",
       "lastNameRequired": "Họ là bắt buộc",
@@ -90,13 +106,22 @@
     "greeting": "Xin chào, {name}",
     "placeholder": "Đăng nhập thành công. Các tính năng ví, giao dịch và ngân sách sẽ được bổ sung tiếp theo.",
     "sidebar": {
-      "label": "Menu"
+      "main": "MAIN",
+      "planning": "PLANNING",
+      "analytics": "ANALYTICS",
+      "system": "SYSTEM"
     },
     "nav": {
       "overview": "Tổng quan",
       "wallets": "Ví",
       "transactions": "Giao dịch",
-      "budgets": "Ngân sách"
+      "budgets": "Ngân sách",
+      "goals": "Mục tiêu",
+      "savings": "Tiết kiệm",
+      "reports": "Báo cáo",
+      "analytics": "Phân tích",
+      "settings": "Cài đặt",
+      "security": "Bảo mật"
     },
     "header": {
       "menu": "Bảng điều khiển",

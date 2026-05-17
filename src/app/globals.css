@@ -5,11 +5,68 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Brand Colors */
+  --brand-primary: #015c97;
+  --brand-primary-dark: #003f66;
+  --brand-primary-light: #54a4d7;
+  --brand-accent: #2d82b9;
+  --brand-soft: #c0e8fb;
+  --brand-bg: #eef8ff;
+
+  /* Primary Scale */
+  --primary-50: #eef8ff;
+  --primary-100: #d9efff;
+  --primary-200: #bce2ff;
+  --primary-300: #8fd1ff;
+  --primary-400: #54b8ff;
+  --primary-500: #2d9cff;
+  --primary-600: #157eff;
+  --primary-700: #015c97;
+  --primary-800: #003f66;
+  --primary-900: #002b45;
+
+  /* Semantic UI Colors */
+  --bg-body: #f5f9fc;
+  --bg-card: #ffffff;
+  --bg-header: #ffffff;
+  --bg-sidebar: #003f66;
+  --bg-hover: #eef8ff;
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --text-inverse: #ffffff;
+
+  --border-default: #e2e8f0;
+  --border-soft: #f1f5f9;
+  --border-primary: #bce2ff;
 }
 
 .dark {
   --background: #0a0a0a;
   --foreground: #ededed;
+
+  /* Semantic UI Colors (Dark) */
+  --bg-body: #08131f;
+  --bg-card: #0f1c2b;
+  --bg-header: #0f1c2b;
+  --bg-sidebar: #06111d;
+  --bg-hover: #102a43;
+
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-inverse: #0f172a;
+
+  --border-default: #1e293b;
+  --border-soft: #334155;
+  --border-primary: #2d82b9;
+
+  /* Brand overrides for Dark Mode */
+  --brand-primary: #54a4d7;
+  --brand-primary-hover: #8bc8f6;
+  --brand-primary-active: #2d82b9;
 }
 
 @theme inline {
@@ -17,11 +74,35 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Map variables to Tailwind Colors */
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-dark: var(--brand-primary-dark);
+  --color-brand-light: var(--brand-primary-light);
+  --color-brand-accent: var(--brand-accent);
+  --color-brand-soft: var(--brand-soft);
+  
+  --color-primary-50: var(--primary-50);
+  --color-primary-100: var(--primary-100);
+  --color-primary-200: var(--primary-200);
+  --color-primary-300: var(--primary-300);
+  --color-primary-400: var(--primary-400);
+  --color-primary-500: var(--primary-500);
+  --color-primary-600: var(--primary-600);
+  --color-primary-700: var(--primary-700);
+  --color-primary-800: var(--primary-800);
+  --color-primary-900: var(--primary-900);
+
+  --color-bg-body: var(--bg-body);
+  --color-bg-card: var(--bg-card);
+  --color-bg-header: var(--bg-header);
+  --color-bg-sidebar: var(--bg-sidebar);
+  --color-bg-hover: var(--bg-hover);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--bg-body);
+  color: var(--text-primary);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
 }
 
@@ -77,14 +158,7 @@ body {
   }
 }
 
-@keyframes auth-aurora-spin {
-  from {
-    transform: translate(-50%, -50%) rotate(0deg);
-  }
-  to {
-    transform: translate(-50%, -50%) rotate(360deg);
-  }
-}
+
 
 @keyframes auth-grid-drift {
   from {
@@ -178,11 +252,11 @@ body {
   0%,
   100% {
     opacity: 0.35;
-    filter: drop-shadow(0 0 8px #34d39944);
+    filter: drop-shadow(0 0 8px #54a4d744);
   }
   50% {
     opacity: 0.5;
-    filter: drop-shadow(0 0 16px #34d39966);
+    filter: drop-shadow(0 0 16px #54a4d766);
   }
 }
 
@@ -204,27 +278,6 @@ body {
   animation-delay: -12s;
 }
 
-.auth-aurora {
-  position: absolute;
-  left: 50%;
-  top: 42%;
-  width: min(140vw, 900px);
-  height: min(140vw, 900px);
-  border-radius: 50%;
-  background: conic-gradient(
-    from 0deg,
-    transparent 0deg,
-    #10b98122 60deg,
-    transparent 120deg,
-    #22d3ee18 180deg,
-    transparent 240deg,
-    #8b5cf614 300deg,
-    transparent 360deg
-  );
-  filter: blur(60px);
-  animation: auth-aurora-spin 48s linear infinite;
-}
-
 .auth-grid {
   animation: auth-grid-drift 32s linear infinite;
 }
@@ -241,7 +294,7 @@ body {
     105deg,
     transparent 0%,
     #ffffff06 42%,
-    #34d39914 50%,
+    #54a4d714 50%,
     #ffffff06 58%,
     transparent 100%
   );
@@ -251,8 +304,8 @@ body {
 .auth-particle {
   position: absolute;
   border-radius: 50%;
-  background: #34d399;
-  box-shadow: 0 0 12px #34d39966;
+  background: #8bc8f6;
+  box-shadow: 0 0 12px #54a4d766;
   animation: auth-particle-float 6s ease-in-out infinite;
 }
 
@@ -341,7 +394,6 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .auth-orb,
-  .auth-aurora,
   .auth-grid,
   .auth-top-glow,
   .auth-shimmer-beam,
