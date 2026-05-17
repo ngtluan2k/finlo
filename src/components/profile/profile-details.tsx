@@ -35,6 +35,13 @@ import {
   Upload,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useCurrency } from '@/hooks/use-currency'
+import { SUPPORTED_CURRENCIES } from '@/lib/currency'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Select } from '@/components/ui/select'
+import { DatePicker } from '@/components/ui/date-picker'
+
 
 type ProfileData = {
   firstName: string
@@ -93,6 +100,17 @@ export function ProfileDetails() {
   const t = useTranslations('profile')
   const tCommon = useTranslations('system.common')
   const locale = useLocale()
+  const { currency, updateCurrency } = useCurrency()
+
+  const handleCurrencyChange = async (code: string) => {
+    const success = await updateCurrency(code)
+    if (success) {
+      toast.success(locale === 'vi' ? 'Đã cập nhật tiền tệ mặc định thành công!' : 'Default currency updated successfully!')
+    } else {
+      toast.error(locale === 'vi' ? 'Cập nhật tiền tệ thất bại' : 'Failed to update currency')
+    }
+  }
+
 
   const [loading, setLoading] = useState(true)
   const [data, setData] = useState<{
@@ -104,6 +122,9 @@ export function ProfileDetails() {
   const [activeTab, setActiveTab] = useState<'overview' | 'roles' | 'logs' | 'security'>('overview')
   const [editStep, setEditStep] = useState<1 | 2 | 3>(1)
   const [genderDropdownOpen, setGenderDropdownOpen] = useState(false)
+  const [currencyDropdownOpen, setCurrencyDropdownOpen] = useState(false)
+  const currencyRef = useRef<HTMLDivElement>(null)
+
 
   // Modals state
   const [editModalOpen, setEditModalOpen] = useState(false)
@@ -214,6 +235,19 @@ export function ProfileDetails() {
       setSessionInfo({ os, browser, deviceType })
     }
   }, [])
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (currencyRef.current && !currencyRef.current.contains(event.target as Node)) {
+        setCurrencyDropdownOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
 
   const fetchProfile = async () => {
     try {
@@ -554,6 +588,87 @@ export function ProfileDetails() {
                     <span className="font-semibold text-zinc-800 dark:text-zinc-200">
                       {[user.profile?.address, user.profile?.city, user.profile?.country].filter(Boolean).join(', ') || 'Chưa cập nhật'}
                     </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Currency & Display Settings Card */}
+              <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-[#0c0c0e]">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h3 className="text-sm font-bold uppercase tracking-wider text-zinc-400">Tùy chọn tiền tệ & hiển thị</h3>
+                    <p className="text-[10px] text-zinc-400 mt-0.5">Cấu hình định dạng tiền tệ mặc định hiển thị trên tất cả các trang.</p>
+                  </div>
+                  <div className="flex size-8 items-center justify-center rounded-lg bg-blue-500/10 text-blue-500 shrink-0">
+                    <Globe className="size-4" />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  {/* Currency Selection */}
+                  <div className="space-y-2 relative" ref={currencyRef}>
+                    <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider block">Tiền tệ hiển thị</label>
+                    <div className="relative">
+                      <button
+                        type="button"
+                        onClick={() => setCurrencyDropdownOpen(!currencyDropdownOpen)}
+                        className="w-full rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-sm font-semibold transition-all duration-300 hover:border-zinc-300 focus:border-[#015C97] dark:border-zinc-800 dark:bg-[#0c0c0e] dark:hover:border-zinc-700 text-zinc-800 dark:text-zinc-100 text-left focus:outline-none flex items-center justify-between cursor-pointer select-none"
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <span className="flex size-7 items-center justify-center rounded-xl bg-blue-500/10 text-blue-600 font-extrabold text-xs">
+                            {SUPPORTED_CURRENCIES[currency]?.symbol || '$'}
+                          </span>
+                          <span>
+                            {locale === 'vi' 
+                              ? SUPPORTED_CURRENCIES[currency]?.nameVi 
+                              : SUPPORTED_CURRENCIES[currency]?.nameEn}
+                          </span>
+                        </div>
+                        <span className="text-zinc-400 text-[10px] pointer-events-none select-none transition-transform duration-300">
+                          {currencyDropdownOpen ? '▲' : '▼'}
+                        </span>
+                      </button>
+
+                      {/* Custom Floating Select Panel */}
+                      {currencyDropdownOpen && (
+                        <div className="absolute z-50 left-0 right-0 mt-2 rounded-2xl border border-zinc-200/85 bg-white p-1.5 shadow-xl dark:border-zinc-850 dark:bg-[#0c0c0e] animate-in fade-in slide-in-from-top-2 duration-200">
+                          {Object.values(SUPPORTED_CURRENCIES).map((cur) => {
+                            const isSelected = currency === cur.code
+                            return (
+                              <button
+                                key={cur.code}
+                                type="button"
+                                onClick={() => {
+                                  handleCurrencyChange(cur.code)
+                                  setCurrencyDropdownOpen(false)
+                                }}
+                                className={cn(
+                                  "flex w-full items-center justify-between rounded-xl px-3.5 py-2.5 text-sm font-semibold transition cursor-pointer text-left",
+                                  isSelected
+                                    ? "bg-primary-50 text-primary-700 dark:bg-primary-950/20 dark:text-primary-400"
+                                    : "text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-900"
+                                )}
+                              >
+                                <div className="flex items-center gap-3">
+                                  <span className={cn(
+                                    "flex size-7 items-center justify-center rounded-lg font-extrabold text-xs transition-colors",
+                                    isSelected 
+                                      ? "bg-primary-500 text-white" 
+                                      : "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-450"
+                                  )}>
+                                    {cur.symbol}
+                                  </span>
+                                  <span>
+                                    {locale === 'vi' ? cur.nameVi : cur.nameEn}
+                                  </span>
+                                </div>
+                                {isSelected && <Check className="size-4 stroke-[3]" />}
+                              </button>
+                            )
+                          })}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1030,181 +1145,96 @@ export function ProfileDetails() {
                 {/* STEP 1: Basic Personal Information */}
                 {editStep === 1 && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5 animate-in fade-in duration-300">
-                    
-                    <div className="relative">
-                      <label className="text-[10px] font-black uppercase tracking-wider text-zinc-400 dark:text-zinc-500 block mb-1.5 ml-1">{t('info.lastName')}</label>
-                      <div className="relative group">
-                        <User className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4.5 text-zinc-400 group-focus-within:text-primary-700 dark:group-focus-within:text-primary-400 transition-colors" />
-                        <input
-                          type="text"
-                          required
-                          value={editForm.lastName}
-                          onChange={(e) => setEditForm({ ...editForm, lastName: e.target.value })}
-                          placeholder={t('editModal.lastNamePlaceholder')}
-                          className="w-full rounded-2xl border border-zinc-200/80 bg-white pl-11 pr-4 py-2.5 text-sm font-semibold transition-all duration-300 hover:border-zinc-300 focus:border-primary-700 focus:ring-4 focus:ring-primary-700/10 dark:border-zinc-855 dark:bg-[#0c0c0e] dark:hover:border-zinc-700 dark:focus:border-primary-500 dark:focus:ring-primary-500/20 text-zinc-800 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none"
-                        />
-                      </div>
+                    <Input
+                      required
+                      label={t('info.lastName')}
+                      value={editForm.lastName}
+                      onChange={(e) => setEditForm({ ...editForm, lastName: e.target.value })}
+                      placeholder={t('editModal.lastNamePlaceholder')}
+                      leftIcon={<User className="size-4.5 text-zinc-400" />}
+                    />
+
+                    <Input
+                      required
+                      label={t('info.firstName')}
+                      value={editForm.firstName}
+                      onChange={(e) => setEditForm({ ...editForm, firstName: e.target.value })}
+                      placeholder={t('editModal.firstNamePlaceholder')}
+                      leftIcon={<User className="size-4.5 text-zinc-400" />}
+                    />
+
+                    <div className="md:col-span-2">
+                      <Input
+                        label={t('info.displayName')}
+                        value={editForm.displayName ?? ''}
+                        onChange={(e) => setEditForm({ ...editForm, displayName: e.target.value })}
+                        placeholder={t('editModal.displayNamePlaceholder')}
+                        leftIcon={<Sparkles className="size-4.5 text-zinc-400" />}
+                      />
                     </div>
 
-                    <div className="relative">
-                      <label className="text-[10px] font-black uppercase tracking-wider text-zinc-400 dark:text-zinc-500 block mb-1.5 ml-1">{t('info.firstName')}</label>
-                      <div className="relative group">
-                        <User className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4.5 text-zinc-400 group-focus-within:text-primary-700 dark:group-focus-within:text-primary-400 transition-colors" />
-                        <input
-                          type="text"
-                          required
-                          value={editForm.firstName}
-                          onChange={(e) => setEditForm({ ...editForm, firstName: e.target.value })}
-                          placeholder={t('editModal.firstNamePlaceholder')}
-                          className="w-full rounded-2xl border border-zinc-200/80 bg-white pl-11 pr-4 py-2.5 text-sm font-semibold transition-all duration-300 hover:border-zinc-300 focus:border-primary-700 focus:ring-4 focus:ring-primary-700/10 dark:border-zinc-850 dark:bg-[#0c0c0e] dark:hover:border-zinc-700 dark:focus:border-primary-500 dark:focus:ring-primary-500/20 text-zinc-800 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none"
-                        />
-                      </div>
-                    </div>
+                    <DatePicker
+                      label={t('info.dob')}
+                      value={editForm.dateOfBirth ?? ''}
+                      onChange={(val) => setEditForm({ ...editForm, dateOfBirth: val })}
+                      locale={locale}
+                    />
 
-                    <div className="md:col-span-2 relative">
-                      <label className="text-[10px] font-black uppercase tracking-wider text-zinc-400 dark:text-zinc-500 block mb-1.5 ml-1">{t('info.displayName')}</label>
-                      <div className="relative group">
-                        <Sparkles className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4.5 text-zinc-400 group-focus-within:text-primary-700 dark:group-focus-within:text-primary-400 transition-colors" />
-                        <input
-                          type="text"
-                          value={editForm.displayName}
-                          onChange={(e) => setEditForm({ ...editForm, displayName: e.target.value })}
-                          placeholder={t('editModal.displayNamePlaceholder')}
-                          className="w-full rounded-2xl border border-zinc-200/80 bg-white pl-11 pr-4 py-2.5 text-sm font-semibold transition-all duration-300 hover:border-zinc-300 focus:border-primary-700 focus:ring-4 focus:ring-primary-700/10 dark:border-zinc-850 dark:bg-[#0c0c0e] dark:hover:border-zinc-700 dark:focus:border-primary-500 dark:focus:ring-primary-500/20 text-zinc-800 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="relative">
-                      <label className="text-[10px] font-black uppercase tracking-wider text-zinc-400 dark:text-zinc-500 block mb-1.5 ml-1">{t('info.dob')}</label>
-                      <div className="relative group">
-                        <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4.5 text-zinc-400 group-focus-within:text-primary-700 dark:group-focus-within:text-primary-400 transition-colors" />
-                        <input
-                          type="date"
-                          value={editForm.dateOfBirth}
-                          onChange={(e) => setEditForm({ ...editForm, dateOfBirth: e.target.value })}
-                          className="w-full rounded-2xl border border-zinc-200/80 bg-white pl-11 pr-4 py-2.5 text-sm font-semibold transition-all duration-300 hover:border-zinc-300 focus:border-primary-700 focus:ring-4 focus:ring-primary-700/10 dark:border-zinc-850 dark:bg-[#0c0c0e] dark:hover:border-zinc-700 dark:focus:border-primary-500 dark:focus:ring-primary-500/20 text-zinc-800 dark:text-zinc-100 focus:outline-none"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="relative">
-                      <label className="text-[10px] font-black uppercase tracking-wider text-zinc-400 dark:text-zinc-500 block mb-1.5 ml-1">{t('info.gender')}</label>
-                      <div className="relative">
-                        <button
-                          type="button"
-                          onClick={() => setGenderDropdownOpen(!genderDropdownOpen)}
-                          className="w-full rounded-2xl border border-zinc-200/80 bg-white pl-11 pr-10 py-2.5 text-sm font-semibold transition-all duration-300 hover:border-zinc-300 focus:border-primary-700 focus:ring-4 focus:ring-primary-700/10 dark:border-zinc-850 dark:bg-[#0c0c0e] dark:hover:border-zinc-700 dark:focus:border-primary-500 dark:focus:ring-primary-500/20 text-zinc-800 dark:text-zinc-100 text-left focus:outline-none flex items-center justify-between cursor-pointer"
-                        >
-                          <div className="flex items-center gap-2">
-                            <UserCheck className="size-4.5 text-zinc-400" />
-                            <span>
-                              {editForm.gender === 'MALE' && t('info.genderMale')}
-                              {editForm.gender === 'FEMALE' && t('info.genderFemale')}
-                              {editForm.gender === 'OTHER' && t('info.genderOther')}
-                              {!editForm.gender && t('info.genderNone')}
-                            </span>
-                          </div>
-                          <span className="text-zinc-400 text-[10px] pointer-events-none select-none">▼</span>
-                        </button>
-
-                        {/* Floating Custom Select Dropdown Panel */}
-                        {genderDropdownOpen && (
-                          <div className="absolute z-50 left-0 right-0 mt-2 rounded-2xl border border-zinc-200/85 bg-white p-1.5 shadow-xl dark:border-zinc-800 dark:bg-[#0c0c0e] animate-in fade-in slide-in-from-top-2 duration-200">
-                            {[
-                              { value: '', label: t('info.genderNone') },
-                              { value: 'MALE', label: t('info.genderMale') },
-                              { value: 'FEMALE', label: t('info.genderFemale') },
-                              { value: 'OTHER', label: t('info.genderOther') }
-                            ].map((opt) => {
-                              const isSelected = editForm.gender === opt.value
-                              return (
-                                <button
-                                  key={opt.value}
-                                  type="button"
-                                  onClick={() => {
-                                    setEditForm({ ...editForm, gender: opt.value as any })
-                                    setGenderDropdownOpen(false)
-                                  }}
-                                  className={cn(
-                                    "flex w-full items-center justify-between rounded-xl px-3.5 py-2 text-sm font-semibold transition cursor-pointer text-left",
-                                    isSelected
-                                      ? "bg-primary-50 text-primary-700 dark:bg-primary-950/20 dark:text-primary-400"
-                                      : "text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-900"
-                                  )}
-                                >
-                                  <span>{opt.label}</span>
-                                  {isSelected && <Check className="size-4 stroke-[3]" />}
-                                </button>
-                              )
-                            })}
-                          </div>
-                        )}
-                      </div>
-                    </div>
+                    <Select
+                      label={t('info.gender')}
+                      value={editForm.gender ?? ''}
+                      searchable={false}
+                      options={[
+                        { value: '', label: t('info.genderNone'), icon: <UserCheck className="size-4.5 text-zinc-400" /> },
+                        { value: 'MALE', label: t('info.genderMale'), icon: <UserCheck className="size-4.5 text-zinc-400" /> },
+                        { value: 'FEMALE', label: t('info.genderFemale'), icon: <UserCheck className="size-4.5 text-zinc-400" /> },
+                        { value: 'OTHER', label: t('info.genderOther'), icon: <UserCheck className="size-4.5 text-zinc-400" /> }
+                      ]}
+                      onChange={(val) => setEditForm({ ...editForm, gender: (val || null) as any })}
+                    />
                   </div>
                 )}
 
                 {/* STEP 2: Contacts & Geography */}
                 {editStep === 2 && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5 animate-in fade-in duration-300">
-                    
-                    <div className="md:col-span-2 relative">
-                      <label className="text-[10px] font-black uppercase tracking-wider text-zinc-400 dark:text-zinc-500 block mb-1.5 ml-1">{t('info.phone')}</label>
-                      <div className="relative group">
-                        <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4.5 text-zinc-400 group-focus-within:text-primary-700 dark:group-focus-within:text-primary-400 transition-colors" />
-                        <input
-                          type="tel"
-                          value={editForm.phone}
-                          onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
-                          placeholder={t('editModal.phonePlaceholder')}
-                          className="w-full rounded-2xl border border-zinc-200/80 bg-white pl-11 pr-4 py-2.5 text-sm font-semibold transition-all duration-300 hover:border-zinc-300 focus:border-primary-700 focus:ring-4 focus:ring-primary-700/10 dark:border-zinc-855 dark:bg-[#0c0c0e] dark:hover:border-zinc-700 dark:focus:border-primary-500 dark:focus:ring-primary-500/20 text-zinc-800 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none"
-                        />
-                      </div>
+                    <div className="md:col-span-2">
+                      <Input
+                        type="tel"
+                        label={t('info.phone')}
+                        value={editForm.phone ?? ''}
+                        onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
+                        placeholder={t('editModal.phonePlaceholder')}
+                        leftIcon={<Phone className="size-4.5 text-zinc-400" />}
+                      />
                     </div>
 
-                    <div className="md:col-span-2 relative">
-                      <label className="text-[10px] font-black uppercase tracking-wider text-zinc-400 dark:text-zinc-500 block mb-1.5 ml-1">{t('info.address')}</label>
-                      <div className="relative group">
-                        <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4.5 text-zinc-400 group-focus-within:text-primary-700 dark:group-focus-within:text-primary-400 transition-colors" />
-                        <input
-                          type="text"
-                          value={editForm.address}
-                          onChange={(e) => setEditForm({ ...editForm, address: e.target.value })}
-                          placeholder={t('editModal.addressPlaceholder')}
-                          className="w-full rounded-2xl border border-zinc-200/80 bg-white pl-11 pr-4 py-2.5 text-sm font-semibold transition-all duration-300 hover:border-zinc-300 focus:border-primary-700 focus:ring-4 focus:ring-primary-700/10 dark:border-zinc-855 dark:bg-[#0c0c0e] dark:hover:border-zinc-700 dark:focus:border-primary-500 dark:focus:ring-primary-500/20 text-zinc-800 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none"
-                        />
-                      </div>
+                    <div className="md:col-span-2">
+                      <Input
+                        label={t('info.address')}
+                        value={editForm.address ?? ''}
+                        onChange={(e) => setEditForm({ ...editForm, address: e.target.value })}
+                        placeholder={t('editModal.addressPlaceholder')}
+                        leftIcon={<MapPin className="size-4.5 text-zinc-400" />}
+                      />
                     </div>
 
-                    <div className="relative">
-                      <label className="text-[10px] font-black uppercase tracking-wider text-zinc-400 dark:text-zinc-500 block mb-1.5 ml-1">{t('info.city')}</label>
-                      <div className="relative group">
-                        <Globe className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4.5 text-zinc-400 group-focus-within:text-primary-700 dark:group-focus-within:text-primary-400 transition-colors" />
-                        <input
-                          type="text"
-                          value={editForm.city}
-                          onChange={(e) => setEditForm({ ...editForm, city: e.target.value })}
-                          placeholder={t('editModal.cityPlaceholder')}
-                          className="w-full rounded-2xl border border-zinc-200/80 bg-white pl-11 pr-4 py-2.5 text-sm font-semibold transition-all duration-300 hover:border-zinc-300 focus:border-primary-700 focus:ring-4 focus:ring-primary-700/10 dark:border-zinc-855 dark:bg-[#0c0c0e] dark:hover:border-zinc-700 dark:focus:border-primary-500 dark:focus:ring-primary-500/20 text-zinc-800 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none"
-                        />
-                      </div>
-                    </div>
+                    <Input
+                      label={t('info.city')}
+                      value={editForm.city ?? ''}
+                      onChange={(e) => setEditForm({ ...editForm, city: e.target.value })}
+                      placeholder={t('editModal.cityPlaceholder')}
+                      leftIcon={<Globe className="size-4.5 text-zinc-400" />}
+                    />
 
-                    <div className="relative">
-                      <label className="text-[10px] font-black uppercase tracking-wider text-zinc-400 dark:text-zinc-500 block mb-1.5 ml-1">{t('info.country')}</label>
-                      <div className="relative group">
-                        <Globe className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4.5 text-zinc-400 group-focus-within:text-primary-700 dark:group-focus-within:text-primary-400 transition-colors" />
-                        <input
-                          type="text"
-                          maxLength={2}
-                          value={editForm.country}
-                          onChange={(e) => setEditForm({ ...editForm, country: e.target.value.toUpperCase() })}
-                          placeholder={t('editModal.countryPlaceholder')}
-                          className="w-full rounded-2xl border border-zinc-200/80 bg-white pl-11 pr-4 py-2.5 text-sm font-semibold transition-all duration-300 hover:border-zinc-300 focus:border-primary-700 focus:ring-4 focus:ring-primary-700/10 dark:border-zinc-855 dark:bg-[#0c0c0e] dark:hover:border-zinc-700 dark:focus:border-primary-500 dark:focus:ring-primary-500/20 text-zinc-800 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none"
-                        />
-                      </div>
-                    </div>
+                    <Input
+                      label={t('info.country')}
+                      maxLength={2}
+                      value={editForm.country ?? ''}
+                      onChange={(e) => setEditForm({ ...editForm, country: e.target.value.toUpperCase() })}
+                      placeholder={t('editModal.countryPlaceholder')}
+                      leftIcon={<Globe className="size-4.5 text-zinc-400" />}
+                    />
                   </div>
                 )}
 
@@ -1294,7 +1324,7 @@ export function ProfileDetails() {
                             type="button"
                             onClick={() => fileInputRef.current?.click()}
                             disabled={uploadingAvatar}
-                            className="flex w-fit items-center gap-1.5 rounded-xl border border-zinc-200 bg-zinc-50 hover:bg-zinc-100 px-3.5 py-1.5 text-xs font-bold text-zinc-700 transition dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 cursor-pointer select-none"
+                            className="flex w-fit items-center gap-1.5 rounded-xl border border-zinc-200 bg-zinc-50 hover:bg-zinc-100 px-3.5 py-1.5 text-xs font-bold text-zinc-750 transition dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 cursor-pointer select-none"
                           >
                             {uploadingAvatar ? (
                               <Loader2 className="size-3.5 animate-spin text-primary-700" />
@@ -1305,19 +1335,14 @@ export function ProfileDetails() {
                           </button>
                         </div>
 
-                        <div className="relative">
-                          <label className="text-[9px] font-bold text-zinc-400 dark:text-zinc-500 block mb-1">{t('editModal.orCustomUrl')}</label>
-                          <div className="relative group">
-                            <Globe className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-zinc-400" />
-                            <input
-                              type="url"
-                              value={editForm.avatarUrl}
-                              onChange={(e) => setEditForm({ ...editForm, avatarUrl: e.target.value })}
-                              placeholder="https://images.unsplash.com/photo-..."
-                              className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 pl-9 pr-4 py-1.5 text-xs font-semibold focus:border-primary-700 focus:outline-none dark:border-zinc-850 dark:bg-[#0c0c0e] text-zinc-800 dark:text-zinc-100"
-                            />
-                          </div>
-                        </div>
+                        <Input
+                          type="url"
+                          label={t('editModal.orCustomUrl')}
+                          value={editForm.avatarUrl ?? ''}
+                          onChange={(e) => setEditForm({ ...editForm, avatarUrl: e.target.value })}
+                          placeholder="https://images.unsplash.com/photo-..."
+                          leftIcon={<Globe className="size-4 text-zinc-400" />}
+                        />
                       </div>
                     </div>
 
@@ -1326,17 +1351,16 @@ export function ProfileDetails() {
                       <div className="flex items-center justify-between">
                         <label className="text-[10px] font-black uppercase tracking-wider text-zinc-400 dark:text-zinc-500 block ml-1">{t('info.bio')}</label>
                         <span className="text-[9px] font-bold text-zinc-400 dark:text-zinc-500 mr-1">
-                          {editForm.bio.length} / 500
+                          {(editForm.bio ?? '').length} / 500
                         </span>
                       </div>
                       
-                      <textarea
-                        rows={6}
+                      <Textarea
                         maxLength={500}
-                        value={editForm.bio}
+                        value={editForm.bio ?? ''}
                         onChange={(e) => setEditForm({ ...editForm, bio: e.target.value })}
                         placeholder={t('editModal.bioPlaceholder')}
-                        className="w-full flex-1 rounded-2xl border border-zinc-200/80 bg-white px-4 py-3 text-sm font-semibold transition-all duration-300 hover:border-zinc-300 focus:border-primary-700 focus:ring-4 focus:ring-primary-700/10 dark:border-zinc-855 dark:bg-[#0c0c0e] dark:hover:border-zinc-700 dark:focus:border-primary-500 dark:focus:ring-primary-500/20 text-zinc-800 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none resize-none leading-relaxed"
+                        className="flex-1 min-h-[148px]"
                       />
                     </div>
                   </div>
@@ -1423,64 +1447,62 @@ export function ProfileDetails() {
             <form onSubmit={handlePasswordSubmit} className="mt-4 space-y-4">
               
               {/* Current password field */}
-              <div className="relative">
-                <label className="text-xs font-bold text-zinc-500 block mb-1">{t('passwordModal.currentPassword')}</label>
-                <input
-                  type={showCurrentPass ? 'text' : 'password'}
-                  required
-                  value={passwordForm.currentPassword}
-                  onChange={(e) => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })}
-                  placeholder={t('passwordModal.currentPasswordPlaceholder')}
-                  className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-zinc-800 dark:bg-zinc-900/50 pr-10"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowCurrentPass(!showCurrentPass)}
-                  className="absolute right-3 top-7.5 text-zinc-400 hover:text-zinc-600 transition"
-                >
-                  {showCurrentPass ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-                </button>
-              </div>
+              {/* Current password field */}
+              <Input
+                type={showCurrentPass ? 'text' : 'password'}
+                required
+                label={t('passwordModal.currentPassword')}
+                value={passwordForm.currentPassword}
+                onChange={(e) => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })}
+                placeholder={t('passwordModal.currentPasswordPlaceholder')}
+                rightIcon={
+                  <button
+                    type="button"
+                    onClick={() => setShowCurrentPass(!showCurrentPass)}
+                    className="text-zinc-400 hover:text-zinc-600 transition flex items-center justify-center"
+                  >
+                    {showCurrentPass ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                  </button>
+                }
+              />
 
               {/* New password field */}
-              <div className="relative">
-                <label className="text-xs font-bold text-zinc-500 block mb-1">{t('passwordModal.newPassword')}</label>
-                <input
-                  type={showNewPass ? 'text' : 'password'}
-                  required
-                  value={passwordForm.newPassword}
-                  onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
-                  placeholder={t('passwordModal.newPasswordPlaceholder')}
-                  className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-zinc-800 dark:bg-zinc-900/50 pr-10"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowNewPass(!showNewPass)}
-                  className="absolute right-3 top-7.5 text-zinc-400 hover:text-zinc-600 transition"
-                >
-                  {showNewPass ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-                </button>
-              </div>
+              <Input
+                type={showNewPass ? 'text' : 'password'}
+                required
+                label={t('passwordModal.newPassword')}
+                value={passwordForm.newPassword}
+                onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
+                placeholder={t('passwordModal.newPasswordPlaceholder')}
+                rightIcon={
+                  <button
+                    type="button"
+                    onClick={() => setShowNewPass(!showNewPass)}
+                    className="text-zinc-400 hover:text-zinc-600 transition flex items-center justify-center"
+                  >
+                    {showNewPass ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                  </button>
+                }
+              />
 
               {/* Confirm new password field */}
-              <div className="relative">
-                <label className="text-xs font-bold text-zinc-500 block mb-1">{t('passwordModal.confirmPassword')}</label>
-                <input
-                  type={showConfirmPass ? 'text' : 'password'}
-                  required
-                  value={passwordForm.confirmPassword}
-                  onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
-                  placeholder={t('passwordModal.confirmPasswordPlaceholder')}
-                  className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-zinc-800 dark:bg-zinc-900/50 pr-10"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowConfirmPass(!showConfirmPass)}
-                  className="absolute right-3 top-7.5 text-zinc-400 hover:text-zinc-600 transition"
-                >
-                  {showConfirmPass ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-                </button>
-              </div>
+              <Input
+                type={showConfirmPass ? 'text' : 'password'}
+                required
+                label={t('passwordModal.confirmPassword')}
+                value={passwordForm.confirmPassword}
+                onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
+                placeholder={t('passwordModal.confirmPasswordPlaceholder')}
+                rightIcon={
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPass(!showConfirmPass)}
+                    className="text-zinc-400 hover:text-zinc-600 transition flex items-center justify-center"
+                  >
+                    {showConfirmPass ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                  </button>
+                }
+              />
 
               <div className="flex items-center justify-end gap-3 pt-3 border-t border-zinc-100 dark:border-zinc-850">
                 <button

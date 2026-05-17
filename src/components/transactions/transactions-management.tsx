@@ -14,6 +14,7 @@ import {
 } from 'lucide-react'
 import { useTranslations, useLocale } from 'next-intl'
 import { toast } from 'sonner'
+import { useSearchParams, useRouter } from 'next/navigation'
 
 import { TransactionStats } from './transaction-stats'
 import { TransactionFilters } from './transaction-filters'
@@ -22,6 +23,7 @@ import { TransactionAllocation } from './transaction-allocation'
 import { TransactionBudget } from './transaction-budget'
 import { TransactionWizardModal } from './transaction-wizard-modal'
 
+import { useCurrency } from '@/hooks/use-currency'
 import type {
   Transaction,
   Wallet,
@@ -33,6 +35,10 @@ import type {
 export function TransactionsManagement() {
   const t = useTranslations('transactions')
   const locale = useLocale()
+  const { formatMoney } = useCurrency()
+  const searchParams = useSearchParams()
+  const router = useRouter()
+
 
   // Core data
   const [mounted, setMounted] = useState(false)
@@ -82,6 +88,27 @@ export function TransactionsManagement() {
   // ---------------------------------------------------
   // Lifecycle
   // ---------------------------------------------------
+  useEffect(() => {
+    const handleOpenModal = () => {
+      setShowAddModal(true)
+      setModalStep(1)
+    }
+    window.addEventListener('open-add-transaction-modal', handleOpenModal)
+
+    if (searchParams.get('add') === 'true') {
+      setShowAddModal(true)
+      setModalStep(1)
+      const nextParams = new URLSearchParams(searchParams.toString())
+      nextParams.delete('add')
+      const qs = nextParams.toString()
+      router.replace(`/transactions${qs ? `?${qs}` : ''}`)
+    }
+
+    return () => {
+      window.removeEventListener('open-add-transaction-modal', handleOpenModal)
+    }
+  }, [searchParams, router])
+
   useEffect(() => {
     setMounted(true)
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -409,7 +436,4 @@ export function TransactionsManagement() {
   )
 }
 
-// Extracted so sub-components can import it too
-export function formatMoney(val: string | number) {
-  return Number(val).toLocaleString('vi-VN') + ' đ'
-}
+

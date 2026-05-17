@@ -110,7 +110,7 @@ export function ActivityLogManagement() {
       </div>
 
       {/* Toolbar */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-[#0c0c0e]">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-[#0c0c0e] relative z-20">
         <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-zinc-400" />
           <input
@@ -209,7 +209,7 @@ export function ActivityLogManagement() {
         </div>
 
         {/* Footer Pagination */}
-        {totalCount > limit && (
+        {totalCount > 0 && (
           <div className="flex items-center justify-between border-t border-zinc-200 p-4 dark:border-zinc-800">
             <span className="text-xs text-zinc-500">
               {t('table.pagination', {
