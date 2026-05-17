@@ -81,7 +81,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ code: 'INVALID_DATA' }, { status: 400 })
   }
 
-  const { code, name, description, level, parentRoleId } = body
+  const { code, name, description, level, parentRoleId, status, permissionIds } = body
 
   if (!code || !name) {
     return NextResponse.json({ code: 'MISSING_FIELDS' }, { status: 400 })
@@ -99,14 +99,30 @@ export async function POST(request: Request) {
       return NextResponse.json({ code: 'ROLE_CODE_EXISTS' }, { status: 400 })
     }
 
-    const createdRole = await prisma.role.create({
-      data: {
-        code: formattedCode,
-        name: name.trim(),
-        description: description?.trim() || null,
-        level: level ? parseInt(level, 10) : 10,
-        parentRoleId: parentRoleId || null,
-      },
+    const createdRole = await prisma.$transaction(async (tx) => {
+      const role = await tx.role.create({
+        data: {
+          code: formattedCode,
+          name: name.trim(),
+          description: description?.trim() || null,
+          level: level ? parseInt(level, 10) : 10,
+          parentRoleId: parentRoleId || null,
+          status: status === 'INACTIVE' ? 'INACTIVE' : 'ACTIVE',
+        },
+      })
+
+      if (Array.isArray(permissionIds) && permissionIds.length > 0) {
+        const createData = permissionIds.map((pId: string) => ({
+          roleId: role.id,
+          permissionId: pId,
+        }))
+
+        await tx.rolePermission.createMany({
+          data: createData,
+        })
+      }
+
+      return role
     })
 
     await logActivity(
