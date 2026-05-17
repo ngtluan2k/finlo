@@ -4,6 +4,7 @@ export const routes = {
   register: '/register',
   verifyEmail: '/verify-email',
   dashboard: '/dashboard',
+  profile: '/profile',
   systemUsers: '/dashboard/system/users',
   systemRoles: '/dashboard/system/roles',
   systemActivityLog: '/dashboard/system/activity-log',

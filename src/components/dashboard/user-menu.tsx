@@ -10,6 +10,7 @@ import {
   User,
 } from 'lucide-react'
 import { useTranslations } from 'next-intl'
+import Link from 'next/link'
 import { routes } from '@/lib/routes'
 import { cn } from '@/lib/utils'
 import { getInitials } from '@/lib/string'
@@ -23,7 +24,7 @@ type UserMenuProps = {
 }
 
 const menuItems = [
-  { key: 'profile' as const, icon: User, href: '#' },
+  { key: 'profile' as const, icon: User, href: routes.profile },
   { key: 'settings' as const, icon: Settings, href: '#' },
   { key: 'docs' as const, icon: BookOpen, href: '#' },
 ]
@@ -117,7 +118,7 @@ export function UserMenu({ user }: UserMenuProps) {
           </div>
 
           {menuItems.map(({ key, icon: Icon, href }) => (
-            <a
+            <Link
               key={key}
               href={href}
               role="menuitem"
@@ -129,7 +130,7 @@ export function UserMenu({ user }: UserMenuProps) {
             >
               <Icon className="size-4 shrink-0 text-zinc-500" aria-hidden />
               {t(key)}
-            </a>
+            </Link>
           ))}
 
           <button

@@ -18,6 +18,7 @@ import {
   History,
   Sliders,
   ShieldAlert,
+  User,
 } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -252,7 +253,7 @@ export function DashboardSidebar({ open, user }: DashboardSidebarProps) {
         <div className="relative">
           <button 
             onClick={() => setProfileOpen(!profileOpen)}
-            className="flex w-full items-center gap-3 rounded-xl border border-white/10 p-2 transition text-left hover:bg-white/10 dark:border-[#1E293B] dark:hover:bg-[#102A43]"
+            className="flex w-full items-center gap-3 rounded-xl border border-white/10 p-2 transition text-left hover:bg-white/10 dark:border-primary-800/30 dark:hover:bg-primary-900/50"
           >
             <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#003f66_0%,#015c97_35%,#2d82b9_70%,#54a4d7_100%)] text-sm font-bold text-white shadow-md dark:bg-[linear-gradient(135deg,#002b45_0%,#003f66_45%,#015c97_100%)]">
               {getInitials(user?.name, user?.email)}
@@ -265,7 +266,18 @@ export function DashboardSidebar({ open, user }: DashboardSidebarProps) {
           </button>
           
           {profileOpen && (
-            <div className="absolute bottom-full left-0 mb-2 w-full overflow-hidden rounded-xl border border-zinc-200 bg-white p-1 shadow-xl dark:border-zinc-700 dark:bg-zinc-900">
+            <div className="absolute bottom-full left-0 mb-2.5 w-full overflow-hidden rounded-2xl border border-white/10 bg-[#003f66]/95 dark:bg-[#06111d]/95 backdrop-blur-md p-1.5 shadow-[0_15px_30px_rgba(0,0,0,0.5)] animate-in fade-in slide-in-from-bottom-2 duration-200">
+              <Link
+                href={routes.profile}
+                onClick={() => setProfileOpen(false)}
+                className={cn(
+                  'flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-sm text-zinc-200 transition hover:bg-white/10 hover:text-white',
+                )}
+              >
+                <User className="size-4 shrink-0 text-[#C0E8FB]" aria-hidden />
+                Hồ sơ cá nhân
+              </Link>
+              <div className="my-1 border-t border-white/5" />
               <button
                 type="button"
                 onClick={() => {
@@ -273,8 +285,7 @@ export function DashboardSidebar({ open, user }: DashboardSidebarProps) {
                   void signOut({ callbackUrl: routes.login })
                 }}
                 className={cn(
-                  'flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-red-600 transition',
-                  'hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-500/10',
+                  'flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-sm text-red-400 transition hover:bg-red-500/10 hover:text-red-300',
                 )}
               >
                 <LogOut className="size-4 shrink-0" aria-hidden />
