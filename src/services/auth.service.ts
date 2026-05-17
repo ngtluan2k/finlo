@@ -17,6 +17,8 @@ export class AuthError extends Error {
       | 'INVALID_CREDENTIALS'
       | 'EMAIL_EXISTS'
       | 'USER_INACTIVE'
+      | 'USER_SUSPENDED'
+      | 'USER_DELETED'
       | 'EMAIL_NOT_VERIFIED',
   ) {
     super(message)
@@ -66,6 +68,7 @@ export async function registerUser(input: RegisterInput, locale: Locale) {
         email,
         username,
         passwordHash,
+        phone: input.phone?.trim() || null,
       },
     })
 
@@ -99,7 +102,6 @@ export async function verifyCredentials(identifier: string, password: string) {
 
   const user = await prisma.user.findFirst({
     where: {
-      ...notDeleted,
       OR: [
         where.email ? { email: where.email } : undefined,
         where.phone ? { phone: where.phone } : undefined,
@@ -118,8 +120,16 @@ export async function verifyCredentials(identifier: string, password: string) {
     throw new AuthError('Email hoặc mật khẩu không đúng', 'INVALID_CREDENTIALS')
   }
 
-  if (user.status === 'INACTIVE' || user.status === 'SUSPENDED') {
-    throw new AuthError('Tài khoản không khả dụng', 'USER_INACTIVE')
+  if (user.deletedAt !== null) {
+    throw new AuthError('Tài khoản đã bị xóa khỏi hệ thống', 'USER_DELETED')
+  }
+
+  if (user.status === 'SUSPENDED') {
+    throw new AuthError('Tài khoản đã bị khóa tạm thời', 'USER_SUSPENDED')
+  }
+
+  if (user.status === 'INACTIVE') {
+    throw new AuthError('Tài khoản đã bị vô hiệu hóa', 'USER_INACTIVE')
   }
 
   if (user.status !== 'ACTIVE' || !user.emailVerifiedAt) {

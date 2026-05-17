@@ -26,6 +26,7 @@ import { useTranslations } from 'next-intl'
 import { FinloLogo } from '@/components/brand/finlo-logo'
 import { routes } from '@/lib/routes'
 import { cn } from '@/lib/utils'
+import { getInitials } from '@/lib/string'
 
 const navSections = [
   {
@@ -33,11 +34,12 @@ const navSections = [
     isDropdown: true,
     labelKey: 'nav.systemManagement' as const,
     icon: Settings,
+    requiredPermissions: ['user:read', 'role:read', 'permission:read', 'user:manage', 'role:manage'],
     items: [
-      { href: routes.systemUsers, icon: Users, labelKey: 'nav.systemUsers' as const },
-      { href: routes.systemRoles, icon: ShieldAlert, labelKey: 'nav.systemRoles' as const },
-      { href: routes.systemActivityLog, icon: History, labelKey: 'nav.systemActivityLog' as const },
-      { href: '#', icon: Sliders, labelKey: 'nav.systemSettings' as const, disabled: true },
+      { href: routes.systemUsers, icon: Users, labelKey: 'nav.systemUsers' as const, requiredPermissions: ['user:read', 'user:manage'] },
+      { href: routes.systemRoles, icon: ShieldAlert, labelKey: 'nav.systemRoles' as const, requiredPermissions: ['role:read', 'role:manage'] },
+      { href: routes.systemActivityLog, icon: History, labelKey: 'nav.systemActivityLog' as const, requiredPermissions: ['user:read', 'user:manage'] },
+      { href: '#', icon: Sliders, labelKey: 'nav.systemSettings' as const, disabled: true, requiredPermissions: ['permission:read'] },
     ],
   },
   {
@@ -45,9 +47,9 @@ const navSections = [
     isDropdown: false,
     items: [
       { href: routes.dashboard, icon: LayoutDashboard, labelKey: 'nav.overview' as const },
-      { href: '#', icon: Receipt, labelKey: 'nav.transactions' as const, disabled: true },
-      { href: '#', icon: Wallet, labelKey: 'nav.wallets' as const, disabled: true },
-      { href: '#', icon: PiggyBank, labelKey: 'nav.budgets' as const, disabled: true },
+      { href: '#', icon: Receipt, labelKey: 'nav.transactions' as const, disabled: true, requiredPermissions: ['transaction:read'] },
+      { href: '#', icon: Wallet, labelKey: 'nav.wallets' as const, disabled: true, requiredPermissions: ['wallet:read'] },
+      { href: '#', icon: PiggyBank, labelKey: 'nav.budgets' as const, disabled: true, requiredPermissions: ['budget:read'] },
     ],
   },
   {
@@ -66,17 +68,30 @@ const navSections = [
       { href: '#', icon: PieChart, labelKey: 'nav.analytics' as const, disabled: true },
     ],
   },
-  
 ]
 
 type DashboardSidebarProps = {
   open: boolean
+  user?: {
+    name?: string | null
+    email?: string | null
+    image?: string | null
+    permissions?: string[]
+    isSuperAdmin?: boolean
+  }
 }
 
-export function DashboardSidebar({ open }: DashboardSidebarProps) {
+export function DashboardSidebar({ open, user }: DashboardSidebarProps) {
   const t = useTranslations('dashboard')
   const pathname = usePathname()
   
+  const hasAccess = (requiredPermissions?: string[]) => {
+    if (!requiredPermissions || requiredPermissions.length === 0) return true
+    if (user?.isSuperAdmin) return true
+    if (!user?.permissions) return false
+    return requiredPermissions.some(p => user.permissions!.includes(p))
+  }
+
   const [systemOpen, setSystemOpen] = useState(() => pathname.startsWith('/dashboard/system'))
   const [profileOpen, setProfileOpen] = useState(false)
   const profileRef = useRef<HTMLDivElement>(null)
@@ -117,7 +132,7 @@ export function DashboardSidebar({ open }: DashboardSidebarProps) {
         className="flex h-16 shrink-0 items-center gap-2.5 px-6 relative"
       >
         <div className="absolute left-6 top-1/2 -translate-y-1/2 h-8 w-24 bg-white/10 blur-xl rounded-full" aria-hidden />
-        <FinloLogo variant="full" className="relative z-10 h-8 brightness-[1.3] drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-all hover:brightness-[1.4]" />
+        <FinloLogo variant="full" priority className="relative z-10 h-8 brightness-[1.3] drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-all hover:brightness-[1.4]" />
       </Link>
 
       <nav 
@@ -126,6 +141,10 @@ export function DashboardSidebar({ open }: DashboardSidebarProps) {
       >
         {/* Unified Render Sections */}
         {navSections.map((section) => {
+          if ('requiredPermissions' in section && !hasAccess(section.requiredPermissions)) {
+            return null
+          }
+
           if (section.isDropdown) {
             const Icon = section.icon
             return (
@@ -153,6 +172,8 @@ export function DashboardSidebar({ open }: DashboardSidebarProps) {
                   {systemOpen && (
                     <div className="mt-1 ml-3 pl-3 border-l border-white/10 dark:border-slate-800 space-y-1 transition-all duration-200">
                       {section.items.map((subItem) => {
+                        if ('requiredPermissions' in subItem && !hasAccess(subItem.requiredPermissions)) return null
+
                         const SubIcon = subItem.icon
                         const active = !subItem.disabled && pathname === subItem.href
                         const className = cn(
@@ -192,7 +213,10 @@ export function DashboardSidebar({ open }: DashboardSidebarProps) {
                 {t(section.titleKey)}
               </p>
               <div className="space-y-0.5">
-                {section.items.map(({ href, icon: Icon, labelKey, disabled }) => {
+                {section.items.map((item) => {
+                  if ('requiredPermissions' in item && !hasAccess(item.requiredPermissions)) return null
+                  const { href, icon: Icon, labelKey, disabled } = item
+
                   const active = !disabled && pathname === href
                   const className = cn(
                     'flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition',
@@ -231,11 +255,11 @@ export function DashboardSidebar({ open }: DashboardSidebarProps) {
             className="flex w-full items-center gap-3 rounded-xl border border-white/10 p-2 transition text-left hover:bg-white/10 dark:border-[#1E293B] dark:hover:bg-[#102A43]"
           >
             <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#003f66_0%,#015c97_35%,#2d82b9_70%,#54a4d7_100%)] text-sm font-bold text-white shadow-md dark:bg-[linear-gradient(135deg,#002b45_0%,#003f66_45%,#015c97_100%)]">
-              LN
+              {getInitials(user?.name, user?.email)}
             </div>
             <div className="flex-1 overflow-hidden">
-              <p className="truncate text-sm font-semibold text-white">LUAN NGUYEN</p>
-              <p className="truncate text-xs font-medium text-[#C0E8FB]">Premium</p>
+              <p className="truncate text-sm font-semibold text-white">{user?.name || user?.email || 'User'}</p>
+              <p className="truncate text-xs font-medium text-[#C0E8FB]">{user?.isSuperAdmin ? 'Quản trị viên' : 'Thành viên'}</p>
             </div>
             <ChevronDown className={cn('size-4 text-[#C0E8FB] transition-transform', profileOpen && 'rotate-180')} />
           </button>

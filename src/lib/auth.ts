@@ -37,6 +37,7 @@ export const authOptions: NextAuthOptions = {
               ? formatProfileDisplayName(
                   user.profile.firstName,
                   user.profile.lastName,
+                  user.profile.displayName,
                 )
               : user.email,
           }
@@ -44,6 +45,15 @@ export const authOptions: NextAuthOptions = {
           if (error instanceof AuthError) {
             if (error.code === 'EMAIL_NOT_VERIFIED') {
               throw new Error('EMAIL_NOT_VERIFIED')
+            }
+            if (error.code === 'USER_SUSPENDED') {
+              throw new Error('USER_SUSPENDED')
+            }
+            if (error.code === 'USER_INACTIVE') {
+              throw new Error('USER_INACTIVE')
+            }
+            if (error.code === 'USER_DELETED') {
+              throw new Error('USER_DELETED')
             }
             return null
           }
