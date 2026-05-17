@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { getAuthenticatedUserId } from '@/lib/auth-session'
 import { prisma } from '@/lib/prisma'
 import { isLocale } from '@/i18n/config'
+import { logActivity } from '@/lib/rbac'
 
 export async function PATCH(request: Request) {
   const userId = await getAuthenticatedUserId()
@@ -31,6 +32,12 @@ export async function PATCH(request: Request) {
       where: { userId },
       data: { locale },
     })
+
+    await logActivity(
+      userId,
+      'UPDATE_LOCALE',
+      `Thay đổi ngôn ngữ hiển thị hệ thống thành "${locale.toUpperCase()}"`
+    )
 
     return NextResponse.json({ success: true })
   } catch (error) {

@@ -6,6 +6,7 @@ import type { RegisterInput } from '@/validations/auth.schema'
 import { createDefaultUserSettings } from '@/services/settings.service'
 import { issueEmailVerification } from '@/services/verification.service'
 import { resolveAvailableUsername } from '@/services/username.service'
+import { logActivity } from '@/lib/rbac'
 
 const BCRYPT_ROUNDS = 12
 
@@ -85,6 +86,8 @@ export async function registerUser(input: RegisterInput, locale: Locale) {
 
     return created
   })
+
+  await logActivity(user.id, 'REGISTER', 'Đăng ký tài khoản thành công')
 
   await issueEmailVerification(user.id, email, locale)
 

@@ -121,7 +121,12 @@
       "reports": "Báo cáo",
       "analytics": "Phân tích",
       "settings": "Cài đặt",
-      "security": "Bảo mật"
+      "security": "Bảo mật",
+      "systemManagement": "Quản lý hệ thống",
+      "systemUsers": "Người dùng",
+      "systemRoles": "Vai trò & quyền",
+      "systemActivityLog": "Nhật ký hoạt động",
+      "systemSettings": "Cài đặt hệ thống"
     },
     "header": {
       "menu": "Bảng điều khiển",

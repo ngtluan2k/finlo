@@ -223,6 +223,7 @@ model User {
   userRoles             UserRole[]             @relation("UserRoleAssignments")
   rolesAssignedByMe     UserRole[]             @relation("UserRoleAssignedBy")
   verificationTokens    VerificationToken[]
+  activityLogs          ActivityLog[]
 
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @updatedAt @map("updated_at")
@@ -479,4 +480,23 @@ model RecurringTransaction {
   @@index([status])
   @@index([deletedAt])
   @@map("recurring_transactions")
+}
+
+// =========================================================
+// SYSTEM LOGS
+// =========================================================
+
+model ActivityLog {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  action    String   @db.VarChar(100)
+  details   String?  @db.Text
+  ipAddress String?  @map("ip_address") @db.VarChar(45)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("activity_logs")
 }

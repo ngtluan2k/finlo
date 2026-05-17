@@ -4,6 +4,7 @@ import { routes } from '@/lib/routes'
 import { formatProfileDisplayName } from '@/lib/profile-name'
 import { loginSchema } from '@/validations/auth.schema'
 import { AuthError, verifyCredentials } from '@/services/auth.service'
+import { logActivity } from '@/lib/rbac'
 
 export const authOptions: NextAuthOptions = {
   session: { strategy: 'jwt' },
@@ -63,6 +64,13 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.id as string
       }
       return session
+    },
+  },
+  events: {
+    async signIn({ user }) {
+      if (user && user.id) {
+        await logActivity(user.id, 'LOGIN', 'Đăng nhập vào hệ thống thành công')
+      }
     },
   },
 }
