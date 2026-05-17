@@ -435,5 +435,190 @@
         "systemError": "A system error occurred"
       }
     }
+  },
+  "profile": {
+    "title": "User Profile",
+    "personalProfile": "Personal Profile",
+    "subtitle": "Manage your account information and security settings",
+    "editProfile": "Edit Profile",
+    "changePassword": "Change Password",
+    "active": "Active",
+    "other": "Other",
+    "tabs": {
+      "overview": "Overview",
+      "roles": "Roles & Permissions",
+      "logs": "Activity Log",
+      "security": "Security"
+    },
+    "info": {
+      "username": "Username",
+      "department": "Department",
+      "role": "Role",
+      "staffId": "Employee ID",
+      "address": "Address",
+      "notes": "Notes",
+      "email": "Email",
+      "phone": "Phone Number",
+      "joined": "Joined",
+      "lastUpdated": "Last Updated",
+      "bio": "Bio",
+      "dob": "Date of Birth",
+      "gender": "Gender",
+      "city": "City",
+      "country": "Country",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "displayName": "Display Name",
+      "genderMale": "Male",
+      "genderFemale": "Female",
+      "genderOther": "Other",
+      "genderNone": "Not selected"
+    },
+    "security": {
+      "password": "Password",
+      "passwordDesc": "Updated on {date}",
+      "twoFactor": "Two-Factor Auth (2FA)",
+      "twoFactorActive": "Enabled",
+      "twoFactorInactive": "Disabled",
+      "devices": "Login Devices",
+      "devicesCount": "{count} devices",
+      "currentSession": "Current Session",
+      "activeBadge": "Active",
+      "recentSessions": "Recent Sessions",
+      "viewAll": "View All",
+      "currentDevice": "Current Device"
+    },
+    "stats": {
+      "title": "Activity Statistics",
+      "logins": "Logins",
+      "operations": "Operations",
+      "dataCreated": "Created Items",
+      "dataUpdated": "Updated Items",
+      "timeRange": "Last 30 days"
+    },
+    "messages": {
+      "updateSuccess": "Profile updated successfully!",
+      "updateFailed": "Failed to update profile",
+      "passwordSuccess": "Password changed successfully!",
+      "passwordFailed": "Failed to change password",
+      "passwordMismatch": "Confirm password does not match",
+      "passwordMin": "New password must be at least 8 characters",
+      "passwordIncorrect": "Current password is incorrect"
+    },
+    "editModal": {
+      "title": "Update Personal Information",
+      "cancel": "Cancel",
+      "submit": "Save Changes",
+      "lastNamePlaceholder": "Enter your last name",
+      "firstNamePlaceholder": "Enter your first name",
+      "displayNamePlaceholder": "Enter public display name",
+      "phonePlaceholder": "Enter phone number",
+      "dobPlaceholder": "Select date of birth",
+      "addressPlaceholder": "Enter residential address",
+      "cityPlaceholder": "City / State",
+      "countryPlaceholder": "Country (Example: VN)",
+      "bioPlaceholder": "Write a short bio about yourself, skills and interests...",
+      "uploadLocal": "Upload avatar from computer",
+      "orCustomUrl": "Or custom image URL",
+      "step": "Step {step} of {total}:",
+      "step1Title": "Basic Information",
+      "step2Title": "Contact & Address",
+      "step3Title": "Avatar & Bio",
+      "step1Label": "Basic",
+      "step1Sub": "Personal Profile",
+      "step2Label": "Contact",
+      "step2Sub": "Address & Phone",
+      "step3Label": "Personal",
+      "step3Sub": "Bio & Avatar",
+      "back": "Back",
+      "next": "Next"
+    },
+    "passwordModal": {
+      "title": "Change Account Password",
+      "currentPassword": "Current Password",
+      "currentPasswordPlaceholder": "Enter current password",
+      "newPassword": "New Password",
+      "newPasswordPlaceholder": "Enter new password",
+      "confirmPassword": "Confirm New Password",
+      "confirmPasswordPlaceholder": "Re-enter new password",
+      "cancel": "Cancel",
+      "submit": "Change Password"
+    }
+  },
+  "transactions": {
+    "title": "Transactions",
+    "subtitle": "Manage all of your income, expense and transfer transactions",
+    "searchPlaceholder": "Search transactions, categories, tags...",
+    "addTransaction": "Add Transaction",
+    "stats": {
+      "income": "Total Income",
+      "expense": "Total Expense",
+      "balance": "Balance",
+      "savings": "Savings",
+      "monthTrend": "vs last month"
+    },
+    "filters": {
+      "type": "All Types",
+      "wallet": "All Accounts",
+      "category": "All Categories",
+      "addFilter": "Add Filter",
+      "clearFilter": "Clear Filter",
+      "income": "Income",
+      "expense": "Expense",
+      "transfer": "Transfer"
+    },
+    "table": {
+      "date": "Date",
+      "note": "Description",
+      "category": "Category",
+      "wallet": "Account",
+      "amount": "Amount",
+      "status": "Status",
+      "actions": "Actions",
+      "completed": "Completed",
+      "pending": "Pending",
+      "cancelled": "Cancelled",
+      "failed": "Failed",
+      "noData": "No transactions match the filter criteria.",
+      "showing": "Showing {start} - {end} of {total} transactions",
+      "perPage": "/ page"
+    },
+    "chart": {
+      "allocation": "Expense Allocation",
+      "viewReport": "View detailed report",
+      "totalExpense": "Total Spend"
+    },
+    "budget": {
+      "title": "Spending Budget",
+      "viewAll": "View all",
+      "usedOf": "Used {used} of {limit}"
+    },
+    "recent": {
+      "title": "Recent Transactions",
+      "viewAll": "View all"
+    },
+    "modal": {
+      "title": "Add New Transaction",
+      "typeSelection": "1. Select Type",
+      "amountWallet": "2. Amount & Account",
+      "descComplete": "3. Description & Notes",
+      "step": "Step {step} of {total}:",
+      "amount": "Amount (đ) *",
+      "amountPlaceholder": "Enter transaction amount",
+      "wallet": "Source Account *",
+      "walletPlaceholder": "Select source account",
+      "category": "Transaction Category *",
+      "categoryPlaceholder": "Select category",
+      "date": "Transaction Date *",
+      "note": "Notes & Description",
+      "notePlaceholder": "Enter transaction notes...",
+      "cancel": "Cancel",
+      "back": "Back",
+      "next": "Next",
+      "submit": "Finish",
+      "successAdd": "New transaction added successfully!",
+      "failAdd": "Failed to add transaction",
+      "validationError": "Please fill in all required fields!"
+    }
   }
 }

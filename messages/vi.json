@@ -435,5 +435,190 @@
         "systemError": "Đã xảy ra lỗi hệ thống"
       }
     }
+  },
+  "profile": {
+    "title": "Hồ sơ người dùng",
+    "personalProfile": "Hồ sơ cá nhân",
+    "subtitle": "Quản lý thông tin tài khoản và cấu hình bảo mật",
+    "editProfile": "Chỉnh sửa hồ sơ",
+    "changePassword": "Đổi mật khẩu",
+    "active": "Đang hoạt động",
+    "other": "Khác",
+    "tabs": {
+      "overview": "Tổng quan",
+      "roles": "Vai trò & quyền",
+      "logs": "Nhật ký hoạt động",
+      "security": "Bảo mật"
+    },
+    "info": {
+      "username": "Tên đăng nhập",
+      "department": "Phòng ban",
+      "role": "Chức vụ",
+      "staffId": "Mã nhân viên",
+      "address": "Địa chỉ",
+      "notes": "Ghi chú",
+      "email": "Email",
+      "phone": "Số điện thoại",
+      "joined": "Tham gia",
+      "lastUpdated": "Cập nhật lần cuối",
+      "bio": "Mô tả",
+      "dob": "Ngày sinh",
+      "gender": "Giới tính",
+      "city": "Thành phố",
+      "country": "Quốc gia",
+      "firstName": "Tên",
+      "lastName": "Họ",
+      "displayName": "Tên hiển thị",
+      "genderMale": "Nam",
+      "genderFemale": "Nữ",
+      "genderOther": "Khác",
+      "genderNone": "Chưa chọn"
+    },
+    "security": {
+      "password": "Mật khẩu",
+      "passwordDesc": "Đã cập nhật {date}",
+      "twoFactor": "Xác thực 2 lớp (2FA)",
+      "twoFactorActive": "Đã bật",
+      "twoFactorInactive": "Chưa bật",
+      "devices": "Thiết bị đăng nhập",
+      "devicesCount": "{count} thiết bị",
+      "currentSession": "Phiên đăng nhập hiện tại",
+      "activeBadge": "Hoạt động",
+      "recentSessions": "Phiên đăng nhập gần đây",
+      "viewAll": "Xem tất cả",
+      "currentDevice": "Thiết bị hiện tại"
+    },
+    "stats": {
+      "title": "Thống kê hoạt động",
+      "logins": "Đăng nhập",
+      "operations": "Thao tác",
+      "dataCreated": "Dữ liệu tạo",
+      "dataUpdated": "Dữ liệu cập nhật",
+      "timeRange": "30 ngày qua"
+    },
+    "messages": {
+      "updateSuccess": "Cập nhật hồ sơ thành công!",
+      "updateFailed": "Cập nhật hồ sơ thất bại",
+      "passwordSuccess": "Thay đổi mật khẩu thành công!",
+      "passwordFailed": "Thay đổi mật khẩu thất bại",
+      "passwordMismatch": "Mật khẩu xác nhận không khớp",
+      "passwordMin": "Mật khẩu mới phải từ 8 ký tự trở lên",
+      "passwordIncorrect": "Mật khẩu hiện tại không chính xác"
+    },
+    "editModal": {
+      "title": "Cập nhật thông tin cá nhân",
+      "cancel": "Hủy",
+      "submit": "Lưu thay đổi",
+      "lastNamePlaceholder": "Nhập họ của bạn",
+      "firstNamePlaceholder": "Nhập tên của bạn",
+      "displayNamePlaceholder": "Nhập tên hiển thị công khai",
+      "phonePlaceholder": "Nhập số điện thoại",
+      "dobPlaceholder": "Chọn ngày sinh",
+      "addressPlaceholder": "Nhập địa chỉ cư trú",
+      "cityPlaceholder": "Tỉnh / Thành phố",
+      "countryPlaceholder": "Quốc gia (Ví dụ: VN)",
+      "bioPlaceholder": "Viết mô tả ngắn gọn giới thiệu về bản thân, kỹ năng và sở thích...",
+      "uploadLocal": "Tải ảnh lên từ máy tính",
+      "orCustomUrl": "Hoặc đường dẫn ảnh tùy chỉnh",
+      "step": "Bước {step} của {total}:",
+      "step1Title": "Thông tin cơ bản",
+      "step2Title": "Liên hệ & Địa chỉ",
+      "step3Title": "Ảnh đại diện & Ghi chú",
+      "step1Label": "Cơ bản",
+      "step1Sub": "Hồ sơ cá nhân",
+      "step2Label": "Liên hệ",
+      "step2Sub": "Địa chỉ & SĐT",
+      "step3Label": "Cá nhân",
+      "step3Sub": "Mô tả & Avatar",
+      "back": "Quay lại",
+      "next": "Tiếp tục"
+    },
+    "passwordModal": {
+      "title": "Thay đổi mật khẩu tài khoản",
+      "currentPassword": "Mật khẩu hiện tại",
+      "currentPasswordPlaceholder": "Nhập mật khẩu hiện tại",
+      "newPassword": "Mật khẩu mới",
+      "newPasswordPlaceholder": "Nhập mật khẩu mới",
+      "confirmPassword": "Xác nhận mật khẩu mới",
+      "confirmPasswordPlaceholder": "Nhập lại mật khẩu mới",
+      "cancel": "Hủy",
+      "submit": "Đổi mật khẩu"
+    }
+  },
+  "transactions": {
+    "title": "Giao dịch",
+    "subtitle": "Quản lý tất cả giao dịch thu, chi và chuyển khoản",
+    "searchPlaceholder": "Tìm kiếm giao dịch, danh mục, tag...",
+    "addTransaction": "Thêm giao dịch",
+    "stats": {
+      "income": "Tổng thu",
+      "expense": "Tổng chi",
+      "balance": "Số dư",
+      "savings": "Tiết kiệm",
+      "monthTrend": "so với tháng trước"
+    },
+    "filters": {
+      "type": "Tất cả loại",
+      "wallet": "Tất cả tài khoản",
+      "category": "Tất cả danh mục",
+      "addFilter": "Thêm bộ lọc",
+      "clearFilter": "Xóa lọc",
+      "income": "Thu nhập",
+      "expense": "Chi tiêu",
+      "transfer": "Chuyển khoản"
+    },
+    "table": {
+      "date": "Ngày",
+      "note": "Nội dung",
+      "category": "Danh mục",
+      "wallet": "Tài khoản",
+      "amount": "Số tiền",
+      "status": "Trạng thái",
+      "actions": "Thao tác",
+      "completed": "Hoàn thành",
+      "pending": "Chờ duyệt",
+      "cancelled": "Đã hủy",
+      "failed": "Thất bại",
+      "noData": "Không có giao dịch nào khớp với điều kiện lọc.",
+      "showing": "Hiển thị {start} - {end} trong {total} giao dịch",
+      "perPage": "/ trang"
+    },
+    "chart": {
+      "allocation": "Phân bổ chi tiêu",
+      "viewReport": "Xem chi tiết báo cáo",
+      "totalExpense": "Tổng chi"
+    },
+    "budget": {
+      "title": "Ngân sách chi tiêu",
+      "viewAll": "Xem tất cả",
+      "usedOf": "Đã dùng {used} trên {limit}"
+    },
+    "recent": {
+      "title": "Giao dịch gần đây",
+      "viewAll": "Xem tất cả"
+    },
+    "modal": {
+      "title": "Thêm giao dịch mới",
+      "typeSelection": "1. Chọn loại",
+      "amountWallet": "2. Số tiền & Tài khoản",
+      "descComplete": "3. Mô tả & Hoàn tất",
+      "step": "Bước {step} của {total}:",
+      "amount": "Số tiền (đ) *",
+      "amountPlaceholder": "Nhập số tiền giao dịch",
+      "wallet": "Tài khoản nguồn *",
+      "walletPlaceholder": "Chọn tài khoản nguồn",
+      "category": "Danh mục giao dịch *",
+      "categoryPlaceholder": "Chọn danh mục",
+      "date": "Ngày giao dịch *",
+      "note": "Ghi chú mô tả",
+      "notePlaceholder": "Nhập ghi chú giao dịch...",
+      "cancel": "Hủy bỏ",
+      "back": "Quay lại",
+      "next": "Tiếp tục",
+      "submit": "Hoàn thành",
+      "successAdd": "Thêm giao dịch mới thành công!",
+      "failAdd": "Thêm giao dịch thất bại",
+      "validationError": "Vui lòng nhập đầy đủ các trường bắt buộc!"
+    }
   }
 }
