@@ -8,6 +8,7 @@ export const routes = {
   systemUsers: '/dashboard/system/users',
   systemRoles: '/dashboard/system/roles',
   systemActivityLog: '/dashboard/system/activity-log',
+  transactions: '/transactions',
 } as const
 
 export type AppRoute = (typeof routes)[keyof typeof routes]

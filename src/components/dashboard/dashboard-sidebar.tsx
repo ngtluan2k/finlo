@@ -48,7 +48,7 @@ const navSections = [
     isDropdown: false,
     items: [
       { href: routes.dashboard, icon: LayoutDashboard, labelKey: 'nav.overview' as const },
-      { href: '#', icon: Receipt, labelKey: 'nav.transactions' as const, disabled: true, requiredPermissions: ['transaction:read'] },
+      { href: routes.transactions, icon: Receipt, labelKey: 'nav.transactions' as const, requiredPermissions: ['transaction:read'] },
       { href: '#', icon: Wallet, labelKey: 'nav.wallets' as const, disabled: true, requiredPermissions: ['wallet:read'] },
       { href: '#', icon: PiggyBank, labelKey: 'nav.budgets' as const, disabled: true, requiredPermissions: ['budget:read'] },
     ],

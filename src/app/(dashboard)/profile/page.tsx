@@ -1,4 +1,4 @@
-import { ProfileDetails } from '@/components/dashboard/profile-details'
+import { ProfileDetails } from '@/components/profile/profile-details'
 
 export const metadata = {
   title: 'Hồ sơ cá nhân | Finlo',
