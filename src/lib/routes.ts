@@ -11,6 +11,7 @@ export const routes = {
   transactions: '/transactions',
   notifications: '/dashboard/notifications',
   wallets: '/wallets',
+  budgets: '/budgets',
 } as const
 
 export type AppRoute = (typeof routes)[keyof typeof routes]

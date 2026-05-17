@@ -50,7 +50,7 @@ const navSections = [
       { href: routes.dashboard, icon: LayoutDashboard, labelKey: 'nav.overview' as const },
       { href: routes.transactions, icon: Receipt, labelKey: 'nav.transactions' as const, requiredPermissions: ['transaction:read'] },
       { href: routes.wallets, icon: Wallet, labelKey: 'nav.wallets' as const, requiredPermissions: ['wallet:read'] },
-      { href: '#', icon: PiggyBank, labelKey: 'nav.budgets' as const, disabled: true, requiredPermissions: ['budget:read'] },
+      { href: routes.budgets, icon: PiggyBank, labelKey: 'nav.budgets' as const, requiredPermissions: ['budget:read'] },
     ],
   },
   {
@@ -176,16 +176,17 @@ export function DashboardSidebar({ open, user }: DashboardSidebarProps) {
                         if ('requiredPermissions' in subItem && !hasAccess(subItem.requiredPermissions)) return null
 
                         const SubIcon = subItem.icon
-                        const active = !subItem.disabled && pathname === subItem.href
+                        const isDisabled = 'disabled' in subItem ? (subItem as any).disabled : false
+                        const active = !isDisabled && pathname === subItem.href
                         const className = cn(
                           'flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition',
                           active
                             ? 'bg-white/15 text-white shadow-sm dark:bg-[#102A43] border border-white/5'
                             : 'text-[#C0E8FB]/90 hover:bg-white/10 hover:text-white dark:text-slate-400 dark:hover:bg-[#102A43]',
-                          subItem.disabled && 'cursor-not-allowed opacity-45 hover:bg-transparent dark:hover:bg-transparent'
+                          isDisabled && 'cursor-not-allowed opacity-45 hover:bg-transparent dark:hover:bg-transparent'
                         )
 
-                        if (subItem.disabled) {
+                        if (isDisabled) {
                           return (
                             <span key={subItem.labelKey} className={className} aria-disabled>
                               <SubIcon className="size-4 shrink-0" aria-hidden />
@@ -216,18 +217,19 @@ export function DashboardSidebar({ open, user }: DashboardSidebarProps) {
               <div className="space-y-0.5">
                 {section.items.map((item) => {
                   if ('requiredPermissions' in item && !hasAccess(item.requiredPermissions)) return null
-                  const { href, icon: Icon, labelKey, disabled } = item
+                  const { href, icon: Icon, labelKey } = item
+                  const isDisabled = 'disabled' in item ? (item as any).disabled : false
 
-                  const active = !disabled && pathname === href
+                  const active = !isDisabled && pathname === href
                   const className = cn(
                     'flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition',
                     active
                       ? 'bg-[linear-gradient(135deg,#003f66_0%,#015c97_35%,#2d82b9_70%,#54a4d7_100%)] text-white shadow-md dark:bg-[linear-gradient(135deg,#002b45_0%,#003f66_45%,#015c97_100%)]'
                       : 'text-[#C0E8FB] hover:bg-white/10 hover:text-white dark:text-slate-300 dark:hover:bg-[#102A43] dark:hover:text-white',
-                    disabled && 'cursor-not-allowed opacity-45 hover:bg-transparent dark:hover:bg-transparent',
+                    isDisabled && 'cursor-not-allowed opacity-45 hover:bg-transparent dark:hover:bg-transparent',
                   )
 
-                  if (disabled) {
+                  if (isDisabled) {
                     return (
                       <span key={labelKey} className={className} aria-disabled>
                         <Icon className="size-4.5 shrink-0" aria-hidden />

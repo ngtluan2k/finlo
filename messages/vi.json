@@ -776,5 +776,76 @@
       },
       "success": "Lưu ví thành công!"
     }
+  },
+  "budgets": {
+    "title": "Ngân sách",
+    "subtitle": "Lập kế hoạch chi tiêu và theo dõi ngân sách của bạn",
+    "monthPrefix": "Tháng",
+    "filter": "Bộ lọc",
+    "createBudget": "Tạo ngân sách",
+    "summary": {
+      "totalBudget": "Tổng ngân sách",
+      "spent": "Đã chi tiêu",
+      "remaining": "Còn lại",
+      "exceeded": "Vượt ngân sách",
+      "comparedToPlan": "{percent}% so với kế hoạch",
+      "categoriesCount": "{count} danh mục"
+    },
+    "tabs": {
+      "all": "Tất cả ({count})",
+      "expense": "Chi tiêu ({count})",
+      "saving": "Tiết kiệm ({count})",
+      "investment": "Đầu tư ({count})"
+    },
+    "table": {
+      "category": "Danh mục",
+      "budget": "Ngân sách",
+      "spent": "Đã chi tiêu",
+      "remaining": "Còn lại",
+      "progress": "Tiến độ",
+      "status": "Trạng thái",
+      "showing": "Hiển thị {start} - {end} trong {total} danh mục"
+    },
+    "status": {
+      "good": "Tốt",
+      "warning": "Cần chú ý",
+      "exceeded": "Vượt",
+      "completed": "Hoàn thành"
+    },
+    "sidebar": {
+      "overview": "Tổng quan ngân sách",
+      "spent": "Đã chi tiêu",
+      "saving": "Tiết kiệm",
+      "investment": "Đầu tư",
+      "comparedToLastMonth": "So với tháng trước",
+      "alerts": "Cảnh báo",
+      "viewAll": "Xem tất cả",
+      "alertMessage": "Bạn đã vượt ngân sách ở {count} danh mục",
+      "suggestions": "Gợi ý cho bạn",
+      "suggestion1Title": "Bạn có thể tăng ngân sách cho danh mục {category}",
+      "suggestion1Desc": "Dựa trên chi tiêu các tháng trước",
+      "suggestion2Title": "Thiết lập ngân sách định kỳ",
+      "suggestion2Desc": "Giúp bạn kiểm soát chi tiêu tốt hơn",
+      "noAlerts": "Không có cảnh báo nào."
+    },
+    "form": {
+      "addTitle": "Thêm ngân sách",
+      "addSubtitle": "Thiết lập ngân sách mới cho tháng",
+      "editTitle": "Sửa ngân sách",
+      "editSubtitle": "Chỉnh sửa ngân sách hiện tại",
+      "category": "Danh mục",
+      "categoryPlaceholder": "Chọn danh mục",
+      "amount": "Số tiền ngân sách",
+      "amountPlaceholder": "Nhập số tiền",
+      "cancel": "Huỷ",
+      "save": "Lưu",
+      "saving": "Đang lưu...",
+      "success": "Lưu ngân sách thành công!",
+      "errors": {
+        "categoryRequired": "Vui lòng chọn danh mục",
+        "amountRequired": "Vui lòng nhập số tiền hợp lệ",
+        "saveFailed": "Có lỗi xảy ra khi lưu"
+      }
+    }
   }
 }

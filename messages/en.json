@@ -776,5 +776,75 @@
       },
       "success": "Wallet saved successfully!"
     }
+  },
+  "budgets": {
+    "title": "Budgets",
+    "subtitle": "Plan your spending and track your budget",
+    "monthPrefix": "Month",
+    "filter": "Filter",
+    "createBudget": "Create budget",
+    "summary": {
+      "totalBudget": "Total Budget",
+      "spent": "Spent",
+      "remaining": "Remaining",
+      "exceeded": "Over Budget",
+      "comparedToPlan": "{percent}% of plan",
+      "categoriesCount": "{count} categories"
+    },
+    "tabs": {
+      "all": "All ({count})",
+      "expense": "Expense ({count})",
+      "saving": "Saving ({count})",
+      "investment": "Investment ({count})"
+    },
+    "table": {
+      "category": "Category",
+      "budget": "Budget",
+      "spent": "Spent",
+      "remaining": "Remaining",
+      "progress": "Progress",
+      "status": "Status",
+      "showing": "Showing {start} - {end} of {total} categories"
+    },
+    "status": {
+      "good": "Good",
+      "warning": "Warning",
+      "exceeded": "Exceeded",
+      "completed": "Completed"
+    },
+    "sidebar": {
+      "overview": "Budget Overview",
+      "spent": "Spent",
+      "saving": "Saving",
+      "investment": "Investment",
+      "comparedToLastMonth": "Compared to last month",
+      "alerts": "Alerts",
+      "viewAll": "View all",
+      "alertMessage": "You exceeded budget in {count} categories",
+      "suggestions": "Suggestions for you",
+      "suggestion1Title": "You could increase budget for {category}",
+      "suggestion1Desc": "Based on past spending",
+      "suggestion2Title": "Set up recurring budgets",
+      "suggestion2Desc": "Helps you control spending better"
+    },
+    "form": {
+      "addTitle": "Add Budget",
+      "addSubtitle": "Set a new budget for the month",
+      "editTitle": "Edit Budget",
+      "editSubtitle": "Modify existing budget",
+      "category": "Category",
+      "categoryPlaceholder": "Select category",
+      "amount": "Budget Amount",
+      "amountPlaceholder": "Enter amount",
+      "cancel": "Cancel",
+      "save": "Save",
+      "saving": "Saving...",
+      "success": "Budget saved successfully!",
+      "errors": {
+        "categoryRequired": "Please select a category",
+        "amountRequired": "Please enter a valid amount",
+        "saveFailed": "An error occurred while saving"
+      }
+    }
   }
 }
