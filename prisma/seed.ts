@@ -767,9 +767,60 @@ async function main() {
         },
       })
     }
+
+    // Seed mock notifications
+    await prisma.notification.deleteMany({
+      where: { userId: user.id },
+    })
+
+    const mockNotifications = [
+      {
+        type: 'SYSTEM' as const,
+        status: 'UNREAD' as const,
+        title: 'Chào mừng đến với Finlo!',
+        message: 'Finlo giúp bạn quản lý tài chính cá nhân một cách thông minh, rõ ràng và trực quan. Hãy bắt đầu bằng cách thêm các tài khoản ví của bạn nhé!',
+        createdAt: new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
+      },
+      {
+        type: 'TRANSACTION' as const,
+        status: 'UNREAD' as const,
+        title: 'Giao dịch mới hoàn thành',
+        message: 'Bạn đã thực hiện giao dịch chi tiêu "Ăn sáng phở bò" trị giá 45.000 đ từ Ví tiền mặt.',
+        createdAt: new Date(now.getTime() - 12 * 60 * 60 * 1000), // 12 hours ago
+      },
+      {
+        type: 'BUDGET' as const,
+        status: 'UNREAD' as const,
+        title: 'Cảnh báo hạn mức ngân sách',
+        message: 'Hạn mức chi tiêu cho danh mục "Ăn uống" trong tháng này đã đạt 80%. Vui lòng cân đối chi tiêu hợp lý.',
+        createdAt: new Date(now.getTime() - 2 * 60 * 60 * 1000), // 2 hours ago
+      },
+      {
+        type: 'SECURITY' as const,
+        status: 'READ' as const,
+        title: 'Đăng nhập từ thiết bị mới',
+        message: 'Tài khoản của bạn vừa được đăng nhập thành công từ thiết bị Windows sử dụng trình duyệt Chrome tại địa chỉ IP 127.0.0.1.',
+        readAt: new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000),
+        createdAt: new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
+      }
+    ]
+
+    for (const notif of mockNotifications) {
+      await prisma.notification.create({
+        data: {
+          userId: user.id,
+          type: notif.type,
+          status: notif.status,
+          title: notif.title,
+          message: notif.message,
+          readAt: notif.readAt ?? null,
+          createdAt: notif.createdAt,
+        }
+      })
+    }
   }
 
-  console.log('Seed completed: roles, permissions, role_permissions, users, activity_logs')
+  console.log('Seed completed: roles, permissions, role_permissions, users, activity_logs, notifications')
 }
 
 main()

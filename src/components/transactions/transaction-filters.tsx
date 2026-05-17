@@ -112,7 +112,7 @@ export function TransactionFilters({
 
         {/* Date range */}
         <div className="flex items-center gap-2">
-          <div className="w-[140px]">
+          <div className="w-[180px]">
             <DatePicker
               value={startDate}
               onChange={setStartDate}
@@ -120,7 +120,7 @@ export function TransactionFilters({
             />
           </div>
           <span className="text-zinc-400">→</span>
-          <div className="w-[140px]">
+          <div className="w-[180px]">
             <DatePicker
               value={endDate}
               onChange={setEndDate}

@@ -18,7 +18,8 @@ function isPrismaClient(value: unknown): value is PrismaClient {
     typeof value === 'object' &&
     value !== null &&
     'userSettings' in value &&
-    typeof (value as PrismaClient).userSettings?.upsert === 'function'
+    typeof (value as PrismaClient).userSettings?.upsert === 'function' &&
+    'notification' in value
   )
 }
 
