@@ -149,5 +149,286 @@
     "light": "Sáng",
     "dark": "Tối",
     "system": "Hệ thống"
+  },
+  "system": {
+    "common": {
+      "actions": {
+        "LOGIN": "Đăng nhập",
+        "UPDATE_PROFILE": "Cập nhật hồ sơ",
+        "UPDATE_USER_STATUS": "Thay đổi trạng thái",
+        "CHANGE_ROLE": "Thay đổi vai trò",
+        "CREATE_USER": "Tạo tài khoản mới",
+        "DELETE_USER": "Xóa tài khoản",
+        "EXPORT_REPORT": "Xuất báo cáo tài chính",
+        "APPROVE_BUDGET": "Duyệt ngân sách chi tiêu",
+        "CREATE_TRANSACTION": "Ghi nhận giao dịch",
+        "UPDATE_ROLE_PERMISSIONS": "Cập nhật ma trận quyền",
+        "CREATE_ROLE": "Tạo vai trò mới",
+        "DELETE_ROLE": "Xóa vai trò hệ thống"
+      },
+      "roles": {
+        "SUPER_ADMIN": "Super Admin",
+        "ADMIN": "Admin",
+        "CHIEF_ACCOUNTANT": "Kế toán trưởng",
+        "ACCOUNTANT": "Kế toán viên",
+        "CASHIER": "Thủ quỹ",
+        "USER": "Người dùng",
+        "system": "Hệ thống",
+        "custom": "Tùy chỉnh",
+        "none": "Không có vai trò"
+      },
+      "statuses": {
+        "ACTIVE": "Đang hoạt động",
+        "SUSPENDED": "Tạm khóa",
+        "INACTIVE": "Vô hiệu hóa",
+        "all": "Trạng thái: Tất cả"
+      },
+      "search": "Tìm kiếm...",
+      "filter": "Bộ lọc",
+      "refresh": "Làm mới",
+      "loading": "Đang tải...",
+      "noRecords": "Không tìm thấy dữ liệu phù hợp.",
+      "noDetails": "Không có mô tả chi tiết.",
+      "confirmDelete": "Bạn có chắc chắn muốn xóa?",
+      "cancel": "Hủy",
+      "save": "Lưu cấu hình",
+      "submitting": "Đang xử lý...",
+      "viewDetail": "Xem chi tiết",
+      "actionsLabel": "Thao tác"
+    },
+    "activityLog": {
+      "title": "Nhật ký hoạt động",
+      "subtitle": "Tra cứu lịch sử kiểm toán của các quản trị viên và nhân viên. Giám sát các biến động hệ thống bảo mật thời gian thực.",
+      "placeholder": "Tìm kiếm theo hành động, người dùng, chi tiết...",
+      "table": {
+        "member": "Thành viên",
+        "action": "Hành động",
+        "details": "Chi tiết sự kiện",
+        "ip": "Địa chỉ IP",
+        "time": "Thời gian",
+        "loading": "Đang tải lịch sử nhật ký...",
+        "noRecords": "Chưa ghi nhận sự kiện hoạt động nào phù hợp.",
+        "noDetails": "Không có mô tả thêm.",
+        "pagination": "Đang xem {start}-{end} trong số {total} sự kiện"
+      }
+    },
+    "roles": {
+      "title": "Vai trò & quyền",
+      "subtitle": "Quản lý các vai trò và phân quyền trong hệ thống",
+      "searchPlaceholder": "Tìm kiếm vai trò...",
+      "addRole": "Thêm vai trò",
+      "tabList": "Danh sách vai trò",
+      "tabLogs": "Nhật ký thay đổi",
+      "stats": {
+        "total": "Tổng số vai trò",
+        "totalDesc": "Vai trò trong hệ thống",
+        "active": "Vai trò đang hoạt động",
+        "activeDesc": "Đang được sử dụng",
+        "system": "Vai trò hệ thống",
+        "systemDesc": "Không thể xóa",
+        "custom": "Vai trò tùy chỉnh",
+        "customDesc": "Có thể chỉnh sửa, xóa"
+      },
+      "table": {
+        "name": "Tên vai trò",
+        "description": "Mô tả",
+        "type": "Loại vai trò",
+        "userCount": "{count} người dùng",
+        "status": "Trạng thái",
+        "action": "Thao tác",
+        "matrixTooltip": "Quản lý ma trận quyền hạn",
+        "loading": "Đang tải cấu hình vai trò & quyền hạn...",
+        "noRecords": "Không tìm thấy vai trò nào khớp với bộ lọc.",
+        "viewDetail": "Xem chi tiết",
+        "setPermissions": "Phân quyền",
+        "deleteRole": "Xóa vai trò",
+        "pagination": "Hiển thị {start} - {end} trong {total} vai trò"
+      },
+      "logs": {
+        "searchPlaceholder": "Tìm theo người dùng, hành động...",
+        "table": {
+          "user": "Người thực hiện",
+          "action": "Hành động",
+          "details": "Chi tiết thay đổi",
+          "ip": "Địa chỉ IP",
+          "time": "Thời gian",
+          "loading": "Đang tải nhật ký hoạt động...",
+          "noRecords": "Không tìm thấy nhật ký hoạt động nào.",
+          "pagination": "Hiển thị {start} - {end} trong {total} bản ghi nhật ký"
+        }
+      },
+      "drawer": {
+        "title": "Cấu hình vai trò",
+        "code": "Mã: {code}",
+        "tabInfo": "Thông tin vai trò",
+        "tabMatrix": "Ma trận quyền hạn",
+        "form": {
+          "name": "Tên vai trò",
+          "level": "Cấp bậc (Level)",
+          "levelDesc": "* Level dùng để so sánh quyền hạn. Chỉ vai trò cấp cao mới gán được vai trò cấp dưới.",
+          "description": "Mô tả chi tiết",
+          "userCount": "{count} thành viên",
+          "userCountDesc": "Đang được gán vai trò này",
+          "saveInfo": "Lưu thông tin vai trò"
+        },
+        "matrix": {
+          "subtitle": "Tích chọn các ô dưới đây để gán quyền thao tác cụ thể cho vai trò này.",
+          "save": "Lưu cấu hình",
+          "superAdminTitle": "Đặc quyền Super Admin tối cao",
+          "superAdminDesc": "Vai trò Super Administrator sở hữu toàn bộ các đặc quyền của hệ thống nhằm bảo toàn tính toàn vẹn của nền tảng và không thể bị sửa đổi.",
+          "checkAll": "Chọn tất cả",
+          "uncheckAll": "Hủy chọn tất cả"
+        },
+        "modules": {
+          "wallet": "Tổng quan (Dashboard)",
+          "transaction": "Thu chi (Transactions)",
+          "budget": "Báo cáo (Reports & Budgets)",
+          "category": "Danh mục (Categories)",
+          "user": "Người dùng (System Users)",
+          "role": "Vai trò & Quyền (RBAC Roles)",
+          "permission": "Hệ thống (Platform Settings)"
+        }
+      },
+      "createModal": {
+        "title": "Thêm vai trò hệ thống mới",
+        "name": "Tên vai trò",
+        "namePlaceholder": "Kế toán trưởng",
+        "code": "Mã vai trò (IN HOA)",
+        "codePlaceholder": "CHIEF_ACCOUNTANT",
+        "level": "Cấp bậc (Level)",
+        "levelDesc": "* Cấp bậc cao hơn có thể quản lý được cấp bậc thấp hơn.",
+        "description": "Mô tả vai trò",
+        "descriptionPlaceholder": "Vai trò quản lý phê duyệt ngân sách và đối soát thu chi.",
+        "cancel": "Hủy",
+        "submit": "Tạo vai trò"
+      },
+      "messages": {
+        "fetchFailed": "Không thể tải danh sách vai trò hoặc quyền",
+        "fetchLogsFailed": "Không thể tải nhật ký hoạt động",
+        "updateSuccess": "Cập nhật thông tin vai trò thành công!",
+        "updateFailed": "Cập nhật thông tin vai trò thất bại",
+        "updateMatrixSuccess": "Cập nhật ma trận phân quyền thành công!",
+        "updateMatrixFailed": "Cập nhật quyền hạn thất bại",
+        "codeExists": "Mã vai trò đã tồn tại trong hệ thống",
+        "createSuccess": "Tạo vai trò mới thành công!",
+        "createFailed": "Tạo vai trò thất bại",
+        "systemError": "Lỗi hệ thống khi tạo vai trò",
+        "protectedRole": "Vai trò hệ thống \"{name}\" được bảo vệ và không thể xóa.",
+        "assignedMembers": "Không thể xóa vai trò này vì đang có {count} thành viên được gán. Vui lòng chuyển vai trò của họ trước.",
+        "confirmDelete": "Bạn có chắc chắn muốn xóa vai trò \"{name}\" khỏi hệ thống?",
+        "deleteSuccess": "Xóa vai trò thành công",
+        "deleteFailed": "Xóa vai trò thất bại"
+      }
+    },
+    "users": {
+      "title": "Quản lý người dùng",
+      "subtitle": "Quản trị tài khoản, phân cấp vai trò và giám sát nhật ký hành động trong hệ thống.",
+      "addUser": "Thêm thành viên",
+      "stats": {
+        "total": "Tổng thành viên",
+        "totalDesc": "Tài khoản được đăng ký trong hệ thống",
+        "active": "Đang hoạt động",
+        "activeDesc": "Tài khoản trực tuyến, hoạt động bình thường",
+        "suspended": "Tạm khóa",
+        "suspendedDesc": "Tài khoản tạm ngưng do vi phạm hoặc yêu cầu",
+        "inactive": "Vô hiệu hóa",
+        "inactiveDesc": "Tài khoản ngưng hoạt động vĩnh viễn"
+      },
+      "toolbar": {
+        "searchPlaceholder": "Tìm kiếm người dùng (tên, email, SĐT...)",
+        "roleAll": "Vai trò: Tất cả",
+        "statusAll": "Trạng thái: Tất cả"
+      },
+      "table": {
+        "user": "Người dùng",
+        "role": "Vai trò",
+        "status": "Trạng thái",
+        "created": "Ngày tạo",
+        "actions": "Thao tác",
+        "loading": "Đang tải danh sách người dùng...",
+        "noRecords": "Không tìm thấy thành viên nào khớp với bộ lọc.",
+        "you": "Bạn",
+        "noRole": "Không có vai trò",
+        "viewDetail": "Xem chi tiết",
+        "suspend": "Tạm khóa tài khoản",
+        "activate": "Mở khóa tài khoản",
+        "delete": "Xóa tài khoản",
+        "pagination": "Đang xem {start}-{end} trong số {total} thành viên"
+      },
+      "drawer": {
+        "title": "Chi tiết người dùng",
+        "tabInfo": "Thông tin",
+        "tabRoles": "Vai trò & quyền",
+        "tabLogs": "Nhật ký hoạt động",
+        "info": {
+          "name": "Họ và Tên",
+          "username": "Tên tài khoản",
+          "email": "Email",
+          "phone": "Số điện thoại",
+          "phoneEmpty": "Chưa cung cấp",
+          "language": "Ngôn ngữ",
+          "timezone": "Múi giờ",
+          "rbac": "Phân cấp phân quyền vai trò",
+          "rbacDesc": "Thay đổi vai trò sẽ điều chỉnh lập tức quyền hạn truy cập của người dùng trên toàn bộ hệ thống.",
+          "rbacSelfWarning": "* Bạn không thể thay đổi vai trò của chính mình để tránh mất quyền quản trị."
+        },
+        "permissions": {
+          "title": "Bảng ma trận phân quyền vai trò",
+          "roleLabel": "Vai trò: {name}",
+          "moduleHeader": "Mô đun quản lý",
+          "read": "Xem",
+          "create": "Thêm",
+          "update": "Sửa",
+          "delete": "Xóa",
+          "desc": "* Quyền hạn của người dùng được kế thừa trực tiếp từ vai trò của họ. Để điều chỉnh quyền hạn, vui lòng chỉnh sửa cấu hình trong trang \"Vai trò & quyền\".",
+          "modules": {
+            "wallet": "Tổng quan (Dashboard)",
+            "transaction": "Thu chi (Transactions)",
+            "budget": "Báo cáo (Reports & Budgets)",
+            "category": "Danh mục (Categories)"
+          }
+        },
+        "logs": {
+          "title": "Nhật ký hoạt động của thành viên",
+          "noRecords": "Chưa ghi nhận hoạt động nào của thành viên này."
+        }
+      },
+      "createModal": {
+        "title": "Thêm thành viên mới",
+        "lastName": "Họ",
+        "lastNamePlaceholder": "Nguyễn Văn",
+        "firstName": "Tên",
+        "firstNamePlaceholder": "A",
+        "email": "Địa chỉ Email",
+        "emailPlaceholder": "nguyenvana@finlo.vn",
+        "username": "Tên đăng nhập (Username)",
+        "usernamePlaceholder": "nguyenvana",
+        "password": "Mật khẩu ban đầu",
+        "passwordPlaceholder": "••••••••",
+        "phone": "Số điện thoại (tùy chọn)",
+        "phonePlaceholder": "0912345678",
+        "role": "Vai trò gán ban đầu",
+        "roleSelect": "Chọn vai trò",
+        "cancel": "Hủy",
+        "submit": "Lưu tài khoản"
+      },
+      "messages": {
+        "fetchFailed": "Không thể tải danh sách người dùng",
+        "fetchDetailsFailed": "Không thể tải chi tiết người dùng",
+        "statusSuccess": "Cập nhật trạng thái người dùng thành công",
+        "statusFailed": "Cập nhật trạng thái thất bại",
+        "roleSuccess": "Thay đổi vai trò người dùng thành công",
+        "roleFailed": "Thay đổi vai trò thất bại",
+        "confirmDelete": "Bạn có chắc chắn muốn xóa thành viên này? Hành động này sẽ khóa tài khoản và lưu trữ lịch sử dữ liệu.",
+        "deleteSelfError": "Bạn không thể tự xóa tài khoản của chính mình!",
+        "deleteSuccess": "Xóa người dùng thành công",
+        "deleteFailed": "Xóa người dùng thất bại",
+        "emailExists": "Email đã tồn tại trong hệ thống",
+        "usernameExists": "Tên đăng nhập đã tồn tại trong hệ thống",
+        "createFailed": "Thêm thành viên thất bại",
+        "createSuccess": "Thêm thành viên mới thành công!",
+        "systemError": "Đã xảy ra lỗi hệ thống"
+      }
+    }
   }
 }

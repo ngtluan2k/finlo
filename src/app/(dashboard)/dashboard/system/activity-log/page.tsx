@@ -1,8 +1,13 @@
 import { ActivityLogManagement } from '@/components/system/activity-log-management'
 
-export const metadata = {
-  title: 'Nhật ký hoạt động - Finlo Admin',
-  description: 'Tra cứu kiểm toán lịch sử hoạt động và các thay đổi trong hệ thống.',
+import { getTranslations } from 'next-intl/server'
+
+export async function generateMetadata() {
+  const t = await getTranslations('system.activityLog')
+  return {
+    title: `${t('title')} - Finlo Admin`,
+    description: t('subtitle'),
+  }
 }
 
 export default function SystemActivityLogPage() {
