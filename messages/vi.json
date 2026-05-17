@@ -1,0 +1,123 @@
+{
+  "metadata": {
+    "title": "Finlo",
+    "description": "Quản lý tài chính cá nhân"
+  },
+  "common": {
+    "appName": "Finlo",
+    "loading": "Đang tải..."
+  },
+  "auth": {
+    "shell": {
+      "tagline": "Quản lý chi tiêu thông minh — rõ ràng, đẹp mắt, trong tầm tay.",
+      "features": [
+        "Theo dõi ví và giao dịch realtime",
+        "Ngân sách & biểu đồ trực quan",
+        "Bảo mật, đồng bộ mọi thiết bị"
+      ]
+    },
+    "login": {
+      "title": "Đăng nhập",
+      "subtitle": "Quản lý tài chính cá nhân với Finlo",
+      "identifierLabel": "Email / SĐT / Tên đăng nhập",
+      "passwordLabel": "Mật khẩu",
+      "submit": "Đăng nhập",
+      "submitting": "Đang đăng nhập...",
+      "noAccount": "Chưa có tài khoản?",
+      "registerLink": "Đăng ký",
+      "invalidCredentials": "Email hoặc mật khẩu không đúng",
+      "emailNotVerified": "Email chưa được xác thực. Kiểm tra hộp thư hoặc gửi lại liên kết.",
+      "verifyLink": "Xác thực email",
+      "verifiedSuccess": "Email đã xác thực. Bạn có thể đăng nhập.",
+      "verifyExpired": "Liên kết xác thực đã hết hạn. Gửi lại email bên dưới.",
+      "verifyInvalid": "Liên kết xác thực không hợp lệ."
+    },
+    "register": {
+      "title": "Đăng ký",
+      "subtitle": "Tạo tài khoản Finlo miễn phí",
+      "firstNameLabel": "Tên",
+      "lastNameLabel": "Họ",
+      "emailLabel": "Email",
+      "passwordLabel": "Mật khẩu",
+      "submit": "Đăng ký",
+      "submitting": "Đang đăng ký...",
+      "hasAccount": "Đã có tài khoản?",
+      "loginLink": "Đăng nhập",
+      "failed": "Đăng ký thất bại"
+    },
+    "signOut": "Đăng xuất",
+    "validation": {
+      "emailInvalid": "Email không hợp lệ",
+      "passwordMin": "Mật khẩu tối thiểu 8 ký tự",
+      "passwordMax": "Mật khẩu tối đa 128 ký tự",
+      "firstNameRequired": "Tên là bắt buộc",
+      "firstNameMax": "Tên tối đa 100 ký tự",
+      "lastNameRequired": "Họ là bắt buộc",
+      "lastNameMax": "Họ tối đa 100 ký tự",
+      "identifierRequired": "Nhập email, số điện thoại hoặc tên đăng nhập",
+      "passwordRequired": "Mật khẩu là bắt buộc"
+    },
+    "errors": {
+      "invalidData": "Dữ liệu không hợp lệ",
+      "emailExists": "Email đã được sử dụng",
+      "registerFailed": "Đăng ký thất bại. Vui lòng thử lại.",
+      "sendFailed": "Không gửi được email xác thực. Vui lòng thử lại."
+    },
+    "verifyEmail": {
+      "title": "Xác thực email",
+      "subtitle": "Chúng tôi đã gửi liên kết xác thực đến email của bạn",
+      "sentTo": "Đã gửi đến {email}",
+      "instructions": "Mở hộp thư và bấm vào liên kết để kích hoạt tài khoản. Liên kết có hiệu lực 24 giờ.",
+      "resend": "Gửi lại email",
+      "resending": "Đang gửi...",
+      "resendSuccess": "Đã gửi lại email xác thực",
+      "resendTooSoon": "Vui lòng đợi một phút trước khi gửi lại",
+      "alreadyVerified": "Email đã được xác thực. Bạn có thể đăng nhập.",
+      "notFound": "Không tìm thấy tài khoản với email này",
+      "sendFailed": "Không gửi được email. Vui lòng thử lại.",
+      "backToLogin": "Quay lại đăng nhập",
+      "redirectingToLogin": "Email đã xác thực, đang chuyển đến đăng nhập...",
+      "email": {
+        "subject": "Xác thực tài khoản Finlo",
+        "greeting": "Xin chào,",
+        "body": "Nhấn nút bên dưới để xác thực email và kích hoạt tài khoản Finlo của bạn.",
+        "button": "Xác thực email",
+        "expiry": "Liên kết hết hạn sau 24 giờ. Nếu bạn không đăng ký Finlo, hãy bỏ qua email này."
+      }
+    }
+  },
+  "dashboard": {
+    "greeting": "Xin chào, {name}",
+    "placeholder": "Đăng nhập thành công. Các tính năng ví, giao dịch và ngân sách sẽ được bổ sung tiếp theo.",
+    "sidebar": {
+      "label": "Menu"
+    },
+    "nav": {
+      "overview": "Tổng quan",
+      "wallets": "Ví",
+      "transactions": "Giao dịch",
+      "budgets": "Ngân sách"
+    },
+    "header": {
+      "menu": "Bảng điều khiển",
+      "openSidebar": "Mở thanh bên",
+      "closeSidebar": "Đóng thanh bên"
+    },
+    "userMenu": {
+      "profile": "Hồ sơ",
+      "settings": "Cài đặt",
+      "docs": "Tài liệu"
+    }
+  },
+  "locale": {
+    "label": "Ngôn ngữ",
+    "vi": "Tiếng Việt",
+    "en": "English"
+  },
+  "theme": {
+    "label": "Giao diện",
+    "light": "Sáng",
+    "dark": "Tối",
+    "system": "Hệ thống"
+  }
+}

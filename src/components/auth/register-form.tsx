@@ -1,0 +1,176 @@
+'use client'
+
+import { useMemo, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Loader2, UserPlus } from 'lucide-react'
+import { useTranslations } from 'next-intl'
+import {
+  createRegisterSchema,
+  type RegisterInput,
+} from '@/validations/auth.schema'
+import {
+  AuthErrorBanner,
+  AuthField,
+  AuthFooterLink,
+  AuthSubmitButton,
+  authFormValidationOptions,
+  authInputClass,
+} from '@/components/auth/auth-field'
+import { routes } from '@/lib/routes'
+
+const AUTH_ERROR_CODES = [
+  'INVALID_DATA',
+  'EMAIL_EXISTS',
+  'REGISTER_FAILED',
+  'SEND_FAILED',
+] as const
+
+type AuthErrorCode = (typeof AUTH_ERROR_CODES)[number]
+
+function isAuthErrorCode(value: string): value is AuthErrorCode {
+  return AUTH_ERROR_CODES.includes(value as AuthErrorCode)
+}
+
+export function RegisterForm() {
+  const t = useTranslations('auth.register')
+  const tValidation = useTranslations('auth.validation')
+  const tErrors = useTranslations('auth.errors')
+  const router = useRouter()
+  const [error, setError] = useState<string | null>(null)
+
+  const registerSchema = useMemo(
+    () =>
+      createRegisterSchema({
+        emailInvalid: tValidation('emailInvalid'),
+        passwordMin: tValidation('passwordMin'),
+        passwordMax: tValidation('passwordMax'),
+        firstNameRequired: tValidation('firstNameRequired'),
+        firstNameMax: tValidation('firstNameMax'),
+        lastNameRequired: tValidation('lastNameRequired'),
+        lastNameMax: tValidation('lastNameMax'),
+      }),
+    [tValidation],
+  )
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<RegisterInput>({
+    resolver: zodResolver(registerSchema),
+    ...authFormValidationOptions,
+    defaultValues: { email: '', password: '', firstName: '', lastName: '' },
+  })
+
+  function resolveApiError(code: string) {
+    if (code === 'EMAIL_EXISTS') return tErrors('emailExists')
+    if (code === 'INVALID_DATA') return tErrors('invalidData')
+    if (code === 'REGISTER_FAILED') return tErrors('registerFailed')
+    if (code === 'SEND_FAILED') return tErrors('sendFailed')
+    return t('failed')
+  }
+
+  async function onSubmit(data: RegisterInput) {
+    setError(null)
+
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+
+    const payload = (await res.json()) as { code?: string }
+
+    if (!res.ok) {
+      const code = payload.code ?? 'REGISTER_FAILED'
+      setError(isAuthErrorCode(code) ? resolveApiError(code) : t('failed'))
+      return
+    }
+
+    router.push(
+      `${routes.verifyEmail}?email=${encodeURIComponent(data.email)}`,
+    )
+  }
+
+  return (
+    <form noValidate onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+      {error && <AuthErrorBanner>{error}</AuthErrorBanner>}
+
+      <div className="grid grid-cols-2 gap-3">
+        <AuthField
+          label={t('lastNameLabel')}
+          id="lastName"
+          error={errors.lastName?.message}
+        >
+          <input
+            id="lastName"
+            type="text"
+            autoComplete="family-name"
+            placeholder="Nguyen Thanh"
+            className={authInputClass(errors.lastName)}
+            {...register('lastName')}
+          />
+        </AuthField>
+
+        <AuthField
+          label={t('firstNameLabel')}
+          id="firstName"
+          error={errors.firstName?.message}
+        >
+          <input
+            id="firstName"
+            type="text"
+            autoComplete="given-name"
+            placeholder="Luan"
+            className={authInputClass(errors.firstName)}
+            {...register('firstName')}
+          />
+        </AuthField>
+      </div>
+
+      <AuthField label={t('emailLabel')} id="email" error={errors.email?.message}>
+        <input
+          id="email"
+          type="email"
+          autoComplete="email"
+          placeholder="email@example.com"
+          className={authInputClass(errors.email)}
+          {...register('email')}
+        />
+      </AuthField>
+
+      <AuthField label={t('passwordLabel')} id="password" error={errors.password?.message}>
+        <input
+          id="password"
+          type="password"
+          autoComplete="new-password"
+          placeholder="********"
+          className={authInputClass(errors.password)}
+          {...register('password')}
+        />
+      </AuthField>
+
+      <AuthSubmitButton disabled={isSubmitting}>
+        {isSubmitting ? (
+          <>
+            <Loader2 className="size-4 animate-spin" aria-hidden />
+            {t('submitting')}
+          </>
+        ) : (
+          <>
+            <UserPlus className="size-4" aria-hidden />
+            {t('submit')}
+          </>
+        )}
+      </AuthSubmitButton>
+
+      <AuthFooterLink
+        prompt={t('hasAccount')}
+        linkText={t('loginLink')}
+        href={routes.login}
+      />
+    </form>
+  )
+}

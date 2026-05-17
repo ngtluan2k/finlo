@@ -1,0 +1,123 @@
+{
+  "metadata": {
+    "title": "Finlo",
+    "description": "Personal finance management"
+  },
+  "common": {
+    "appName": "Finlo",
+    "loading": "Loading..."
+  },
+  "auth": {
+    "shell": {
+      "tagline": "Smart spending — clear, beautiful, always within reach.",
+      "features": [
+        "Track wallets and transactions in real time",
+        "Visual budgets and charts",
+        "Secure sync across all your devices"
+      ]
+    },
+    "login": {
+      "title": "Sign in",
+      "subtitle": "Manage your personal finances with Finlo",
+      "identifierLabel": "Email / Phone / Username",
+      "passwordLabel": "Password",
+      "submit": "Sign in",
+      "submitting": "Signing in...",
+      "noAccount": "Don't have an account?",
+      "registerLink": "Sign up",
+      "invalidCredentials": "Invalid email or password",
+      "emailNotVerified": "Email not verified. Check your inbox or resend the link.",
+      "verifyLink": "Verify email",
+      "verifiedSuccess": "Email verified. You can sign in now.",
+      "verifyExpired": "Verification link expired. Resend the email below.",
+      "verifyInvalid": "Invalid verification link."
+    },
+    "register": {
+      "title": "Sign up",
+      "subtitle": "Create your free Finlo account",
+      "firstNameLabel": "First name",
+      "lastNameLabel": "Last name",
+      "emailLabel": "Email",
+      "passwordLabel": "Password",
+      "submit": "Sign up",
+      "submitting": "Signing up...",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Sign in",
+      "failed": "Registration failed"
+    },
+    "signOut": "Sign out",
+    "validation": {
+      "emailInvalid": "Invalid email address",
+      "passwordMin": "Password must be at least 8 characters",
+      "passwordMax": "Password must be at most 128 characters",
+      "firstNameRequired": "First name is required",
+      "firstNameMax": "First name must be at most 100 characters",
+      "lastNameRequired": "Last name is required",
+      "lastNameMax": "Last name must be at most 100 characters",
+      "identifierRequired": "Enter email, phone number, or username",
+      "passwordRequired": "Password is required"
+    },
+    "errors": {
+      "invalidData": "Invalid data",
+      "emailExists": "Email is already in use",
+      "registerFailed": "Registration failed. Please try again.",
+      "sendFailed": "Could not send verification email. Please try again."
+    },
+    "verifyEmail": {
+      "title": "Verify your email",
+      "subtitle": "We sent a verification link to your email",
+      "sentTo": "Sent to {email}",
+      "instructions": "Open your inbox and click the link to activate your account. The link expires in 24 hours.",
+      "resend": "Resend email",
+      "resending": "Sending...",
+      "resendSuccess": "Verification email sent again",
+      "resendTooSoon": "Please wait a minute before resending",
+      "alreadyVerified": "Email already verified. You can sign in.",
+      "notFound": "No account found with this email",
+      "sendFailed": "Could not send email. Please try again.",
+      "backToLogin": "Back to sign in",
+      "redirectingToLogin": "Email verified, redirecting to sign in...",
+      "email": {
+        "subject": "Verify your Finlo account",
+        "greeting": "Hello,",
+        "body": "Click the button below to verify your email and activate your Finlo account.",
+        "button": "Verify email",
+        "expiry": "This link expires in 24 hours. If you did not sign up for Finlo, ignore this email."
+      }
+    }
+  },
+  "dashboard": {
+    "greeting": "Hello, {name}",
+    "placeholder": "Signed in successfully. Wallets, transactions, and budgets are coming soon.",
+    "sidebar": {
+      "label": "Menu"
+    },
+    "nav": {
+      "overview": "Overview",
+      "wallets": "Wallets",
+      "transactions": "Transactions",
+      "budgets": "Budgets"
+    },
+    "header": {
+      "menu": "Dashboard",
+      "openSidebar": "Open sidebar",
+      "closeSidebar": "Close sidebar"
+    },
+    "userMenu": {
+      "profile": "Profile",
+      "settings": "Settings",
+      "docs": "Docs"
+    }
+  },
+  "locale": {
+    "label": "Language",
+    "vi": "Tiếng Việt",
+    "en": "English"
+  },
+  "theme": {
+    "label": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  }
+}
