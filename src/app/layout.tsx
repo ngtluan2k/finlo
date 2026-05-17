@@ -10,6 +10,7 @@ import { authOptions } from '@/lib/auth'
 import { getOrCreateUserSettings } from '@/services/settings.service'
 import { prisma } from '@/lib/prisma'
 import { LocaleSync } from '@/components/locale-sync'
+import { CurrencyProvider } from '@/hooks/use-currency'
 import type { Locale } from '@/i18n/config'
 import './globals.css'
 
@@ -67,7 +68,9 @@ export default async function RootLayout({
         <LocaleSync userLocale={userLocale} currentLocale={locale} />
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider userId={userId} initialTheme={initialTheme}>
-            <AuthSessionProvider>{children}</AuthSessionProvider>
+            <AuthSessionProvider>
+              <CurrencyProvider>{children}</CurrencyProvider>
+            </AuthSessionProvider>
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>

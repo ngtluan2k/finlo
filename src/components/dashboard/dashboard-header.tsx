@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl'
 import { LocaleSwitcher } from '@/components/locale-switcher'
 import { ThemeSwitcher } from '@/components/theme-switcher'
 import { UserMenu } from '@/components/dashboard/user-menu'
+import { useRouter } from 'next/navigation'
 
 import { DashboardSidebarToggle } from '@/components/dashboard/dashboard-sidebar-toggle'
 
@@ -20,6 +21,16 @@ type DashboardHeaderProps = {
 
 export function DashboardHeader({ user, sidebarOpen, onToggleSidebar }: DashboardHeaderProps) {
   const t = useTranslations('dashboard')
+  const router = useRouter()
+
+  const handleAddTransactionClick = () => {
+    const pathname = typeof window !== 'undefined' ? window.location.pathname : ''
+    if (pathname.includes('/transactions')) {
+      window.dispatchEvent(new CustomEvent('open-add-transaction-modal'))
+    } else {
+      router.push('/transactions?add=true')
+    }
+  }
 
   return (
     <header className="flex h-16 shrink-0 items-center gap-4 bg-transparent px-4 sm:px-6">
@@ -41,12 +52,16 @@ export function DashboardHeader({ user, sidebarOpen, onToggleSidebar }: Dashboar
       </div>
 
       <div className="flex shrink-0 items-center gap-3">
-        <button className="hidden sm:flex h-9 items-center gap-2 rounded-full border-none bg-[linear-gradient(135deg,#003f66_0%,#015c97_35%,#2d82b9_70%,#54a4d7_100%)] px-4 text-sm font-semibold text-white shadow-md transition hover:scale-105 hover:opacity-90 dark:bg-[linear-gradient(135deg,#002b45_0%,#003f66_45%,#015c97_100%)]">
+        {/* <button className="hidden sm:flex h-9 items-center gap-2 rounded-full border-none bg-[linear-gradient(135deg,#003f66_0%,#015c97_35%,#2d82b9_70%,#54a4d7_100%)] px-4 text-sm font-semibold text-white shadow-md transition hover:scale-105 hover:opacity-90 dark:bg-[linear-gradient(135deg,#002b45_0%,#003f66_45%,#015c97_100%)]">
           <Plus className="size-4" />
           Thêm giao dịch
-        </button>
+        </button> */}
 
-        <button className="flex size-9 items-center justify-center rounded-full border border-white/20 text-white transition hover:bg-white/10 dark:border-[#1E293B] dark:hover:bg-[#102A43]">
+        <button 
+          onClick={handleAddTransactionClick}
+          className="flex size-9 items-center justify-center rounded-full border border-white/20 text-white transition hover:bg-white/10 dark:border-[#1E293B] dark:hover:bg-[#102A43] active:scale-95 duration-200 transform cursor-pointer"
+          title="Thêm giao dịch"
+        >
           <ArrowRightLeft className="size-4" />
         </button>
 

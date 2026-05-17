@@ -34,6 +34,18 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { toCode } from '@/lib/string'
+import { Input } from '@/components/ui/input'
+import { Select } from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from '@/components/ui/table'
+import { Pagination } from '@/components/ui/pagination'
 
 type Permission = {
   id: string
@@ -613,17 +625,16 @@ export function RolesManagement() {
           </p>
         </div>
         <div className="flex items-center gap-3 self-end sm:self-center">
-          <div className="relative hidden md:block w-64">
-            <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-zinc-400" />
-            <input
-              type="text"
+          <div className="hidden md:block w-64">
+            <Input
               placeholder={t('searchPlaceholder')}
               value={rolesSearch}
               onChange={(e) => {
                 setRolesSearch(e.target.value)
                 setRolesPage(1)
               }}
-              className="w-full rounded-xl border border-zinc-200 bg-white pl-9 pr-4 py-2 text-xs focus:border-blue-500 focus:outline-none dark:border-zinc-800 dark:bg-[#0c0c0e]"
+              leftIcon={<Search className="size-4 text-zinc-400" />}
+              className="py-1.5 text-xs"
             />
           </div>
           <button className="flex size-9 items-center justify-center rounded-xl border border-zinc-200 bg-white text-zinc-600 hover:text-zinc-950 transition dark:border-zinc-800 dark:bg-[#0c0c0e] dark:text-zinc-400 dark:hover:text-zinc-100">
@@ -726,17 +737,15 @@ export function RolesManagement() {
         <>
           {/* 4. Toolbar: Search & Advanced Filters (Roles View) */}
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-[#0c0c0e]">
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-zinc-400" />
-              <input
-                type="text"
+            <div className="flex-1 max-w-md">
+              <Input
                 placeholder={t('searchPlaceholder')}
                 value={rolesSearch}
                 onChange={(e) => {
                   setRolesSearch(e.target.value)
                   setRolesPage(1)
                 }}
-                className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 pl-10 pr-4 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-zinc-800 dark:bg-zinc-900/50"
+                leftIcon={<Search className="size-4 text-zinc-400" />}
               />
             </div>
 
@@ -807,206 +816,182 @@ export function RolesManagement() {
 
           {/* 5. Roles Table List */}
           <div className="rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-[#0c0c0e] overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse text-left text-sm">
-                <thead>
-                  <tr className="border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/30 text-xs font-semibold uppercase tracking-wider text-zinc-500">
-                    <th className="p-4 pl-6">{t('table.name')}</th>
-                    <th className="p-4">{t('table.description')}</th>
-                    <th className="p-4">{t('table.type')}</th>
-                    <th className="p-4">{t('table.userCount', { count: '' }).replace('()', '').trim()}</th>
-                    <th className="p-4">{t('table.status')}</th>
-                    <th className="p-4 text-center pr-6">{t('table.action')}</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
-                  {loading ? (
-                    <tr>
-                      <td colSpan={6} className="p-12 text-center">
-                        <Loader2 className="size-6 animate-spin text-zinc-400 mx-auto" />
-                        <p className="text-sm text-zinc-500 mt-2">{t('table.loading')}</p>
-                      </td>
-                    </tr>
-                  ) : paginatedRoles.length === 0 ? (
-                    <tr>
-                      <td colSpan={6} className="p-12 text-center text-sm text-zinc-500">
-                        {t('table.noRecords')}
-                      </td>
-                    </tr>
-                  ) : (
-                    paginatedRoles.map((role) => {
-                      const isSys = isSystemRole(role.code)
-                      const isAct = role.status === 'ACTIVE'
-                      const styling = getRoleIconDetails(role.code)
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="pl-6">{t('table.name')}</TableHead>
+                  <TableHead>{t('table.description')}</TableHead>
+                  <TableHead>{t('table.type')}</TableHead>
+                  <TableHead>{t('table.userCount', { count: '' }).replace('()', '').trim()}</TableHead>
+                  <TableHead>{t('table.status')}</TableHead>
+                  <TableHead className="text-center pr-6">{t('table.action')}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {loading ? (
+                  <TableRow>
+                    <TableCell colSpan={6} className="p-12 text-center">
+                      <Loader2 className="size-6 animate-spin text-zinc-400 mx-auto" />
+                      <p className="text-sm text-zinc-500 mt-2">{t('table.loading')}</p>
+                    </TableCell>
+                  </TableRow>
+                ) : paginatedRoles.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={6} className="p-12 text-center text-sm text-zinc-500">
+                      {t('table.noRecords')}
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  paginatedRoles.map((role) => {
+                    const isSys = isSystemRole(role.code)
+                    const isAct = role.status === 'ACTIVE'
+                    const styling = getRoleIconDetails(role.code)
 
-                      return (
-                        <tr
-                          key={role.id}
-                          onClick={() => handleOpenDrawer(role, 'info')}
-                          className="group hover:bg-zinc-50/40 dark:hover:bg-zinc-900/20 cursor-pointer transition"
-                        >
-                          {/* Role Icon and Name */}
-                          <td className="p-4 pl-6">
-                            <div className="flex items-center gap-3">
-                              <div className={cn(
-                                "size-10 rounded-full flex items-center justify-center font-bold text-white shadow-inner",
-                                styling.iconColor
-                              )}>
-                                <Shield className="size-5" />
-                              </div>
-                              <div>
-                                <span className="font-semibold text-zinc-950 dark:text-zinc-50 block leading-tight">
-                                  {translateRoleName(role.code, role.name)}
-                                </span>
-                                <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider mt-0.5 block">
-                                  {role.code}
-                                </span>
-                              </div>
+                    return (
+                      <TableRow
+                        key={role.id}
+                        onClick={() => handleOpenDrawer(role, 'info')}
+                        className="group transition-all duration-300 animate-in fade-in-50 slide-in-from-bottom-1"
+                      >
+                        {/* Role Icon and Name */}
+                        <TableCell className="pl-6">
+                          <div className="flex items-center gap-3">
+                            <div className={cn(
+                              "size-10 rounded-full flex items-center justify-center font-bold text-white shadow-inner",
+                              styling.iconColor
+                            )}>
+                              <Shield className="size-5" />
                             </div>
-                          </td>
+                            <div>
+                              <span className="font-semibold text-zinc-950 dark:text-zinc-50 block leading-tight">
+                                {translateRoleName(role.code, role.name)}
+                              </span>
+                              <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider mt-0.5 block">
+                                {role.code}
+                              </span>
+                            </div>
+                          </div>
+                        </TableCell>
 
-                          {/* Description */}
-                          <td className="p-4 text-zinc-650 dark:text-zinc-400 max-w-xs truncate">
-                            {role.description || tCommon('noDetails')}
-                          </td>
+                        {/* Description */}
+                        <TableCell className="max-w-xs truncate text-zinc-650 dark:text-zinc-400">
+                          {role.description || tCommon('noDetails')}
+                        </TableCell>
 
-                          {/* Role Type Tag */}
-                          <td className="p-4">
+                        {/* Role Type Tag */}
+                        <TableCell>
+                          <span className={cn(
+                            "inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-semibold border shadow-inner",
+                            isSys
+                              ? "bg-blue-500/10 text-blue-600 border-blue-500/20 dark:bg-blue-550/20 dark:text-blue-400"
+                              : "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 dark:bg-emerald-500/20 dark:text-emerald-400"
+                          )}>
+                            {isSys ? tCommon('roles.system') : tCommon('roles.custom')}
+                          </span>
+                        </TableCell>
+
+                        {/* User Count */}
+                        <TableCell className="font-bold text-zinc-700 dark:text-zinc-300">
+                          {t('table.userCount', { count: role.userCount })}
+                        </TableCell>
+
+                        {/* Status Badge */}
+                        <TableCell>
+                          <span className={cn(
+                            "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold border",
+                            isAct
+                              ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 dark:bg-emerald-550/20 dark:text-emerald-400"
+                              : "bg-zinc-500/10 text-zinc-500 border-zinc-500/20 dark:bg-zinc-500/20 dark:text-zinc-400"
+                          )}>
                             <span className={cn(
-                              "inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-semibold border shadow-inner",
-                              isSys
-                                ? "bg-blue-500/10 text-blue-600 border-blue-500/20 dark:bg-blue-550/20 dark:text-blue-400"
-                                : "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 dark:bg-emerald-500/20 dark:text-emerald-400"
-                            )}>
-                              {isSys ? tCommon('roles.system') : tCommon('roles.custom')}
-                            </span>
-                          </td>
+                              "size-1.5 rounded-full shrink-0",
+                              isAct ? "bg-emerald-500 dark:bg-emerald-450" : "bg-zinc-400"
+                            )} />
+                            {isAct ? tCommon('statuses.ACTIVE') : tCommon('statuses.INACTIVE')}
+                          </span>
+                        </TableCell>
 
-                          {/* User Count */}
-                          <td className="p-4 text-zinc-700 dark:text-zinc-300 font-medium">
-                            {t('table.userCount', { count: role.userCount })}
-                          </td>
+                        {/* Action Buttons */}
+                        <TableCell className="text-center pr-6" onClick={(e) => e.stopPropagation()}>
+                          <div className="relative inline-block text-left">
+                            <div className="flex items-center justify-center gap-1">
+                              <button
+                                onClick={() => handleOpenDrawer(role, 'permissions')}
+                                title={t('table.matrixTooltip')}
+                                className="p-1.5 rounded-lg hover:bg-zinc-100 text-zinc-400 hover:text-zinc-700 transition dark:hover:bg-zinc-800 dark:hover:text-zinc-200 cursor-pointer"
+                              >
+                                <Eye className="size-4" />
+                              </button>
+                              <button
+                                onClick={() => setActionMenuOpen(actionMenuOpen === role.id ? null : role.id)}
+                                className="p-1.5 rounded-lg hover:bg-zinc-100 text-zinc-400 hover:text-zinc-700 transition dark:hover:bg-zinc-800 dark:hover:text-zinc-200 cursor-pointer"
+                              >
+                                <MoreVertical className="size-4" />
+                              </button>
+                            </div>
 
-                          {/* Status Badge */}
-                          <td className="p-4">
-                            <span className={cn(
-                              "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold border",
-                              isAct
-                                ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 dark:bg-emerald-550/20 dark:text-emerald-400"
-                                : "bg-zinc-500/10 text-zinc-500 border-zinc-500/20 dark:bg-zinc-500/20 dark:text-zinc-400"
-                            )}>
-                              <span className={cn(
-                                "size-1.5 rounded-full shrink-0",
-                                isAct ? "bg-emerald-500 dark:bg-emerald-450" : "bg-zinc-400"
-                              )} />
-                              {isAct ? tCommon('statuses.ACTIVE') : tCommon('statuses.INACTIVE')}
-                            </span>
-                          </td>
-
-                          {/* Action Buttons */}
-                          <td className="p-4 text-center pr-6" onClick={(e) => e.stopPropagation()}>
-                            <div className="relative inline-block text-left">
-                              <div className="flex items-center justify-center gap-1">
+                            {actionMenuOpen === role.id && (
+                              <div className="absolute right-0 mt-1 w-44 rounded-xl border border-zinc-200 bg-white p-1 shadow-lg dark:border-zinc-800 dark:bg-[#0c0c0e] z-50 animate-in fade-in slide-in-from-top-1">
+                                <button
+                                  onClick={() => handleOpenDrawer(role, 'info')}
+                                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-zinc-750 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-800 transition cursor-pointer"
+                                >
+                                  <Info className="size-3.5" />
+                                  {t('table.viewDetail')}
+                                </button>
                                 <button
                                   onClick={() => handleOpenDrawer(role, 'permissions')}
-                                  title={t('table.matrixTooltip')}
-                                  className="p-1.5 rounded-lg hover:bg-zinc-100 text-zinc-400 hover:text-zinc-700 transition dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
+                                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-950/20 transition cursor-pointer"
                                 >
-                                  <Eye className="size-4" />
+                                  <ShieldAlert className="size-3.5" />
+                                  {t('table.setPermissions')}
                                 </button>
-                                <button
-                                  onClick={() => setActionMenuOpen(actionMenuOpen === role.id ? null : role.id)}
-                                  className="p-1.5 rounded-lg hover:bg-zinc-100 text-zinc-400 hover:text-zinc-700 transition dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
-                                >
-                                  <MoreVertical className="size-4" />
-                                </button>
+                                {!isSys && (
+                                  <button
+                                    onClick={() => handleDeleteRole(role)}
+                                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/20 border-t border-zinc-100 dark:border-zinc-800/80 transition cursor-pointer"
+                                  >
+                                    <Trash2 className="size-3.5" />
+                                    {t('table.deleteRole')}
+                                  </button>
+                                )}
                               </div>
-
-                              {actionMenuOpen === role.id && (
-                                <div className="absolute right-0 mt-1 w-44 rounded-xl border border-zinc-200 bg-white p-1 shadow-lg dark:border-zinc-800 dark:bg-[#0c0c0e] z-50 animate-in fade-in slide-in-from-top-1">
-                                  <button
-                                    onClick={() => handleOpenDrawer(role, 'info')}
-                                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-zinc-750 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-800 transition"
-                                  >
-                                    <Info className="size-3.5" />
-                                    {t('table.viewDetail')}
-                                  </button>
-                                  <button
-                                    onClick={() => handleOpenDrawer(role, 'permissions')}
-                                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-950/20 transition"
-                                  >
-                                    <ShieldAlert className="size-3.5" />
-                                    {t('table.setPermissions')}
-                                  </button>
-                                  {!isSys && (
-                                    <button
-                                      onClick={() => handleDeleteRole(role)}
-                                      className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/20 border-t border-zinc-100 dark:border-zinc-800/80 transition"
-                                    >
-                                      <Trash2 className="size-3.5" />
-                                      {t('table.deleteRole')}
-                                    </button>
-                                  )}
-                                </div>
-                              )}
-                            </div>
-                          </td>
-                        </tr>
-                      )
-                    })
-                  )}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Pagination Footer */}
-            {totalRolesCount > rolesLimit && (
-              <div className="flex items-center justify-between border-t border-zinc-200 p-4 dark:border-zinc-800">
-                <span className="text-xs text-zinc-500">
-                  {t('table.pagination', {
-                    start: Math.min(totalRolesCount, (rolesPage - 1) * rolesLimit + 1),
-                    end: Math.min(totalRolesCount, rolesPage * rolesLimit),
-                    total: totalRolesCount,
-                  })}
-                </span>
-                <div className="flex items-center gap-2">
-                  <button
-                    disabled={rolesPage === 1}
-                    onClick={() => setRolesPage(rolesPage - 1)}
-                    className="rounded-lg border border-zinc-200 p-1.5 hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-800 dark:hover:bg-zinc-900 transition cursor-pointer"
-                  >
-                    <ChevronLeft className="size-4" />
-                  </button>
-                  <span className="text-xs font-bold bg-blue-600 text-white rounded-md size-7 flex items-center justify-center shadow">
-                    {rolesPage}
-                  </span>
-                  <button
-                    disabled={rolesPage * rolesLimit >= totalRolesCount}
-                    onClick={() => setRolesPage(rolesPage + 1)}
-                    className="rounded-lg border border-zinc-200 p-1.5 hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-800 dark:hover:bg-zinc-900 transition cursor-pointer"
-                  >
-                    <ChevronRight className="size-4" />
-                  </button>
-                </div>
-              </div>
-            )}
+                            )}
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    )
+                  })
+                )}
+              </TableBody>
+            </Table>
           </div>
+
+          {/* Pagination Footer */}
+          {totalRolesCount > 0 && (
+            <Pagination
+              page={rolesPage}
+              setPage={setRolesPage}
+              limit={rolesLimit}
+              totalCount={totalRolesCount}
+              totalPages={Math.ceil(totalRolesCount / rolesLimit)}
+              locale={locale}
+            />
+          )}
         </>
       ) : (
         <>
           {/* 6. Activity Logs Tab Interface */}
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-[#0c0c0e]">
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-zinc-400" />
-              <input
-                type="text"
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-[#0c0c0e] relative z-20">
+            <div className="flex-1 max-w-md">
+              <Input
                 placeholder={t('logs.searchPlaceholder')}
                 value={logsSearch}
                 onChange={(e) => {
                   setLogsSearch(e.target.value)
                   setLogsPage(1)
                 }}
-                className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 pl-10 pr-4 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-zinc-800 dark:bg-zinc-900/50"
+                leftIcon={<Search className="size-4 text-zinc-400" />}
               />
             </div>
             <button
@@ -1018,124 +1003,102 @@ export function RolesManagement() {
           </div>
 
           <div className="rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-[#0c0c0e] overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse text-left text-sm">
-                <thead>
-                  <tr className="border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/30 text-xs font-semibold uppercase tracking-wider text-zinc-500">
-                    <th className="p-4 pl-6">{t('logs.table.user')}</th>
-                    <th className="p-4">{t('logs.table.action')}</th>
-                    <th className="p-4">{t('logs.table.details')}</th>
-                    <th className="p-4">{t('logs.table.ip')}</th>
-                    <th className="p-4 pr-6">{t('logs.table.time')}</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
-                  {logsLoading ? (
-                    <tr>
-                      <td colSpan={5} className="p-12 text-center">
-                        <Loader2 className="size-6 animate-spin text-zinc-400 mx-auto" />
-                        <p className="text-sm text-zinc-500 mt-2">{t('logs.table.loading')}</p>
-                      </td>
-                    </tr>
-                  ) : logs.length === 0 ? (
-                    <tr>
-                      <td colSpan={5} className="p-12 text-center text-sm text-zinc-500">
-                        {t('logs.table.noRecords')}
-                      </td>
-                    </tr>
-                  ) : (
-                    logs.map((log) => {
-                      const profile = log.user?.profile
-                      const name = profile ? `${profile.lastName} ${profile.firstName}` : log.user?.username
-                      
-                      return (
-                        <tr key={log.id} className="hover:bg-zinc-50/40 dark:hover:bg-zinc-900/20 transition">
-                          {/* User Avatar + Info */}
-                          <td className="p-4 pl-6">
-                            <div className="flex items-center gap-3">
-                              <div className="size-9 rounded-full bg-gradient-to-tr from-blue-600 to-sky-400 flex items-center justify-center font-bold text-xs text-white shadow-inner">
-                                {getUserInitials(log.user)}
-                              </div>
-                              <div>
-                                <span className="font-semibold text-zinc-950 dark:text-zinc-50 block leading-tight">
-                                  {name}
-                                </span>
-                                <span className="text-xs text-zinc-500 mt-0.5 block">
-                                  {log.user?.email}
-                                </span>
-                              </div>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="pl-6">{t('logs.table.user')}</TableHead>
+                  <TableHead>{t('logs.table.action')}</TableHead>
+                  <TableHead>{t('logs.table.details')}</TableHead>
+                  <TableHead>{t('logs.table.ip')}</TableHead>
+                  <TableHead className="pr-6">{t('logs.table.time')}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {logsLoading ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="p-12 text-center">
+                      <Loader2 className="size-6 animate-spin text-zinc-400 mx-auto" />
+                      <p className="text-sm text-zinc-500 mt-2">{t('logs.table.loading')}</p>
+                    </TableCell>
+                  </TableRow>
+                ) : logs.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="p-12 text-center text-sm text-zinc-500">
+                      {t('logs.table.noRecords')}
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  logs.map((log) => {
+                    const profile = log.user?.profile
+                    const name = profile ? `${profile.lastName} ${profile.firstName}` : log.user?.username
+                    
+                    return (
+                      <TableRow key={log.id}>
+                        {/* User Avatar + Info */}
+                        <TableCell className="pl-6">
+                          <div className="flex items-center gap-3">
+                            <div className="size-9 rounded-full bg-gradient-to-tr from-blue-600 to-sky-400 flex items-center justify-center font-bold text-xs text-white shadow-inner">
+                              {getUserInitials(log.user)}
                             </div>
-                          </td>
+                            <div>
+                              <span className="font-semibold text-zinc-950 dark:text-zinc-50 block leading-tight">
+                                {name}
+                              </span>
+                              <span className="text-xs text-zinc-500 mt-0.5 block">
+                                {log.user?.email}
+                              </span>
+                            </div>
+                          </div>
+                        </TableCell>
 
-                          {/* Action Tag */}
-                          <td className="p-4">
-                            <span className="inline-flex items-center gap-1 rounded-md bg-zinc-100 text-zinc-800 border border-zinc-200 px-2 py-0.5 text-xs font-bold dark:bg-zinc-850 dark:text-zinc-200 dark:border-zinc-800">
-                              <Clock className="size-3 shrink-0 text-zinc-500" />
-                              {formatAction(log.action)}
-                            </span>
-                          </td>
+                        {/* Action Tag */}
+                        <TableCell>
+                          <span className="inline-flex items-center gap-1 rounded-md bg-zinc-100 text-zinc-800 border border-zinc-200 px-2 py-0.5 text-xs font-bold dark:bg-zinc-850 dark:text-zinc-200 dark:border-zinc-800">
+                            <Clock className="size-3 shrink-0 text-zinc-500" />
+                            {formatAction(log.action)}
+                          </span>
+                        </TableCell>
 
-                          {/* Details */}
-                          <td className="p-4 text-zinc-650 dark:text-zinc-450 max-w-sm truncate">
-                            {log.details || tCommon('noDetails')}
-                          </td>
+                        {/* Details */}
+                        <TableCell className="max-w-sm truncate text-zinc-650 dark:text-zinc-450">
+                          {log.details || tCommon('noDetails')}
+                        </TableCell>
 
-                          {/* IP Address */}
-                          <td className="p-4 text-xs font-mono text-zinc-500">
-                            {log.ipAddress || '—'}
-                          </td>
+                        {/* IP Address */}
+                        <TableCell className="text-xs font-mono text-zinc-500">
+                          {log.ipAddress || '—'}
+                        </TableCell>
 
-                          {/* Timestamp */}
-                          <td className="p-4 pr-6 text-zinc-550 dark:text-zinc-400 text-xs">
-                            {new Date(log.createdAt).toLocaleString(locale === 'vi' ? 'vi-VN' : 'en-US', {
-                              year: 'numeric',
-                              month: '2-digit',
-                              day: '2-digit',
-                              hour: '2-digit',
-                              minute: '2-digit',
-                              second: '2-digit',
-                            })}
-                          </td>
-                        </tr>
-                      )
-                    })
-                  )}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Logs Pagination */}
-            {logsTotal > logsLimit && (
-              <div className="flex items-center justify-between border-t border-zinc-200 p-4 dark:border-zinc-800">
-                <span className="text-xs text-zinc-500">
-                  {t('logs.table.pagination', {
-                    start: Math.min(logsTotal, (logsPage - 1) * logsLimit + 1),
-                    end: Math.min(logsTotal, logsPage * logsLimit),
-                    total: logsTotal,
-                  })}
-                </span>
-                <div className="flex items-center gap-2">
-                  <button
-                    disabled={logsPage === 1}
-                    onClick={() => setLogsPage(logsPage - 1)}
-                    className="rounded-lg border border-zinc-200 p-1.5 hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-800 dark:hover:bg-zinc-900 transition cursor-pointer"
-                  >
-                    <ChevronLeft className="size-4" />
-                  </button>
-                  <span className="text-xs font-bold bg-blue-600 text-white rounded-md size-7 flex items-center justify-center shadow">
-                    {logsPage}
-                  </span>
-                  <button
-                    disabled={logsPage * logsLimit >= logsTotal}
-                    onClick={() => setLogsPage(logsPage + 1)}
-                    className="rounded-lg border border-zinc-200 p-1.5 hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-800 dark:hover:bg-zinc-900 transition cursor-pointer"
-                  >
-                    <ChevronRight className="size-4" />
-                  </button>
-                </div>
-              </div>
-            )}
+                        {/* Timestamp */}
+                        <TableCell className="pr-6 text-zinc-550 dark:text-zinc-400 text-xs">
+                          {new Date(log.createdAt).toLocaleString(locale === 'vi' ? 'vi-VN' : 'en-US', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit',
+                          })}
+                        </TableCell>
+                      </TableRow>
+                    )
+                  })
+                )}
+              </TableBody>
+            </Table>
           </div>
+
+          {/* Logs Pagination */}
+          {logsTotal > 0 && (
+            <Pagination
+              page={logsPage}
+              setPage={setLogsPage}
+              limit={logsLimit}
+              totalCount={logsTotal}
+              totalPages={Math.ceil(logsTotal / logsLimit)}
+              locale={locale}
+            />
+          )}
         </>
       )}
 
@@ -1239,49 +1202,39 @@ export function RolesManagement() {
                 /* TAB 1: BASIC DETAILS AND METADATA EDIT */
                 <form onSubmit={handleSaveRoleDetails} className="space-y-5">
                   <div className="rounded-xl border border-zinc-200 p-4 bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-900/20 space-y-4">
-                    <div>
-                      <label className="text-xs font-semibold text-zinc-500 mb-1 block dark:text-zinc-400">{t('drawer.form.name')}</label>
-                      <input
-                        type="text"
-                        required
-                        disabled={isSystemRole(editingRole.code)}
-                        value={roleForm.name}
-                        onChange={(e) => setRoleForm({ ...roleForm, name: e.target.value })}
-                        className="w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none disabled:bg-zinc-100/60 dark:border-zinc-800 dark:bg-[#0c0c0e] dark:disabled:bg-zinc-900/50"
-                      />
-                    </div>
+                    <Input
+                      required
+                      label={t('drawer.form.name')}
+                      disabled={isSystemRole(editingRole.code)}
+                      value={roleForm.name}
+                      onChange={(e) => setRoleForm({ ...roleForm, name: e.target.value })}
+                    />
 
                     <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="text-xs font-semibold text-zinc-500 mb-1 block dark:text-zinc-400">{t('drawer.form.level')}</label>
-                        <input
-                          type="number"
-                          min="1"
-                          max="99"
-                          required
-                          disabled={isSystemRole(editingRole.code)}
-                          value={roleForm.level}
-                          onChange={(e) => setRoleForm({ ...roleForm, level: parseInt(e.target.value, 10) })}
-                          className="w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none disabled:bg-zinc-100/60 dark:border-zinc-800 dark:bg-[#0c0c0e] dark:disabled:bg-zinc-900/50"
-                        />
-                      </div>
+                      <Input
+                        type="number"
+                        min="1"
+                        max="99"
+                        required
+                        label={t('drawer.form.level')}
+                        disabled={isSystemRole(editingRole.code)}
+                        value={roleForm.level.toString()}
+                        onChange={(e) => setRoleForm({ ...roleForm, level: parseInt(e.target.value, 10) || 0 })}
+                      />
                       <div className="flex flex-col justify-center">
-                        <span className="text-[10px] text-zinc-400 italic leading-tight mt-3 block">
+                        <span className="text-[10px] text-zinc-400 italic leading-tight mt-5 block">
                           {t('drawer.form.levelDesc')}
                         </span>
                       </div>
                     </div>
 
-                    <div>
-                      <label className="text-xs font-semibold text-zinc-500 mb-1 block dark:text-zinc-400">{t('drawer.form.description')}</label>
-                      <textarea
-                        disabled={isSystemRole(editingRole.code)}
-                        value={roleForm.description}
-                        onChange={(e) => setRoleForm({ ...roleForm, description: e.target.value })}
-                        rows={4}
-                        className="w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none resize-none disabled:bg-zinc-100/60 dark:border-zinc-800 dark:bg-[#0c0c0e] dark:disabled:bg-zinc-900/50"
-                      />
-                    </div>
+                    <Textarea
+                      label={t('drawer.form.description')}
+                      disabled={isSystemRole(editingRole.code)}
+                      value={roleForm.description}
+                      onChange={(e) => setRoleForm({ ...roleForm, description: e.target.value })}
+                      className="min-h-[100px]"
+                    />
                   </div>
 
                   <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 p-4 bg-blue-500/5 border-blue-500/10 flex items-center justify-between text-sm">
@@ -1469,12 +1422,9 @@ export function RolesManagement() {
                 <div className="space-y-4">
                   {/* Role Name */}
                   <div>
-                    <label className="text-xs font-semibold text-zinc-500 mb-1.5 block dark:text-zinc-400">
-                      {locale === 'vi' ? 'Tên vai trò' : 'Role Name'} <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
+                    <Input
                       required
+                      label={locale === 'vi' ? 'Tên vai trò' : 'Role Name'}
                       value={createForm.name}
                       onChange={(e) => {
                         const newName = e.target.value
@@ -1488,7 +1438,6 @@ export function RolesManagement() {
                         })
                       }}
                       placeholder={locale === 'vi' ? 'Nhập tên vai trò' : 'Enter role name'}
-                      className="w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs focus:border-blue-500 focus:outline-none dark:border-zinc-800 dark:bg-[#0c0c0e] focus:ring-1 focus:ring-blue-500"
                     />
                     <span className="text-[10px] text-zinc-400 mt-1 block">
                       {locale === 'vi' ? 'VD: Kế toán, Thủ quỹ, Nhân viên...' : 'e.g. Accountant, Cashier, Staff...'}
@@ -1497,19 +1446,15 @@ export function RolesManagement() {
 
                   {/* Role Code */}
                   <div>
-                    <label className="text-xs font-semibold text-zinc-500 mb-1.5 block dark:text-zinc-400">
-                      {locale === 'vi' ? 'Mã vai trò' : 'Role Code'} <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
+                    <Input
                       required
+                      label={locale === 'vi' ? 'Mã vai trò' : 'Role Code'}
                       value={createForm.code}
                       onChange={(e) => {
                         setIsCodeManuallyEdited(true)
                         setCreateForm({ ...createForm, code: e.target.value.toUpperCase().replace(/[^A-Z0-9_]/g, '') })
                       }}
                       placeholder={locale === 'vi' ? 'Nhập mã vai trò' : 'Enter role code'}
-                      className="w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs focus:border-blue-500 focus:outline-none dark:border-zinc-800 dark:bg-[#0c0c0e] focus:ring-1 focus:ring-blue-500"
                     />
                     <span className="text-[10px] text-zinc-400 mt-1 block">
                       {locale === 'vi' ? 'VD: CHIEF_ACCOUNTANT, CASHIER...' : 'e.g. CHIEF_ACCOUNTANT, CASHIER...'}
@@ -1518,22 +1463,17 @@ export function RolesManagement() {
 
                   {/* Level & Description */}
                   <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-xs font-semibold text-zinc-500 mb-1.5 block dark:text-zinc-400">
-                        {locale === 'vi' ? 'Cấp độ bảo mật' : 'Role Level'}
-                      </label>
-                      <input
-                        type="number"
-                        min="1"
-                        max="99"
-                        required
-                        value={createForm.level}
-                        onChange={(e) => setCreateForm({ ...createForm, level: parseInt(e.target.value, 10) })}
-                        className="w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs focus:border-blue-500 focus:outline-none dark:border-zinc-800 dark:bg-[#0c0c0e]"
-                      />
-                    </div>
+                    <Input
+                      type="number"
+                      min="1"
+                      max="99"
+                      required
+                      label={locale === 'vi' ? 'Cấp độ bảo mật' : 'Role Level'}
+                      value={createForm.level.toString()}
+                      onChange={(e) => setCreateForm({ ...createForm, level: parseInt(e.target.value, 10) || 0 })}
+                    />
                     <div className="flex flex-col justify-end">
-                      <span className="text-[10px] text-zinc-400 italic block leading-tight mb-1">
+                      <span className="text-[10px] text-zinc-400 italic block leading-tight mb-3">
                         {locale === 'vi' ? '* Cấp độ càng cao, quyền hạn vai trò càng lớn.' : '* Higher level denotes superior security authority.'}
                       </span>
                     </div>
@@ -1541,25 +1481,24 @@ export function RolesManagement() {
 
                   {/* Description */}
                   <div>
-                    <label className="text-xs font-semibold text-zinc-500 mb-1.5 block dark:text-zinc-400">
-                      {locale === 'vi' ? 'Mô tả vai trò' : 'Description'}
-                    </label>
-                    <div className="relative">
-                      <textarea
-                        value={createForm.description}
-                        onChange={(e) => {
-                          if (e.target.value.length <= 200) {
-                            setCreateForm({ ...createForm, description: e.target.value })
-                          }
-                        }}
-                        placeholder={locale === 'vi' ? 'Nhập mô tả vai trò' : 'Enter role description'}
-                        rows={3}
-                        className="w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs focus:border-blue-500 focus:outline-none dark:border-zinc-800 dark:bg-[#0c0c0e] resize-none pr-12 focus:ring-1 focus:ring-blue-500"
-                      />
-                      <span className="absolute bottom-2 right-3 text-[9px] text-zinc-400 font-bold">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label className="text-xs font-semibold text-zinc-500 block dark:text-zinc-400">
+                        {locale === 'vi' ? 'Mô tả vai trò' : 'Description'}
+                      </label>
+                      <span className="text-[9px] text-zinc-400 font-bold">
                         {createForm.description.length}/200
                       </span>
                     </div>
+                    <Textarea
+                      value={createForm.description}
+                      onChange={(e) => {
+                        if (e.target.value.length <= 200) {
+                          setCreateForm({ ...createForm, description: e.target.value })
+                        }
+                      }}
+                      placeholder={locale === 'vi' ? 'Nhập mô tả vai trò' : 'Enter role description'}
+                      className="min-h-[80px]"
+                    />
                   </div>
 
                   {/* Status Selection Card Row */}
@@ -1705,24 +1644,25 @@ export function RolesManagement() {
                 {/* Sub-toolbar: search and select all check */}
                 <div className="flex items-center gap-4 py-3 border-b border-zinc-100 dark:border-zinc-850 shrink-0">
                   {/* Search Input */}
-                  <div className="relative flex-1">
-                    <Search className="absolute left-3 top-2.5 size-3.5 text-zinc-400" />
-                    <input
-                      type="text"
+                  <div className="flex-1">
+                    <Input
                       placeholder={locale === 'vi' ? 'Tìm quyền...' : 'Search permissions...'}
                       value={createSearchQuery}
                       onChange={(e) => setCreateSearchQuery(e.target.value)}
-                      className="w-full rounded-xl border border-zinc-200 bg-white pl-9 pr-8 py-2 text-xs focus:border-blue-500 focus:outline-none dark:border-zinc-800 dark:bg-[#0c0c0e] focus:ring-1 focus:ring-blue-500"
+                      leftIcon={<Search className="size-3.5 text-zinc-400" />}
+                      rightIcon={
+                        createSearchQuery ? (
+                          <button
+                            type="button"
+                            onClick={() => setCreateSearchQuery('')}
+                            className="p-0.5 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-400 transition"
+                          >
+                            <X className="size-3" />
+                          </button>
+                        ) : undefined
+                      }
+                      className="py-1.5 text-xs"
                     />
-                    {createSearchQuery && (
-                      <button
-                        type="button"
-                        onClick={() => setCreateSearchQuery('')}
-                        className="absolute right-3 top-2.5 p-0.5 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-400 transition"
-                      >
-                        <X className="size-3" />
-                      </button>
-                    )}
                   </div>
 
                   {/* Select All Checkbox */}
