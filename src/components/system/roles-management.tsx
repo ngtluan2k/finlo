@@ -33,6 +33,7 @@ import {
   Edit3,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { toCode } from '@/lib/string'
 
 type Permission = {
   id: string
@@ -116,11 +117,16 @@ export function RolesManagement() {
   // Create Modal
   const [createModalOpen, setCreateModalOpen] = useState(false)
   const [creating, setCreating] = useState(false)
+  const [createCheckedPermissionIds, setCreateCheckedPermissionIds] = useState<string[]>([])
+  const [createSearchQuery, setCreateSearchQuery] = useState('')
+  const [quickSelectOpen, setQuickSelectOpen] = useState(false)
+  const [isCodeManuallyEdited, setIsCodeManuallyEdited] = useState(false)
   const [createForm, setCreateForm] = useState({
     code: '',
     name: '',
     description: '',
     level: 10,
+    status: 'ACTIVE' as 'ACTIVE' | 'INACTIVE',
   })
 
   // Action Menu Dropdown (Three dots menu on table row)
@@ -280,6 +286,183 @@ export function RolesManagement() {
     )
   }
 
+  // Slugify helper using unified utility library
+  const slugifyRoleName = toCode
+
+  // Open Create Modal and reset all states cleanly
+  const handleOpenCreateModal = () => {
+    setCreateForm({
+      code: '',
+      name: '',
+      description: '',
+      level: 10,
+      status: 'ACTIVE',
+    })
+    setCreateCheckedPermissionIds([])
+    setCreateSearchQuery('')
+    setIsCodeManuallyEdited(false)
+    setCreateModalOpen(true)
+  }
+
+  // Localized name/description mapper helper for permissions
+  const getPermissionLocaleInfo = (code: string, originalName: string) => {
+    const enMap: Record<string, { name: string; desc: string }> = {
+      'wallet:read': { name: 'View Overview', desc: 'View financial overview dashboard information' },
+      'wallet:create': { name: 'Create Wallets', desc: 'Create new wallet accounts' },
+      'wallet:update': { name: 'Update Wallets', desc: 'Update existing wallet information' },
+      'wallet:delete': { name: 'Delete Wallets', desc: 'Remove wallets from the system' },
+      'category:read': { name: 'View Categories', desc: 'View list of income/expense categories' },
+      'category:create': { name: 'Create Categories', desc: 'Create new categories' },
+      'category:update': { name: 'Update Categories', desc: 'Modify existing category details' },
+      'category:delete': { name: 'Delete Categories', desc: 'Delete custom categories' },
+      'transaction:read': { name: 'View Cashflow', desc: 'View list of cashflow transactions' },
+      'transaction:create': { name: 'Create Transactions', desc: 'Record new income or expense transactions' },
+      'transaction:update': { name: 'Update Transactions', desc: 'Edit existing cashflow records' },
+      'transaction:delete': { name: 'Delete Transactions', desc: 'Delete cashflow transactions' },
+      'budget:read': { name: 'View Reports & Budgets', desc: 'View budget configurations and financial reports' },
+      'budget:create': { name: 'Create Budgets', desc: 'Configure spending budgets' },
+      'budget:update': { name: 'Update Budgets', desc: 'Update budget targets' },
+      'budget:delete': { name: 'Delete Budgets', desc: 'Remove budget setups' },
+      'profile:read': { name: 'View Profile', desc: 'View personal user profile details' },
+      'profile:update': { name: 'Update Profile', desc: 'Modify personal profile information' },
+      'attachment:read': { name: 'View Attachments', desc: 'View files, receipts, and invoices' },
+      'attachment:create': { name: 'Upload Attachments', desc: 'Upload new receipts and bills' },
+      'attachment:delete': { name: 'Delete Attachments', desc: 'Delete uploaded attachment files' },
+      'user:read': { name: 'View Members', desc: 'View administrative list of system members' },
+      'user:manage': { name: 'Manage Members', desc: 'Perform administrative user operations (create, lock, role changes)' },
+      'role:read': { name: 'View Roles', desc: 'View security roles and matrices' },
+      'role:manage': { name: 'Manage Roles', desc: 'Create, update permission configurations, and delete roles' },
+      'permission:read': { name: 'View System Settings', desc: 'View detailed security permissions configurations' }
+    }
+
+    const viMap: Record<string, { name: string; desc: string }> = {
+      'wallet:read': { name: 'Xem tổng quan', desc: 'Xem thông tin tổng quan tài chính' },
+      'wallet:create': { name: 'Tạo ví', desc: 'Tạo tài khoản ví mới' },
+      'wallet:update': { name: 'Sửa ví', desc: 'Cập nhật thông tin ví' },
+      'wallet:delete': { name: 'Xóa ví', desc: 'Xóa ví khỏi hệ thống' },
+      'category:read': { name: 'Xem danh mục', desc: 'Xem danh sách danh mục thu chi' },
+      'category:create': { name: 'Thêm danh mục', desc: 'Thêm danh mục mới' },
+      'category:update': { name: 'Sửa danh mục', desc: 'Chỉnh sửa danh mục' },
+      'category:delete': { name: 'Xóa danh mục', desc: 'Xóa danh mục' },
+      'transaction:read': { name: 'Xem thu chi', desc: 'Xem danh sách thu chi' },
+      'transaction:create': { name: 'Thêm thu chi', desc: 'Tạo mới giao dịch thu chi' },
+      'transaction:update': { name: 'Sửa thu chi', desc: 'Chỉnh sửa giao dịch thu chi' },
+      'transaction:delete': { name: 'Xóa thu chi', desc: 'Xóa giao dịch thu chi' },
+      'budget:read': { name: 'Xem báo cáo & ngân sách', desc: 'Xem các báo cáo tài chính và ngân sách' },
+      'budget:create': { name: 'Thiết lập ngân sách', desc: 'Tạo mới ngân sách chi tiêu' },
+      'budget:update': { name: 'Cập nhật ngân sách', desc: 'Chỉnh sửa ngân sách' },
+      'budget:delete': { name: 'Xóa ngân sách', desc: 'Xóa ngân sách chi tiêu' },
+      'profile:read': { name: 'Xem hồ sơ', desc: 'Xem hồ sơ cá nhân của người dùng' },
+      'profile:update': { name: 'Cập nhật hồ sơ', desc: 'Thay đổi thông tin hồ sơ' },
+      'attachment:read': { name: 'Xem tệp đính kèm', desc: 'Xem hóa đơn chứng từ đính kèm' },
+      'attachment:create': { name: 'Tải lên tệp đính kèm', desc: 'Tải lên tài liệu chứng từ mới' },
+      'attachment:delete': { name: 'Xóa tệp đính kèm', desc: 'Xóa tệp chứng từ khỏi hệ thống' },
+      'user:read': { name: 'Xem thành viên', desc: 'Xem danh sách thành viên hệ thống' },
+      'user:manage': { name: 'Quản lý thành viên', desc: 'Thao tác phê duyệt, khóa, gán vai trò người dùng' },
+      'role:read': { name: 'Xem vai trò', desc: 'Xem thông tin vai trò bảo mật' },
+      'role:manage': { name: 'Quản lý vai trò', desc: 'Tạo mới, sửa đổi ma trận quyền hạn, xóa vai trò' },
+      'permission:read': { name: 'Xem phân quyền hệ thống', desc: 'Xem danh sách quyền hạn chi tiết' }
+    }
+
+    const localeMap = locale === 'vi' ? viMap : enMap
+    return localeMap[code] || { name: originalName, desc: '' }
+  }
+
+  // Get index position for checkboxes in matrix (Xem, Thêm, Sửa, Xóa, Xuất)
+  const getActionColumnIndex = (action: string) => {
+    switch (action.toLowerCase()) {
+      case 'read':
+        return 0
+      case 'create':
+        return 1
+      case 'update':
+        return 2
+      case 'delete':
+        return 3
+      default:
+        return 4 // export, approve, manage, etc.
+    }
+  }
+
+  // Group and search permissions inside modal
+  const getGroupedPermissionsForModal = () => {
+    const modules: Record<string, { label: string; icon: any; permissions: Permission[] }> = {
+      wallet: { label: locale === 'vi' ? 'Tổng quan' : 'Overview', icon: Shield, permissions: [] },
+      transaction: { label: locale === 'vi' ? 'Thu chi' : 'Cashflow', icon: RefreshCw, permissions: [] },
+      budget: { label: locale === 'vi' ? 'Báo cáo & Ngân sách' : 'Reports & Budgets', icon: SlidersHorizontal, permissions: [] },
+      category: { label: locale === 'vi' ? 'Danh mục' : 'Categories', icon: SlidersHorizontal, permissions: [] },
+      attachment: { label: locale === 'vi' ? 'Đính kèm' : 'Attachments', icon: SlidersHorizontal, permissions: [] },
+      user: { label: locale === 'vi' ? 'Thành viên' : 'Members', icon: Users, permissions: [] },
+      role: { label: locale === 'vi' ? 'Vai trò & Quyền' : 'Roles & Permissions', icon: ShieldCheck, permissions: [] },
+      permission: { label: locale === 'vi' ? 'Hệ thống' : 'System Settings', icon: SlidersHorizontal, permissions: [] },
+      profile: { label: locale === 'vi' ? 'Hồ sơ cá nhân' : 'Personal Profile', icon: SlidersHorizontal, permissions: [] },
+    }
+
+    permissions.forEach((p) => {
+      if (createSearchQuery) {
+        const info = getPermissionLocaleInfo(p.code, p.name)
+        const match =
+          info.name.toLowerCase().includes(createSearchQuery.toLowerCase()) ||
+          info.desc.toLowerCase().includes(createSearchQuery.toLowerCase()) ||
+          p.code.toLowerCase().includes(createSearchQuery.toLowerCase())
+        if (!match) return
+      }
+
+      if (modules[p.module]) {
+        modules[p.module].permissions.push(p)
+      } else {
+        if (!modules[p.module]) {
+          modules[p.module] = { label: p.module.toUpperCase(), icon: SlidersHorizontal, permissions: [] }
+        }
+        modules[p.module].permissions.push(p)
+      }
+    })
+
+    return Object.entries(modules).filter(([_, group]) => group.permissions.length > 0)
+  }
+
+  // Toggle single permission for new role creation
+  const handleToggleCreatePermission = (id: string) => {
+    setCreateCheckedPermissionIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    )
+  }
+
+  // Toggle all visible/filtered permissions in modal
+  const handleToggleAllCreatePermissions = () => {
+    const filteredPermissions = getGroupedPermissionsForModal().flatMap(([_, group]) => group.permissions)
+    const filteredIds = filteredPermissions.map((p) => p.id)
+    const isAllChecked = filteredIds.every((id) => createCheckedPermissionIds.includes(id))
+
+    if (isAllChecked) {
+      setCreateCheckedPermissionIds((prev) => prev.filter((id) => !filteredIds.includes(id)))
+    } else {
+      setCreateCheckedPermissionIds((prev) => {
+        const newChecked = [...prev]
+        filteredIds.forEach((id) => {
+          if (!newChecked.includes(id)) newChecked.push(id)
+        })
+        return newChecked
+      })
+    }
+  }
+
+  // Quick select helper in modal
+  const handleQuickSelect = (type: 'all' | 'none' | 'readOnly') => {
+    setQuickSelectOpen(false)
+    if (type === 'all') {
+      setCreateCheckedPermissionIds(permissions.map((p) => p.id))
+      toast.success(locale === 'vi' ? 'Đã chọn toàn bộ quyền hạn!' : 'Selected all permissions!')
+    } else if (type === 'none') {
+      setCreateCheckedPermissionIds([])
+      toast.success(locale === 'vi' ? 'Đã hủy chọn toàn bộ!' : 'Cleared all permissions!')
+    } else if (type === 'readOnly') {
+      const readOnlyIds = permissions.filter((p) => p.action.toLowerCase() === 'read').map((p) => p.id)
+      setCreateCheckedPermissionIds(readOnlyIds)
+      toast.success(locale === 'vi' ? 'Đã kích hoạt chế độ chỉ xem!' : 'Activated read-only privileges!')
+    }
+  }
+
   // Create new Role
   const handleCreateRole = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -288,7 +471,10 @@ export function RolesManagement() {
       const res = await fetch('/api/system/roles', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(createForm),
+        body: JSON.stringify({
+          ...createForm,
+          permissionIds: createCheckedPermissionIds,
+        }),
       })
       const data = await res.json()
       if (!res.ok) {
@@ -301,7 +487,10 @@ export function RolesManagement() {
       }
       toast.success(t('messages.createSuccess'))
       setCreateModalOpen(false)
-      setCreateForm({ code: '', name: '', description: '', level: 10 })
+      setCreateForm({ code: '', name: '', description: '', level: 10, status: 'ACTIVE' })
+      setCreateCheckedPermissionIds([])
+      setCreateSearchQuery('')
+      setIsCodeManuallyEdited(false)
       fetchAllRolesAndPermissions(true)
     } catch {
       toast.error(t('messages.systemError'))
@@ -440,7 +629,7 @@ export function RolesManagement() {
             <Bell className="size-4" />
           </button>
           <button
-            onClick={() => setCreateModalOpen(true)}
+            onClick={handleOpenCreateModal}
             className="flex items-center gap-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-xs font-semibold shadow transition cursor-pointer"
           >
             <Plus className="size-4" />
@@ -1203,96 +1392,428 @@ export function RolesManagement() {
           {/* Backdrop */}
           <div
             onClick={() => setCreateModalOpen(false)}
-            className="absolute inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-sm"
           />
 
-          {/* Modal Content */}
-          <div className="relative z-10 w-full max-w-md rounded-2xl border border-zinc-200 bg-white p-6 shadow-2xl dark:border-zinc-800 dark:bg-[#0c0c0e] animate-in zoom-in-95 duration-200">
-            <div className="flex items-center justify-between border-b border-zinc-150 pb-4 dark:border-zinc-800">
-              <h3 className="text-base font-bold text-zinc-950 dark:text-zinc-50">{t('modal.title')}</h3>
+          {/* Modal Content container */}
+          <form
+            onSubmit={handleCreateRole}
+            className="relative z-10 w-full max-w-6xl h-[90vh] max-h-[850px] flex flex-col rounded-3xl border border-zinc-200 bg-white shadow-2xl dark:border-zinc-800 dark:bg-[#0c0c0e] animate-in zoom-in-95 duration-200 overflow-hidden"
+          >
+            {/* Modal Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-150 dark:border-zinc-800 shrink-0 bg-zinc-50/50 dark:bg-[#09090b]/50">
+              <div>
+                <h3 className="text-sm font-bold text-zinc-950 dark:text-zinc-50">
+                  {locale === 'vi' ? 'Thêm vai trò mới' : 'Add New Role'}
+                </h3>
+                <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+                  {locale === 'vi' ? 'Tạo vai trò và thiết lập quyền hạn cho vai trò này' : 'Create role and configure its specific permission privileges'}
+                </p>
+              </div>
               <button
+                type="button"
                 onClick={() => setCreateModalOpen(false)}
-                className="p-1 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-400 transition"
+                className="p-1.5 rounded-xl hover:bg-zinc-150 dark:hover:bg-zinc-800 text-zinc-450 hover:text-zinc-700 dark:hover:text-zinc-200 transition cursor-pointer"
               >
                 <X className="size-5" />
               </button>
             </div>
 
-            <form onSubmit={handleCreateRole} className="space-y-4 mt-4">
-              <div>
-                <label className="text-xs font-semibold text-zinc-500 mb-1 block dark:text-zinc-400">{t('modal.name')}</label>
-                <input
-                  type="text"
-                  required
-                  value={createForm.name}
-                  onChange={(e) => setCreateForm({ ...createForm, name: e.target.value })}
-                  placeholder={t('modal.namePlaceholder')}
-                  className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-zinc-800 dark:bg-zinc-900/50"
-                />
-              </div>
+            {/* Modal Body (Scrollable layout with two columns) */}
+            <div className="flex-1 overflow-y-auto grid grid-cols-1 lg:grid-cols-12 gap-6 p-6 min-h-0 bg-white dark:bg-[#0c0c0e]">
+              {/* LEFT COLUMN: Role Information Form */}
+              <div className="lg:col-span-4 space-y-5 flex flex-col pr-0 lg:pr-2 lg:border-r lg:border-zinc-100 dark:lg:border-zinc-800/50">
+                <h4 className="text-xs font-bold text-zinc-900 dark:text-zinc-100 border-b border-zinc-100 dark:border-zinc-800/50 pb-2 flex items-center gap-2">
+                  <span className="size-2 rounded-full bg-blue-500" />
+                  {locale === 'vi' ? 'Thông tin vai trò' : 'Role Information'}
+                </h4>
 
-              <div>
-                <label className="text-xs font-semibold text-zinc-500 mb-1 block dark:text-zinc-400">{t('modal.code')}</label>
-                <input
-                  type="text"
-                  required
-                  value={createForm.code}
-                  onChange={(e) => setCreateForm({ ...createForm, code: e.target.value })}
-                  placeholder={t('modal.codePlaceholder')}
-                  className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-zinc-800 dark:bg-zinc-900/50"
-                />
-              </div>
+                <div className="space-y-4">
+                  {/* Role Name */}
+                  <div>
+                    <label className="text-xs font-semibold text-zinc-500 mb-1.5 block dark:text-zinc-400">
+                      {locale === 'vi' ? 'Tên vai trò' : 'Role Name'} <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={createForm.name}
+                      onChange={(e) => {
+                        const newName = e.target.value
+                        setCreateForm((prev) => {
+                          const updated = { ...prev, name: newName }
+                          // Auto-slugify if code is not manually edited
+                          if (!isCodeManuallyEdited) {
+                            updated.code = slugifyRoleName(newName)
+                          }
+                          return updated
+                        })
+                      }}
+                      placeholder={locale === 'vi' ? 'Nhập tên vai trò' : 'Enter role name'}
+                      className="w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs focus:border-blue-500 focus:outline-none dark:border-zinc-800 dark:bg-[#0c0c0e] focus:ring-1 focus:ring-blue-500"
+                    />
+                    <span className="text-[10px] text-zinc-400 mt-1 block">
+                      {locale === 'vi' ? 'VD: Kế toán, Thủ quỹ, Nhân viên...' : 'e.g. Accountant, Cashier, Staff...'}
+                    </span>
+                  </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="text-xs font-semibold text-zinc-500 mb-1 block dark:text-zinc-400">{t('modal.level')}</label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="99"
-                    required
-                    value={createForm.level}
-                    onChange={(e) => setCreateForm({ ...createForm, level: parseInt(e.target.value, 10) })}
-                    className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-zinc-800 dark:bg-zinc-900/50"
-                  />
+                  {/* Role Code */}
+                  <div>
+                    <label className="text-xs font-semibold text-zinc-500 mb-1.5 block dark:text-zinc-400">
+                      {locale === 'vi' ? 'Mã vai trò' : 'Role Code'} <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={createForm.code}
+                      onChange={(e) => {
+                        setIsCodeManuallyEdited(true)
+                        setCreateForm({ ...createForm, code: e.target.value.toUpperCase().replace(/[^A-Z0-9_]/g, '') })
+                      }}
+                      placeholder={locale === 'vi' ? 'Nhập mã vai trò' : 'Enter role code'}
+                      className="w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs focus:border-blue-500 focus:outline-none dark:border-zinc-800 dark:bg-[#0c0c0e] focus:ring-1 focus:ring-blue-500"
+                    />
+                    <span className="text-[10px] text-zinc-400 mt-1 block">
+                      {locale === 'vi' ? 'VD: CHIEF_ACCOUNTANT, CASHIER...' : 'e.g. CHIEF_ACCOUNTANT, CASHIER...'}
+                    </span>
+                  </div>
+
+                  {/* Level & Description */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-xs font-semibold text-zinc-500 mb-1.5 block dark:text-zinc-400">
+                        {locale === 'vi' ? 'Cấp độ bảo mật' : 'Role Level'}
+                      </label>
+                      <input
+                        type="number"
+                        min="1"
+                        max="99"
+                        required
+                        value={createForm.level}
+                        onChange={(e) => setCreateForm({ ...createForm, level: parseInt(e.target.value, 10) })}
+                        className="w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs focus:border-blue-500 focus:outline-none dark:border-zinc-800 dark:bg-[#0c0c0e]"
+                      />
+                    </div>
+                    <div className="flex flex-col justify-end">
+                      <span className="text-[10px] text-zinc-400 italic block leading-tight mb-1">
+                        {locale === 'vi' ? '* Cấp độ càng cao, quyền hạn vai trò càng lớn.' : '* Higher level denotes superior security authority.'}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Description */}
+                  <div>
+                    <label className="text-xs font-semibold text-zinc-500 mb-1.5 block dark:text-zinc-400">
+                      {locale === 'vi' ? 'Mô tả vai trò' : 'Description'}
+                    </label>
+                    <div className="relative">
+                      <textarea
+                        value={createForm.description}
+                        onChange={(e) => {
+                          if (e.target.value.length <= 200) {
+                            setCreateForm({ ...createForm, description: e.target.value })
+                          }
+                        }}
+                        placeholder={locale === 'vi' ? 'Nhập mô tả vai trò' : 'Enter role description'}
+                        rows={3}
+                        className="w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs focus:border-blue-500 focus:outline-none dark:border-zinc-800 dark:bg-[#0c0c0e] resize-none pr-12 focus:ring-1 focus:ring-blue-500"
+                      />
+                      <span className="absolute bottom-2 right-3 text-[9px] text-zinc-400 font-bold">
+                        {createForm.description.length}/200
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Status Selection Card Row */}
+                  <div>
+                    <label className="text-xs font-semibold text-zinc-500 mb-2 block dark:text-zinc-400">
+                      {locale === 'vi' ? 'Trạng thái' : 'Status'}
+                    </label>
+                    <div className="grid grid-cols-2 gap-3">
+                      {/* Active Status Card */}
+                      <div
+                        onClick={() => setCreateForm({ ...createForm, status: 'ACTIVE' })}
+                        className={cn(
+                          "flex flex-col p-3 rounded-xl border cursor-pointer select-none transition shadow-sm",
+                          createForm.status === 'ACTIVE'
+                            ? "border-blue-500 bg-blue-50/10 text-zinc-950 dark:bg-blue-950/10 dark:text-zinc-50"
+                            : "border-zinc-200 bg-white hover:border-zinc-300 text-zinc-600 dark:border-zinc-800 dark:bg-[#0c0c0e] dark:text-zinc-400"
+                        )}
+                      >
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-xs font-bold">{locale === 'vi' ? 'Kích hoạt' : 'Active'}</span>
+                          <span className={cn(
+                            "size-3 rounded-full border flex items-center justify-center",
+                            createForm.status === 'ACTIVE' ? "border-blue-500 bg-blue-500" : "border-zinc-300 dark:border-zinc-700"
+                          )}>
+                            {createForm.status === 'ACTIVE' && <span className="size-1 bg-white rounded-full" />}
+                          </span>
+                        </div>
+                        <span className="text-[10px] text-zinc-400 block leading-tight">
+                          {locale === 'vi' ? 'Vai trò có thể sử dụng' : 'Role is active'}
+                        </span>
+                      </div>
+
+                      {/* Inactive Status Card */}
+                      <div
+                        onClick={() => setCreateForm({ ...createForm, status: 'INACTIVE' })}
+                        className={cn(
+                          "flex flex-col p-3 rounded-xl border cursor-pointer select-none transition shadow-sm",
+                          createForm.status === 'INACTIVE'
+                            ? "border-blue-500 bg-blue-50/10 text-zinc-950 dark:bg-blue-950/10 dark:text-zinc-50"
+                            : "border-zinc-200 bg-white hover:border-zinc-300 text-zinc-600 dark:border-zinc-800 dark:bg-[#0c0c0e] dark:text-zinc-400"
+                        )}
+                      >
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-xs font-bold">{locale === 'vi' ? 'Vô hiệu hóa' : 'Disabled'}</span>
+                          <span className={cn(
+                            "size-3 rounded-full border flex items-center justify-center",
+                            createForm.status === 'INACTIVE' ? "border-blue-500 bg-blue-500" : "border-zinc-300 dark:border-zinc-700"
+                          )}>
+                            {createForm.status === 'INACTIVE' && <span className="size-1 bg-white rounded-full" />}
+                          </span>
+                        </div>
+                        <span className="text-[10px] text-zinc-400 block leading-tight">
+                          {locale === 'vi' ? 'Tạm thời ngừng sử dụng' : 'Temporarily suspended'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Members (0) Card */}
+                  <div className="rounded-xl border border-zinc-200 p-4 bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-900/20 space-y-3">
+                    <span className="text-xs font-bold text-zinc-750 dark:text-zinc-350 block">
+                      {locale === 'vi' ? 'Thành viên (0)' : 'Members (0)'}
+                    </span>
+                    <p className="text-[10px] text-zinc-400 text-center py-2 leading-relaxed">
+                      {locale === 'vi' ? 'Chưa có người dùng nào được gán vào vai trò này' : 'No users are currently assigned to this role'}
+                    </p>
+                    <button
+                      type="button"
+                      disabled
+                      className="w-full rounded-xl border border-dashed border-zinc-300 hover:border-zinc-400 text-zinc-500 dark:border-zinc-800 dark:text-zinc-400 px-3 py-2 text-[10px] font-semibold transition cursor-not-allowed text-center"
+                    >
+                      + {locale === 'vi' ? 'Thêm thành viên' : 'Add member'}
+                    </button>
+                  </div>
                 </div>
-                <div className="flex flex-col justify-end">
-                  <span className="text-[10px] text-zinc-400 italic block mb-1">
-                    *{t('modal.levelDesc')}
-                  </span>
+              </div>
+
+              {/* RIGHT COLUMN: Permission Matrix grid */}
+              <div className="lg:col-span-8 flex flex-col min-h-0">
+                <div className="flex items-center justify-between border-b border-zinc-100 dark:border-zinc-850 pb-2 shrink-0">
+                  <div>
+                    <h4 className="text-xs font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
+                      <span className="size-2 rounded-full bg-blue-500" />
+                      {locale === 'vi' ? 'Thiết lập quyền' : 'Configure Permissions'}
+                    </h4>
+                    <p className="text-[10px] text-zinc-400 mt-0.5">
+                      {locale === 'vi' ? 'Chọn các quyền mà vai trò này được phép thực hiện' : 'Configure specific action privileges for this role'}
+                    </p>
+                  </div>
+
+                  {/* Toolbar */}
+                  <div className="flex items-center gap-2 relative">
+                    {/* Quick Select Dropdown */}
+                    <div className="relative">
+                      <button
+                        type="button"
+                        onClick={() => setQuickSelectOpen(!quickSelectOpen)}
+                        className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-zinc-200 text-[10px] font-bold text-zinc-600 hover:text-zinc-950 dark:border-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-100 bg-white dark:bg-[#0c0c0e] shadow-sm select-none transition cursor-pointer"
+                      >
+                        {locale === 'vi' ? 'Chọn nhanh' : 'Quick select'}
+                        <ChevronDown className="size-3" />
+                      </button>
+                      
+                      {quickSelectOpen && (
+                        <>
+                          <div
+                            onClick={() => setQuickSelectOpen(false)}
+                            className="fixed inset-0 z-10"
+                          />
+                          <div className="absolute right-0 mt-1 z-20 w-44 rounded-xl border border-zinc-200 bg-white py-1.5 shadow-xl dark:border-zinc-850 dark:bg-[#0c0c0e] animate-in fade-in slide-in-from-top-1 duration-150">
+                            <button
+                              type="button"
+                              onClick={() => handleQuickSelect('all')}
+                              className="w-full px-3 py-2 text-left text-[11px] font-semibold text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-900/50 flex items-center gap-2 cursor-pointer"
+                            >
+                              <ShieldCheck className="size-3.5 text-blue-500" />
+                              {locale === 'vi' ? 'Chọn tất cả' : 'Select all'}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleQuickSelect('readOnly')}
+                              className="w-full px-3 py-2 text-left text-[11px] font-semibold text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-900/50 flex items-center gap-2 cursor-pointer"
+                            >
+                              <Eye className="size-3.5 text-blue-500" />
+                              {locale === 'vi' ? 'Chỉ xem' : 'Read-only'}
+                            </button>
+                            <hr className="my-1 border-zinc-100 dark:border-zinc-850" />
+                            <button
+                              type="button"
+                              onClick={() => handleQuickSelect('none')}
+                              className="w-full px-3 py-2 text-left text-[11px] font-semibold text-red-500 hover:bg-red-50/20 dark:hover:bg-red-950/20 flex items-center gap-2 cursor-pointer"
+                            >
+                              <X className="size-3.5" />
+                              {locale === 'vi' ? 'Hủy chọn tất cả' : 'Clear all'}
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Sub-toolbar: search and select all check */}
+                <div className="flex items-center gap-4 py-3 border-b border-zinc-100 dark:border-zinc-850 shrink-0">
+                  {/* Search Input */}
+                  <div className="relative flex-1">
+                    <Search className="absolute left-3 top-2.5 size-3.5 text-zinc-400" />
+                    <input
+                      type="text"
+                      placeholder={locale === 'vi' ? 'Tìm quyền...' : 'Search permissions...'}
+                      value={createSearchQuery}
+                      onChange={(e) => setCreateSearchQuery(e.target.value)}
+                      className="w-full rounded-xl border border-zinc-200 bg-white pl-9 pr-8 py-2 text-xs focus:border-blue-500 focus:outline-none dark:border-zinc-800 dark:bg-[#0c0c0e] focus:ring-1 focus:ring-blue-500"
+                    />
+                    {createSearchQuery && (
+                      <button
+                        type="button"
+                        onClick={() => setCreateSearchQuery('')}
+                        className="absolute right-3 top-2.5 p-0.5 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-400 transition"
+                      >
+                        <X className="size-3" />
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Select All Checkbox */}
+                  <label className="flex items-center gap-2 text-xs font-bold text-zinc-600 dark:text-zinc-400 select-none cursor-pointer">
+                    <div
+                      onClick={handleToggleAllCreatePermissions}
+                      className="size-4 flex items-center justify-center rounded border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-[#0c0c0e] transition shadow-sm cursor-pointer"
+                    >
+                      {getGroupedPermissionsForModal().flatMap(([_, g]) => g.permissions).map(p => p.id).every(id => createCheckedPermissionIds.includes(id)) && (
+                        <Check className="size-3 text-blue-600 dark:text-blue-500 font-extrabold" />
+                      )}
+                    </div>
+                    {locale === 'vi' ? 'Chọn tất cả' : 'Select all'}
+                  </label>
+                </div>
+
+                {/* MATRIX HEADERS TABLE ROW */}
+                <div className="grid grid-cols-12 gap-2 text-[9px] uppercase font-bold text-zinc-400 dark:text-zinc-500 py-2.5 px-4 bg-zinc-50/50 dark:bg-[#09090b]/30 shrink-0 border-b border-zinc-100 dark:border-zinc-850">
+                  <div className="col-span-7">{locale === 'vi' ? 'Hành động / Quyền' : 'Action / Scope'}</div>
+                  <div className="col-span-1 text-center">{locale === 'vi' ? 'Xem' : 'View'}</div>
+                  <div className="col-span-1 text-center">{locale === 'vi' ? 'Thêm' : 'Add'}</div>
+                  <div className="col-span-1 text-center">{locale === 'vi' ? 'Sửa' : 'Edit'}</div>
+                  <div className="col-span-1 text-center">{locale === 'vi' ? 'Xóa' : 'Delete'}</div>
+                  <div className="col-span-1 text-center">{locale === 'vi' ? 'Xuất' : 'Export'}</div>
+                </div>
+
+                {/* SCROLLABLE MATRIX GRID BODY */}
+                <div className="flex-1 overflow-y-auto min-h-0 space-y-4 pr-1 py-3">
+                  {getGroupedPermissionsForModal().length === 0 ? (
+                    <div className="text-center text-zinc-400 text-xs py-8">
+                      {tCommon('noRecords')}
+                    </div>
+                  ) : (
+                    getGroupedPermissionsForModal().map(([moduleKey, group]) => {
+                      const IconComponent = group.icon
+                      return (
+                        <div key={moduleKey} className="space-y-1">
+                          {/* Module Accordion Section header */}
+                          <div className="flex items-center gap-2 px-4 py-1.5 bg-zinc-50/30 dark:bg-zinc-900/10 rounded-lg select-none">
+                            <IconComponent className="size-3.5 text-zinc-400 dark:text-zinc-550 shrink-0" />
+                            <span className="text-[10px] font-bold text-zinc-700 dark:text-zinc-350 uppercase tracking-wider">
+                              {group.label}
+                            </span>
+                          </div>
+
+                          {/* Row items */}
+                          <div className="divide-y divide-zinc-100/50 dark:divide-zinc-800/30">
+                            {group.permissions.map((p) => {
+                              const isChecked = createCheckedPermissionIds.includes(p.id)
+                              const targetColIndex = getActionColumnIndex(p.action)
+                              const info = getPermissionLocaleInfo(p.code, p.name)
+
+                              return (
+                                <div
+                                  key={p.id}
+                                  className="grid grid-cols-12 gap-2 py-3 px-4 items-center hover:bg-zinc-50/50 dark:hover:bg-zinc-900/20 rounded-xl transition duration-150"
+                                >
+                                  {/* Scope Column */}
+                                  <div className="col-span-7 pr-2">
+                                    <span className="text-xs font-bold text-zinc-800 dark:text-zinc-200 block leading-tight">
+                                      {info.name}
+                                    </span>
+                                    <span className="text-[9px] uppercase font-bold tracking-wider text-zinc-400 dark:text-zinc-500 mt-0.5 block">
+                                      {p.code}
+                                    </span>
+                                    {info.desc && (
+                                      <span className="text-[9.5px] text-zinc-500 dark:text-zinc-500 mt-0.5 block leading-normal italic">
+                                        {info.desc}
+                                      </span>
+                                    )}
+                                  </div>
+
+                                  {/* Render checkboxes / dashes under Columns */}
+                                  {[0, 1, 2, 3, 4].map((colIndex) => {
+                                    const isTarget = colIndex === targetColIndex
+                                    return (
+                                      <div
+                                        key={colIndex}
+                                        className="col-span-1 flex items-center justify-center"
+                                      >
+                                        {isTarget ? (
+                                          <div
+                                            onClick={() => handleToggleCreatePermission(p.id)}
+                                            className={cn(
+                                              "size-4 flex items-center justify-center rounded border transition shadow-sm cursor-pointer select-none",
+                                              isChecked
+                                                ? "border-blue-500 bg-blue-500 text-white"
+                                                : "border-zinc-300 bg-white hover:border-zinc-400 dark:border-zinc-700 dark:bg-[#0c0c0e] dark:hover:border-zinc-650"
+                                            )}
+                                          >
+                                            {isChecked && <Check className="size-3 text-white font-extrabold" />}
+                                          </div>
+                                        ) : (
+                                          <span className="text-zinc-300 dark:text-zinc-750 font-medium select-none">-</span>
+                                        )}
+                                      </div>
+                                    )
+                                  })}
+                                </div>
+                              )
+                            })}
+                          </div>
+                        </div>
+                      )
+                    })
+                  )}
                 </div>
               </div>
+            </div>
 
-              <div>
-                <label className="text-xs font-semibold text-zinc-500 mb-1 block dark:text-zinc-400">{t('modal.description')}</label>
-                <textarea
-                  value={createForm.description}
-                  onChange={(e) => setCreateForm({ ...createForm, description: e.target.value })}
-                  placeholder={t('modal.descriptionPlaceholder')}
-                  rows={3}
-                  className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-zinc-800 dark:bg-zinc-900/50 resize-none"
-                />
-              </div>
-
-              <div className="flex justify-end gap-3 border-t border-zinc-150 pt-4 dark:border-zinc-800">
-                <button
-                  type="button"
-                  onClick={() => setCreateModalOpen(false)}
-                  className="rounded-xl border border-zinc-200 px-4 py-2 text-sm font-semibold hover:bg-zinc-50 transition cursor-pointer dark:border-zinc-800 dark:hover:bg-zinc-900"
-                >
-                  {tCommon('cancel')}
-                </button>
-                <button
-                  type="submit"
-                  disabled={creating}
-                  className="flex items-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-sm font-semibold shadow transition cursor-pointer disabled:opacity-50"
-                >
-                  {creating && <Loader2 className="size-4 animate-spin" />}
-                  {t('modal.create')}
-                </button>
-              </div>
-            </form>
-          </div>
+            {/* Modal Footer */}
+            <div className="flex justify-end gap-3 px-6 py-4 border-t border-zinc-150 dark:border-zinc-800 shrink-0 bg-zinc-50/50 dark:bg-[#09090b]/50">
+              <button
+                type="button"
+                onClick={() => setCreateModalOpen(false)}
+                className="rounded-xl border border-zinc-200 px-4 py-2 text-xs font-bold hover:bg-zinc-100 text-zinc-700 transition cursor-pointer dark:border-zinc-800 dark:hover:bg-zinc-900 dark:text-zinc-350"
+              >
+                {locale === 'vi' ? 'Hủy' : 'Cancel'}
+              </button>
+              <button
+                type="submit"
+                disabled={creating}
+                className="flex items-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 text-xs font-bold shadow transition cursor-pointer disabled:opacity-50"
+              >
+                {creating && <Loader2 className="size-3.5 animate-spin" />}
+                {locale === 'vi' ? 'Lưu vai trò' : 'Save Role'}
+              </button>
+            </div>
+          </form>
         </div>
       )}
     </div>
