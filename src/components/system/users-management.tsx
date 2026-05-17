@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { toast } from 'sonner'
+import { useTranslations, useLocale } from 'next-intl'
 import {
   Users,
   UserCheck,
@@ -80,6 +81,15 @@ export function UsersManagement() {
   const { data: session } = useSession()
   const currentUserEmail = session?.user?.email
 
+  // Translations
+  const t = useTranslations('system.users')
+  const tCommon = useTranslations('system.common')
+  const locale = useLocale()
+
+  const translateRoleName = (code: string, fallbackName: string) => {
+    return tCommon.has(`roles.${code}`) ? tCommon(`roles.${code}`) : fallbackName
+  }
+
   // Data State
   const [users, setUsers] = useState<User[]>([])
   const [roles, setRoles] = useState<Role[]>([])
@@ -143,7 +153,7 @@ export function UsersManagement() {
         setStats(data.stats)
       }
     } catch (error) {
-      toast.error('Không thể tải danh sách người dùng')
+      toast.error(t('messages.fetchFailed'))
       console.error(error)
     } finally {
       setLoading(false)
@@ -181,7 +191,7 @@ export function UsersManagement() {
       const data = await res.json()
       setSelectedUserDetail(data)
     } catch (error) {
-      toast.error('Không thể tải chi tiết người dùng')
+      toast.error(t('messages.fetchDetailsFailed'))
       console.error(error)
     } finally {
       setDrawerLoading(false)
@@ -204,14 +214,14 @@ export function UsersManagement() {
         body: JSON.stringify({ status: newStatus }),
       })
       if (!res.ok) throw new Error()
-      toast.success('Cập nhật trạng thái người dùng thành công')
+      toast.success(t('messages.statusSuccess'))
       fetchUsers()
       if (selectedUser?.id === userId) {
         fetchUserDetails(userId)
         setSelectedUser((prev) => prev ? { ...prev, status: newStatus } : null)
       }
     } catch {
-      toast.error('Cập nhật trạng thái thất bại')
+      toast.error(t('messages.statusFailed'))
     }
     setActionMenuOpen(null)
   }
@@ -225,18 +235,18 @@ export function UsersManagement() {
         body: JSON.stringify({ roleId }),
       })
       if (!res.ok) throw new Error()
-      toast.success('Thay đổi vai trò người dùng thành công')
+      toast.success(t('messages.roleSuccess'))
       fetchUsers()
       fetchUserDetails(userId)
     } catch {
-      toast.error('Thay đổi vai trò thất bại')
+      toast.error(t('messages.roleFailed'))
     } finally {
       setRoleUpdating(false)
     }
   }
 
   const handleDeleteUser = async (userId: string) => {
-    if (!confirm('Bạn có chắc chắn muốn xóa thành viên này? Hành động này sẽ khóa tài khoản và lưu trữ lịch sử dữ liệu.')) {
+    if (!confirm(t('messages.confirmDelete'))) {
       return
     }
 
@@ -247,16 +257,16 @@ export function UsersManagement() {
       if (!res.ok) {
         const err = await res.json()
         if (err.code === 'CANNOT_DELETE_SELF') {
-          toast.error('Bạn không thể tự xóa tài khoản của chính mình!')
+          toast.error(t('messages.deleteSelfError'))
           return
         }
         throw new Error()
       }
-      toast.success('Xóa người dùng thành công')
+      toast.success(t('messages.deleteSuccess'))
       setDrawerOpen(false)
       fetchUsers()
     } catch {
-      toast.error('Xóa người dùng thất bại')
+      toast.error(t('messages.deleteFailed'))
     }
     setActionMenuOpen(null)
   }
@@ -273,15 +283,15 @@ export function UsersManagement() {
       const data = await res.json()
       if (!res.ok) {
         if (data.code === 'EMAIL_EXISTS') {
-          toast.error('Email đã tồn tại trong hệ thống')
+          toast.error(t('messages.emailExists'))
         } else if (data.code === 'USERNAME_EXISTS') {
-          toast.error('Tên đăng nhập đã tồn tại trong hệ thống')
+          toast.error(t('messages.usernameExists'))
         } else {
-          toast.error('Thêm thành viên thất bại')
+          toast.error(t('messages.createFailed'))
         }
         return
       }
-      toast.success('Thêm thành viên mới thành công!')
+      toast.success(t('messages.createSuccess'))
       setCreateModalOpen(false)
       setCreateForm({
         email: '',
@@ -295,7 +305,7 @@ export function UsersManagement() {
       })
       fetchUsers()
     } catch {
-      toast.error('Đã xảy ra lỗi hệ thống')
+      toast.error(t('messages.systemError'))
     } finally {
       setCreating(false)
     }
@@ -325,43 +335,43 @@ export function UsersManagement() {
     // Hardcoded grouped tree matching mockup
     const permissionModules = [
       {
-        name: 'Tổng quan (Dashboard)',
+        name: t('drawer.permissions.modules.wallet'),
         code: 'wallet',
         permissions: [
-          { name: 'Xem', code: 'wallet:read' },
-          { name: 'Thêm', code: 'wallet:create' },
-          { name: 'Sửa', code: 'wallet:update' },
-          { name: 'Xóa', code: 'wallet:delete' },
+          { name: t('drawer.permissions.read'), code: 'wallet:read' },
+          { name: t('drawer.permissions.create'), code: 'wallet:create' },
+          { name: t('drawer.permissions.update'), code: 'wallet:update' },
+          { name: t('drawer.permissions.delete'), code: 'wallet:delete' },
         ],
       },
       {
-        name: 'Thu chi (Transactions)',
+        name: t('drawer.permissions.modules.transaction'),
         code: 'transaction',
         permissions: [
-          { name: 'Xem', code: 'transaction:read' },
-          { name: 'Thêm', code: 'transaction:create' },
-          { name: 'Sửa', code: 'transaction:update' },
-          { name: 'Xóa', code: 'transaction:delete' },
+          { name: t('drawer.permissions.read'), code: 'transaction:read' },
+          { name: t('drawer.permissions.create'), code: 'transaction:create' },
+          { name: t('drawer.permissions.update'), code: 'transaction:update' },
+          { name: t('drawer.permissions.delete'), code: 'transaction:delete' },
         ],
       },
       {
-        name: 'Báo cáo (Reports & Budgets)',
+        name: t('drawer.permissions.modules.budget'),
         code: 'budget',
         permissions: [
-          { name: 'Xem', code: 'budget:read' },
-          { name: 'Thêm', code: 'budget:create' },
-          { name: 'Sửa', code: 'budget:update' },
-          { name: 'Xóa', code: 'budget:delete' },
+          { name: t('drawer.permissions.read'), code: 'budget:read' },
+          { name: t('drawer.permissions.create'), code: 'budget:create' },
+          { name: t('drawer.permissions.update'), code: 'budget:update' },
+          { name: t('drawer.permissions.delete'), code: 'budget:delete' },
         ],
       },
       {
-        name: 'Danh mục (Categories)',
+        name: t('drawer.permissions.modules.category'),
         code: 'category',
         permissions: [
-          { name: 'Xem', code: 'category:read' },
-          { name: 'Thêm', code: 'category:create' },
-          { name: 'Sửa', code: 'category:update' },
-          { name: 'Xóa', code: 'category:delete' },
+          { name: t('drawer.permissions.read'), code: 'category:read' },
+          { name: t('drawer.permissions.create'), code: 'category:create' },
+          { name: t('drawer.permissions.update'), code: 'category:update' },
+          { name: t('drawer.permissions.delete'), code: 'category:delete' },
         ],
       },
     ]
@@ -370,11 +380,11 @@ export function UsersManagement() {
       <div className="mt-4 space-y-4">
         <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden bg-zinc-50 dark:bg-zinc-900/50">
           <div className="grid grid-cols-5 border-b border-zinc-200 dark:border-zinc-800 p-3 text-xs font-semibold uppercase tracking-wider text-zinc-500">
-            <div className="col-span-2">Mô đun quản lý</div>
-            <div className="text-center">Xem</div>
-            <div className="text-center">Thêm</div>
-            <div className="text-center">Sửa</div>
-            <div className="text-center">Xóa</div>
+            <div className="col-span-2">{t('drawer.permissions.moduleHeader')}</div>
+            <div className="text-center">{t('drawer.permissions.read')}</div>
+            <div className="text-center">{t('drawer.permissions.create')}</div>
+            <div className="text-center">{t('drawer.permissions.update')}</div>
+            <div className="text-center">{t('drawer.permissions.delete')}</div>
           </div>
 
           <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
@@ -404,7 +414,7 @@ export function UsersManagement() {
           </div>
         </div>
         <p className="text-xs text-zinc-500 italic mt-2">
-          * Quyền hạn của người dùng được kế thừa trực tiếp từ vai trò của họ. Để điều chỉnh quyền hạn, vui lòng chỉnh sửa cấu hình trong trang "Vai trò & quyền".
+          {t('drawer.permissions.desc')}
         </p>
       </div>
     )
@@ -412,18 +422,7 @@ export function UsersManagement() {
 
   // Format action text
   const formatActionName = (action: string) => {
-    const map: Record<string, string> = {
-      LOGIN: 'Đăng nhập',
-      UPDATE_PROFILE: 'Cập nhật hồ sơ',
-      UPDATE_USER_STATUS: 'Đổi trạng thái tài khoản',
-      CHANGE_ROLE: 'Đổi vai trò người dùng',
-      CREATE_USER: 'Tạo tài khoản mới',
-      DELETE_USER: 'Xóa tài khoản',
-      EXPORT_REPORT: 'Xuất báo cáo tài chính',
-      APPROVE_BUDGET: 'Duyệt ngân sách chi tiêu',
-      CREATE_TRANSACTION: 'Ghi nhận giao dịch',
-    }
-    return map[action] || action
+    return tCommon.has(`actions.${action}`) ? tCommon(`actions.${action}`) : action
   }
 
   return (
@@ -431,9 +430,9 @@ export function UsersManagement() {
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Quản lý người dùng</h1>
+          <h1 className="text-2xl font-bold">{t('title')}</h1>
           <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-            Quản trị tài khoản, phân cấp vai trò và giám sát nhật ký hành động trong hệ thống.
+            {t('subtitle')}
           </p>
         </div>
         <button
@@ -446,7 +445,7 @@ export function UsersManagement() {
           className="flex items-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-sm font-medium shadow transition cursor-pointer"
         >
           <Plus className="size-4" />
-          Thêm thành viên
+          {t('addUser')}
         </button>
       </div>
 
@@ -456,56 +455,56 @@ export function UsersManagement() {
         <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-[#0c0c0e]">
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Tổng thành viên</p>
+              <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">{t('stats.total')}</p>
               <h2 className="mt-2 text-3xl font-bold">{stats.total}</h2>
             </div>
             <div className="flex size-10 items-center justify-center rounded-xl bg-blue-500/10 text-blue-500">
               <Users className="size-5" />
             </div>
           </div>
-          <div className="mt-3 text-xs text-zinc-500">Tài khoản được đăng ký trong hệ thống</div>
+          <div className="mt-3 text-xs text-zinc-500">{t('stats.totalDesc')}</div>
         </div>
 
         {/* Card 2: Active */}
         <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-[#0c0c0e]">
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Đang hoạt động</p>
+              <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">{t('stats.active')}</p>
               <h2 className="mt-2 text-3xl font-bold text-emerald-600 dark:text-emerald-500">{stats.active}</h2>
             </div>
             <div className="flex size-10 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-500 animate-pulse">
               <UserCheck className="size-5" />
             </div>
           </div>
-          <div className="mt-3 text-xs text-zinc-500">Tài khoản trực tuyến, hoạt động bình thường</div>
+          <div className="mt-3 text-xs text-zinc-500">{t('stats.activeDesc')}</div>
         </div>
 
         {/* Card 3: Suspended */}
         <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-[#0c0c0e]">
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Tạm khóa</p>
+              <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">{t('stats.suspended')}</p>
               <h2 className="mt-2 text-3xl font-bold text-amber-500 dark:text-amber-500">{stats.suspended}</h2>
             </div>
             <div className="flex size-10 items-center justify-center rounded-xl bg-amber-500/10 text-amber-500">
               <UserMinus className="size-5" />
             </div>
           </div>
-          <div className="mt-3 text-xs text-zinc-500">Tài khoản tạm ngưng do vi phạm hoặc yêu cầu</div>
+          <div className="mt-3 text-xs text-zinc-500">{t('stats.suspendedDesc')}</div>
         </div>
 
         {/* Card 4: Inactive */}
         <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-[#0c0c0e]">
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Vô hiệu hóa</p>
+              <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">{t('stats.inactive')}</p>
               <h2 className="mt-2 text-3xl font-bold text-zinc-400 dark:text-zinc-400">{stats.inactive}</h2>
             </div>
             <div className="flex size-10 items-center justify-center rounded-xl bg-zinc-500/10 text-zinc-400">
               <UserX className="size-5" />
             </div>
           </div>
-          <div className="mt-3 text-xs text-zinc-500">Tài khoản ngưng hoạt động vĩnh viễn</div>
+          <div className="mt-3 text-xs text-zinc-500">{t('stats.inactiveDesc')}</div>
         </div>
       </div>
 
@@ -515,7 +514,7 @@ export function UsersManagement() {
           <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-zinc-400" />
           <input
             type="text"
-            placeholder="Tìm kiếm người dùng (tên, email, SĐT...)"
+            placeholder={t('toolbar.searchPlaceholder')}
             value={search}
             onChange={(e) => {
               setSearch(e.target.value)
@@ -535,10 +534,10 @@ export function UsersManagement() {
             }}
             className="rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm focus:outline-none dark:border-zinc-800 dark:bg-[#0c0c0e] text-zinc-700 dark:text-zinc-300"
           >
-            <option value="">Vai trò: Tất cả</option>
+            <option value="">{t('toolbar.roleAll')}</option>
             {roles.map((role) => (
               <option key={role.id} value={role.id}>
-                {role.name}
+                {translateRoleName(role.code, role.name)}
               </option>
             ))}
           </select>
@@ -552,10 +551,10 @@ export function UsersManagement() {
             }}
             className="rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm focus:outline-none dark:border-zinc-800 dark:bg-[#0c0c0e] text-zinc-700 dark:text-zinc-300"
           >
-            <option value="">Trạng thái: Tất cả</option>
-            <option value="ACTIVE">Đang hoạt động</option>
-            <option value="SUSPENDED">Tạm khóa</option>
-            <option value="INACTIVE">Vô hiệu hóa</option>
+            <option value="">{t('toolbar.statusAll')}</option>
+            <option value="ACTIVE">{tCommon('statuses.ACTIVE')}</option>
+            <option value="SUSPENDED">{tCommon('statuses.SUSPENDED')}</option>
+            <option value="INACTIVE">{tCommon('statuses.INACTIVE')}</option>
           </select>
         </div>
       </div>
@@ -566,11 +565,11 @@ export function UsersManagement() {
           <table className="w-full border-collapse text-left">
             <thead>
               <tr className="border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/30 text-xs font-semibold uppercase tracking-wider text-zinc-500">
-                <th className="p-4">Người dùng</th>
-                <th className="p-4">Vai trò</th>
-                <th className="p-4">Trạng thái</th>
-                <th className="p-4">Ngày tạo</th>
-                <th className="p-4 text-center">Thao tác</th>
+                <th className="p-4">{t('table.user')}</th>
+                <th className="p-4">{t('table.role')}</th>
+                <th className="p-4">{t('table.status')}</th>
+                <th className="p-4">{t('table.created')}</th>
+                <th className="p-4 text-center">{t('table.actions')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
@@ -578,13 +577,13 @@ export function UsersManagement() {
                 <tr>
                   <td colSpan={5} className="p-8 text-center">
                     <Loader2 className="size-6 animate-spin text-zinc-400 mx-auto" />
-                    <p className="text-sm text-zinc-500 mt-2">Đang tải danh sách người dùng...</p>
+                    <p className="text-sm text-zinc-500 mt-2">{t('table.loading')}</p>
                   </td>
                 </tr>
               ) : users.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="p-8 text-center text-sm text-zinc-500">
-                    Không tìm thấy thành viên nào khớp với bộ lọc.
+                    {t('table.noRecords')}
                   </td>
                 </tr>
               ) : (
@@ -616,7 +615,7 @@ export function UsersManagement() {
                               </span>
                               {isCurrentUser && (
                                 <span className="inline-flex items-center rounded-full bg-blue-500/10 px-2 py-0.5 text-[10px] font-bold text-blue-600 dark:bg-blue-500/20 dark:text-blue-400">
-                                  Bạn
+                                  {t('table.you')}
                                 </span>
                               )}
                             </div>
@@ -639,10 +638,10 @@ export function UsersManagement() {
                             roleObj.code === 'USER' && "bg-zinc-500/10 text-zinc-600 border-zinc-500/20 dark:bg-zinc-500/25 dark:text-zinc-400"
                           )}>
                             <Shield className="size-3 shrink-0" />
-                            {roleObj.name}
+                            {translateRoleName(roleObj.code, roleObj.name)}
                           </span>
                         ) : (
-                          <span className="text-xs text-zinc-400 italic">Không có vai trò</span>
+                          <span className="text-xs text-zinc-400 italic">{t('table.noRole')}</span>
                         )}
                       </td>
 
@@ -660,13 +659,13 @@ export function UsersManagement() {
                             user.status === 'SUSPENDED' && "bg-amber-500 dark:bg-amber-400",
                             user.status === 'INACTIVE' && "bg-zinc-400 dark:bg-zinc-500"
                           )} />
-                          {user.status === 'ACTIVE' ? 'Đang hoạt động' : user.status === 'SUSPENDED' ? 'Tạm khóa' : 'Vô hiệu hóa'}
+                          {user.status === 'ACTIVE' ? tCommon('statuses.ACTIVE') : user.status === 'SUSPENDED' ? tCommon('statuses.SUSPENDED') : tCommon('statuses.INACTIVE')}
                         </span>
                       </td>
 
                       {/* Date Column */}
                       <td className="p-4 text-sm text-zinc-500">
-                        {new Date(user.createdAt).toLocaleDateString('vi-VN')}
+                        {new Date(user.createdAt).toLocaleDateString(locale === 'vi' ? 'vi-VN' : 'en-US')}
                       </td>
 
                       {/* Actions Column */}
@@ -687,7 +686,7 @@ export function UsersManagement() {
                                 className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-800 transition"
                               >
                                 <Users className="size-3.5" />
-                                Xem chi tiết
+                                {t('table.viewDetail')}
                               </button>
                               
                               {user.status === 'ACTIVE' ? (
@@ -696,7 +695,7 @@ export function UsersManagement() {
                                   className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-amber-600 hover:bg-amber-50 dark:text-amber-400 dark:hover:bg-amber-950/20 transition"
                                 >
                                   <Lock className="size-3.5" />
-                                  Tạm khóa tài khoản
+                                  {t('table.suspend')}
                                 </button>
                               ) : (
                                 <button
@@ -704,7 +703,7 @@ export function UsersManagement() {
                                   className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:hover:bg-emerald-950/20 transition"
                                 >
                                   <Unlock className="size-3.5" />
-                                  Mở khóa tài khoản
+                                  {t('table.activate')}
                                 </button>
                               )}
 
@@ -714,7 +713,7 @@ export function UsersManagement() {
                                   className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/20 border-t border-zinc-100 dark:border-zinc-800/80 transition"
                                 >
                                   <Trash2 className="size-3.5" />
-                                  Xóa tài khoản
+                                  {t('table.delete')}
                                 </button>
                               )}
                             </div>
@@ -733,7 +732,11 @@ export function UsersManagement() {
         {totalCount > limit && (
           <div className="flex items-center justify-between border-t border-zinc-200 p-4 dark:border-zinc-800">
             <span className="text-xs text-zinc-500">
-              Đang xem {Math.min(totalCount, (page - 1) * limit + 1)}-{Math.min(totalCount, page * limit)} trong số {totalCount} thành viên
+              {t('table.pagination', {
+                start: Math.min(totalCount, (page - 1) * limit + 1),
+                end: Math.min(totalCount, page * limit),
+                total: totalCount
+              })}
             </span>
             <div className="flex items-center gap-2">
               <button
@@ -789,7 +792,7 @@ export function UsersManagement() {
                   selectedUser.status === 'SUSPENDED' && "bg-amber-500/10 text-amber-600 border-amber-500/20 dark:bg-amber-500/25 dark:text-amber-400",
                   selectedUser.status === 'INACTIVE' && "bg-zinc-500/10 text-zinc-500 border-zinc-500/20 dark:bg-zinc-500/25 dark:text-zinc-400"
                 )}>
-                  {selectedUser.status === 'ACTIVE' ? 'Đang hoạt động' : selectedUser.status === 'SUSPENDED' ? 'Tạm khóa' : 'Vô hiệu hóa'}
+                  {selectedUser.status === 'ACTIVE' ? tCommon('statuses.ACTIVE') : selectedUser.status === 'SUSPENDED' ? tCommon('statuses.SUSPENDED') : tCommon('statuses.INACTIVE')}
                 </span>
                 <button
                   onClick={() => setDrawerOpen(false)}
@@ -811,7 +814,7 @@ export function UsersManagement() {
                     : "border-transparent text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-300"
                 )}
               >
-                Thông tin
+                {t('drawer.tabInfo')}
               </button>
               <button
                 onClick={() => setActiveTab('permissions')}
@@ -822,7 +825,7 @@ export function UsersManagement() {
                     : "border-transparent text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-300"
                 )}
               >
-                Vai trò & quyền
+                {t('drawer.tabRoles')}
               </button>
               <button
                 onClick={() => setActiveTab('logs')}
@@ -833,7 +836,7 @@ export function UsersManagement() {
                     : "border-transparent text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-300"
                 )}
               >
-                Nhật ký hoạt động
+                {t('drawer.tabLogs')}
               </button>
             </div>
 
@@ -842,7 +845,7 @@ export function UsersManagement() {
               {drawerLoading ? (
                 <div className="flex h-64 flex-col items-center justify-center">
                   <Loader2 className="size-8 animate-spin text-blue-500" />
-                  <p className="text-sm text-zinc-500 mt-2">Đang tải thông tin chi tiết...</p>
+                  <p className="text-sm text-zinc-500 mt-2">{tCommon('loading')}</p>
                 </div>
               ) : (
                 <>
@@ -852,38 +855,40 @@ export function UsersManagement() {
                       {/* Detailed Grid */}
                       <div className="grid grid-cols-2 gap-4">
                         <div className="rounded-xl border border-zinc-100 p-3.5 bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-900/30">
-                          <span className="text-[10px] uppercase font-bold text-zinc-500 block mb-1">Họ và Tên</span>
+                          <span className="text-[10px] uppercase font-bold text-zinc-500 block mb-1">{t('drawer.info.name')}</span>
                           <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
                             {selectedUser.profile?.lastName} {selectedUser.profile?.firstName}
                           </span>
                         </div>
                         <div className="rounded-xl border border-zinc-100 p-3.5 bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-900/30">
-                          <span className="text-[10px] uppercase font-bold text-zinc-500 block mb-1">Tên tài khoản</span>
+                          <span className="text-[10px] uppercase font-bold text-zinc-500 block mb-1">{t('drawer.info.username')}</span>
                           <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">@{selectedUser.username}</span>
                         </div>
                         <div className="rounded-xl border border-zinc-100 p-3.5 bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-900/30">
                           <span className="text-[10px] uppercase font-bold text-zinc-500 flex items-center gap-1 mb-1">
-                            <Mail className="size-3" /> Email
+                            <Mail className="size-3" /> {t('drawer.info.email')}
                           </span>
                           <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 break-all">{selectedUser.email}</span>
                         </div>
                         <div className="rounded-xl border border-zinc-100 p-3.5 bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-900/30">
                           <span className="text-[10px] uppercase font-bold text-zinc-500 flex items-center gap-1 mb-1">
-                            <Phone className="size-3" /> Số điện thoại
+                            <Phone className="size-3" /> {t('drawer.info.phone')}
                           </span>
                           <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-                            {selectedUser.phone || 'Chưa cung cấp'}
+                            {selectedUser.phone || t('drawer.info.phoneEmpty')}
                           </span>
                         </div>
                         <div className="rounded-xl border border-zinc-100 p-3.5 bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-900/30">
                           <span className="text-[10px] uppercase font-bold text-zinc-500 flex items-center gap-1 mb-1">
-                            <Globe className="size-3" /> Ngôn ngữ
+                            <Globe className="size-3" /> {t('drawer.info.language')}
                           </span>
-                          <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Tiếng Việt (vi)</span>
+                          <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+                            {locale === 'vi' ? 'Tiếng Việt (vi)' : 'English (en)'}
+                          </span>
                         </div>
                         <div className="rounded-xl border border-zinc-100 p-3.5 bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-900/30">
                           <span className="text-[10px] uppercase font-bold text-zinc-500 flex items-center gap-1 mb-1">
-                            <Clock className="size-3" /> Múi giờ
+                            <Clock className="size-3" /> {t('drawer.info.timezone')}
                           </span>
                           <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Asia/Ho_Chi_Minh</span>
                         </div>
@@ -893,10 +898,10 @@ export function UsersManagement() {
                       <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-[#0c0c0e]">
                         <h4 className="text-sm font-bold flex items-center gap-2 mb-3">
                           <ShieldCheck className="size-4 text-blue-600" />
-                          Phân cấp phân quyền vai trò
+                          {t('drawer.info.rbac')}
                         </h4>
                         <p className="text-xs text-zinc-500 mb-4">
-                          Thay đổi vai trò sẽ điều chỉnh lập tức quyền hạn truy cập của người dùng trên toàn bộ hệ thống.
+                          {t('drawer.info.rbacDesc')}
                         </p>
                         <div className="flex items-center gap-3">
                           <select
@@ -907,7 +912,7 @@ export function UsersManagement() {
                           >
                             {roles.map((role) => (
                               <option key={role.id} value={role.id}>
-                                {role.name} ({role.code})
+                                {translateRoleName(role.code, role.name)} ({role.code})
                               </option>
                             ))}
                           </select>
@@ -915,7 +920,7 @@ export function UsersManagement() {
                         </div>
                         {currentUserEmail && selectedUser.email === currentUserEmail && (
                           <p className="text-[10px] text-amber-500 mt-2">
-                            * Bạn không thể thay đổi vai trò của chính mình để tránh mất quyền quản trị.
+                            {t('drawer.info.rbacSelfWarning')}
                           </p>
                         )}
                       </div>
@@ -926,9 +931,14 @@ export function UsersManagement() {
                   {activeTab === 'permissions' && (
                     <div className="animate-in fade-in duration-200">
                       <div className="flex items-center justify-between">
-                        <h4 className="text-sm font-bold">Bảng ma trận phân quyền vai trò</h4>
+                        <h4 className="text-sm font-bold">{t('drawer.permissions.title')}</h4>
                         <span className="text-xs text-blue-600 font-semibold bg-blue-50 dark:bg-blue-900/30 px-2.5 py-1 rounded-lg">
-                          Vai trò: {selectedUserDetail?.user.userRoles[0]?.role.name}
+                          {t('drawer.permissions.roleLabel', {
+                            name: translateRoleName(
+                              selectedUserDetail?.user.userRoles[0]?.role.code || '',
+                              selectedUserDetail?.user.userRoles[0]?.role.name || ''
+                            )
+                          })}
                         </span>
                       </div>
                       {renderPermissionTree()}
@@ -940,11 +950,11 @@ export function UsersManagement() {
                     <div className="animate-in fade-in duration-200 space-y-4">
                       <h4 className="text-sm font-bold flex items-center gap-2 mb-3">
                         <Activity className="size-4 text-blue-600" />
-                        Nhật ký hoạt động của thành viên
+                        {t('drawer.logs.title')}
                       </h4>
 
                       {selectedUserDetail?.activityLogs && selectedUserDetail.activityLogs.length === 0 ? (
-                        <p className="text-sm text-zinc-500 text-center py-8">Chưa ghi nhận hoạt động nào của thành viên này.</p>
+                        <p className="text-sm text-zinc-500 text-center py-8">{t('drawer.logs.noRecords')}</p>
                       ) : (
                         <div className="relative pl-6 border-l-2 border-zinc-100 dark:border-zinc-800 ml-3 space-y-6">
                           {selectedUserDetail?.activityLogs.map((log) => (
@@ -959,7 +969,7 @@ export function UsersManagement() {
                                 </span>
                                 <p className="text-xs text-zinc-500 mt-0.5">{log.details}</p>
                                 <span className="text-[10px] text-zinc-400 mt-1 flex items-center gap-2">
-                                  <span>{new Date(log.createdAt).toLocaleString('vi-VN')}</span>
+                                  <span>{new Date(log.createdAt).toLocaleString(locale === 'vi' ? 'vi-VN' : 'en-US')}</span>
                                   <span>•</span>
                                   <span>IP: {log.ipAddress || '127.0.0.1'}</span>
                                 </span>
@@ -991,7 +1001,7 @@ export function UsersManagement() {
           {/* Modal Container */}
           <div className="relative z-10 w-full max-w-lg rounded-2xl border border-zinc-200 bg-white p-6 shadow-2xl dark:border-zinc-800 dark:bg-[#0c0c0e] animate-in zoom-in-95 duration-200">
             <div className="flex items-center justify-between border-b border-zinc-100 pb-4 dark:border-zinc-800">
-              <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">Thêm thành viên mới</h3>
+              <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">{t('createModal.title')}</h3>
               <button
                 onClick={() => setCreateModalOpen(false)}
                 className="p-1 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-400 transition"
@@ -1003,60 +1013,60 @@ export function UsersManagement() {
             <form onSubmit={handleCreateUser} className="space-y-4 mt-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-xs font-semibold text-zinc-500 mb-1 block">Họ</label>
+                  <label className="text-xs font-semibold text-zinc-500 mb-1 block">{t('createModal.lastName')}</label>
                   <input
                     type="text"
                     required
                     value={createForm.lastName}
                     onChange={(e) => setCreateForm({ ...createForm, lastName: e.target.value })}
-                    placeholder="Nguyễn Văn"
+                    placeholder={t('createModal.lastNamePlaceholder')}
                     className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-zinc-800 dark:bg-zinc-900/50"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-zinc-500 mb-1 block">Tên</label>
+                  <label className="text-xs font-semibold text-zinc-500 mb-1 block">{t('createModal.firstName')}</label>
                   <input
                     type="text"
                     required
                     value={createForm.firstName}
                     onChange={(e) => setCreateForm({ ...createForm, firstName: e.target.value })}
-                    placeholder="A"
+                    placeholder={t('createModal.firstNamePlaceholder')}
                     className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-zinc-800 dark:bg-zinc-900/50"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-zinc-500 mb-1 block">Địa chỉ Email</label>
+                <label className="text-xs font-semibold text-zinc-500 mb-1 block">{t('createModal.email')}</label>
                 <input
                   type="email"
                   required
                   value={createForm.email}
                   onChange={(e) => setCreateForm({ ...createForm, email: e.target.value })}
-                  placeholder="nguyenvana@finlo.vn"
+                  placeholder={t('createModal.emailPlaceholder')}
                   className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-zinc-800 dark:bg-zinc-900/50"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-xs font-semibold text-zinc-500 mb-1 block">Tên đăng nhập (Username)</label>
+                  <label className="text-xs font-semibold text-zinc-500 mb-1 block">{t('createModal.username')}</label>
                   <input
                     type="text"
                     value={createForm.username}
                     onChange={(e) => setCreateForm({ ...createForm, username: e.target.value })}
-                    placeholder="nguyenvana"
+                    placeholder={t('createModal.usernamePlaceholder')}
                     className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-zinc-800 dark:bg-zinc-900/50"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-zinc-500 mb-1 block">Mật khẩu ban đầu</label>
+                  <label className="text-xs font-semibold text-zinc-500 mb-1 block">{t('createModal.password')}</label>
                   <input
                     type="password"
                     required
                     value={createForm.password}
                     onChange={(e) => setCreateForm({ ...createForm, password: e.target.value })}
-                    placeholder="••••••••"
+                    placeholder={t('createModal.passwordPlaceholder')}
                     className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-zinc-800 dark:bg-zinc-900/50"
                   />
                 </div>
@@ -1064,27 +1074,27 @@ export function UsersManagement() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-xs font-semibold text-zinc-500 mb-1 block">Số điện thoại (tùy chọn)</label>
+                  <label className="text-xs font-semibold text-zinc-500 mb-1 block">{t('createModal.phone')}</label>
                   <input
                     type="text"
                     value={createForm.phone}
                     onChange={(e) => setCreateForm({ ...createForm, phone: e.target.value })}
-                    placeholder="0912345678"
+                    placeholder={t('createModal.phonePlaceholder')}
                     className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-zinc-800 dark:bg-zinc-900/50"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-zinc-500 mb-1 block">Vai trò gán ban đầu</label>
+                  <label className="text-xs font-semibold text-zinc-500 mb-1 block">{t('createModal.role')}</label>
                   <select
                     value={createForm.roleId}
                     onChange={(e) => setCreateForm({ ...createForm, roleId: e.target.value })}
                     required
                     className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-3 py-2 text-sm focus:outline-none dark:border-zinc-800 dark:bg-zinc-900/50"
                   >
-                    <option value="" disabled>Chọn vai trò</option>
+                    <option value="" disabled>{t('createModal.roleSelect')}</option>
                     {roles.map((role) => (
                       <option key={role.id} value={role.id}>
-                        {role.name} ({role.code})
+                        {translateRoleName(role.code, role.name)} ({role.code})
                       </option>
                     ))}
                   </select>
@@ -1097,7 +1107,7 @@ export function UsersManagement() {
                   onClick={() => setCreateModalOpen(false)}
                   className="rounded-xl border border-zinc-200 px-4 py-2 text-sm font-semibold hover:bg-zinc-50 transition cursor-pointer dark:border-zinc-800 dark:hover:bg-zinc-900"
                 >
-                  Hủy
+                  {t('createModal.cancel')}
                 </button>
                 <button
                   type="submit"
@@ -1105,7 +1115,7 @@ export function UsersManagement() {
                   className="flex items-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-sm font-semibold shadow transition cursor-pointer disabled:opacity-50"
                 >
                   {creating && <Loader2 className="size-4 animate-spin" />}
-                  Lưu tài khoản
+                  {t('createModal.submit')}
                 </button>
               </div>
             </form>

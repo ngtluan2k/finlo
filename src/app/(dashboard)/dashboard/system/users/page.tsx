@@ -1,8 +1,13 @@
 import { UsersManagement } from '@/components/system/users-management'
 
-export const metadata = {
-  title: 'Quản lý người dùng - Finlo Admin',
-  description: 'Quản trị danh sách người dùng và phân quyền hệ thống Finlo.',
+import { getTranslations } from 'next-intl/server'
+
+export async function generateMetadata() {
+  const t = await getTranslations('system.users')
+  return {
+    title: `${t('title')} - Finlo Admin`,
+    description: t('subtitle'),
+  }
 }
 
 export default function SystemUsersPage() {

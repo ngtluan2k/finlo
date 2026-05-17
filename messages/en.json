@@ -149,5 +149,286 @@
     "light": "Light",
     "dark": "Dark",
     "system": "System"
+  },
+  "system": {
+    "common": {
+      "actions": {
+        "LOGIN": "Sign in",
+        "UPDATE_PROFILE": "Update profile",
+        "UPDATE_USER_STATUS": "Change status",
+        "CHANGE_ROLE": "Change role",
+        "CREATE_USER": "Create new account",
+        "DELETE_USER": "Delete account",
+        "EXPORT_REPORT": "Export financial report",
+        "APPROVE_BUDGET": "Approve budget spending",
+        "CREATE_TRANSACTION": "Create transaction",
+        "UPDATE_ROLE_PERMISSIONS": "Update permission matrix",
+        "CREATE_ROLE": "Create new role",
+        "DELETE_ROLE": "Delete system role"
+      },
+      "roles": {
+        "SUPER_ADMIN": "Super Admin",
+        "ADMIN": "Admin",
+        "CHIEF_ACCOUNTANT": "Chief Accountant",
+        "ACCOUNTANT": "Accountant",
+        "CASHIER": "Cashier",
+        "USER": "User",
+        "system": "System",
+        "custom": "Custom",
+        "none": "No role"
+      },
+      "statuses": {
+        "ACTIVE": "Active",
+        "SUSPENDED": "Suspended",
+        "INACTIVE": "Inactive",
+        "all": "All statuses"
+      },
+      "search": "Search...",
+      "filter": "Filter",
+      "refresh": "Refresh",
+      "loading": "Loading...",
+      "noRecords": "No matching data found.",
+      "noDetails": "No detailed description.",
+      "confirmDelete": "Are you sure you want to delete?",
+      "cancel": "Cancel",
+      "save": "Save Config",
+      "submitting": "Processing...",
+      "viewDetail": "View Details",
+      "actionsLabel": "Actions"
+    },
+    "activityLog": {
+      "title": "Activity Logs",
+      "subtitle": "Audit history logs of administrators and staff. Monitor system security events in real-time.",
+      "placeholder": "Search by action, user, details...",
+      "table": {
+        "member": "Member",
+        "action": "Action",
+        "details": "Event Details",
+        "ip": "IP Address",
+        "time": "Time",
+        "loading": "Loading audit history...",
+        "noRecords": "No matching activity log events found.",
+        "noDetails": "No additional description.",
+        "pagination": "Showing {start}-{end} of {total} events"
+      }
+    },
+    "roles": {
+      "title": "Roles & Permissions",
+      "subtitle": "Manage roles and configure permission matrices in the system",
+      "searchPlaceholder": "Search roles...",
+      "addRole": "Add Role",
+      "tabList": "Role List",
+      "tabLogs": "Change Log",
+      "stats": {
+        "total": "Total Roles",
+        "totalDesc": "Roles in the system",
+        "active": "Active Roles",
+        "activeDesc": "Currently in use",
+        "system": "System Roles",
+        "systemDesc": "Cannot be deleted",
+        "custom": "Custom Roles",
+        "customDesc": "Can edit and delete"
+      },
+      "table": {
+        "name": "Role Name",
+        "description": "Description",
+        "type": "Role Type",
+        "userCount": "{count} users",
+        "status": "Status",
+        "action": "Actions",
+        "matrixTooltip": "Manage permission matrix",
+        "loading": "Loading roles & permissions...",
+        "noRecords": "No roles found matching the filter.",
+        "viewDetail": "View Details",
+        "setPermissions": "Set Permissions",
+        "deleteRole": "Delete Role",
+        "pagination": "Showing {start} - {end} of {total} roles"
+      },
+      "logs": {
+        "searchPlaceholder": "Search by user, action...",
+        "table": {
+          "user": "Performed By",
+          "action": "Action",
+          "details": "Change Details",
+          "ip": "IP Address",
+          "time": "Time",
+          "loading": "Loading activity logs...",
+          "noRecords": "No activity logs found.",
+          "pagination": "Showing {start} - {end} of {total} log entries"
+        }
+      },
+      "drawer": {
+        "title": "Role Config",
+        "code": "Code: {code}",
+        "tabInfo": "Role Details",
+        "tabMatrix": "Permission Matrix",
+        "form": {
+          "name": "Role Name",
+          "level": "Level",
+          "levelDesc": "* Level is used for privilege comparison. Higher level roles can assign lower level ones.",
+          "description": "Detailed Description",
+          "userCount": "{count} members",
+          "userCountDesc": "Are currently assigned this role",
+          "saveInfo": "Save Role Info"
+        },
+        "matrix": {
+          "subtitle": "Check the boxes below to assign specific operating privileges to this role.",
+          "save": "Save Configuration",
+          "superAdminTitle": "Supreme Super Admin Privilege",
+          "superAdminDesc": "The Super Administrator role possesses all platform privileges to ensure platform integrity and cannot be modified.",
+          "checkAll": "Check All",
+          "uncheckAll": "Uncheck All"
+        },
+        "modules": {
+          "wallet": "Overview (Dashboard)",
+          "transaction": "Cashflow (Transactions)",
+          "budget": "Reports (Reports & Budgets)",
+          "category": "Categories",
+          "user": "Users (System Users)",
+          "role": "Roles & Permissions (RBAC)",
+          "permission": "System Settings"
+        }
+      },
+      "createModal": {
+        "title": "Add New System Role",
+        "name": "Role Name",
+        "namePlaceholder": "Chief Accountant",
+        "code": "Role Code (UPPERCASE)",
+        "codePlaceholder": "CHIEF_ACCOUNTANT",
+        "level": "Level",
+        "levelDesc": "* Higher level roles can manage lower level ones.",
+        "description": "Role Description",
+        "descriptionPlaceholder": "Role for managing budget approval and cashflow matching.",
+        "cancel": "Cancel",
+        "submit": "Create Role"
+      },
+      "messages": {
+        "fetchFailed": "Failed to load roles or permissions",
+        "fetchLogsFailed": "Failed to load activity logs",
+        "updateSuccess": "Role details updated successfully!",
+        "updateFailed": "Failed to update role details",
+        "updateMatrixSuccess": "Permission matrix updated successfully!",
+        "updateMatrixFailed": "Failed to update permissions",
+        "codeExists": "Role code already exists in the system",
+        "createSuccess": "New role created successfully!",
+        "createFailed": "Failed to create role",
+        "systemError": "System error occurred while creating role",
+        "protectedRole": "System role \"{name}\" is protected and cannot be deleted.",
+        "assignedMembers": "Cannot delete this role because there are {count} active members assigned. Please change their roles first.",
+        "confirmDelete": "Are you sure you want to delete role \"{name}\" from the system?",
+        "deleteSuccess": "Role deleted successfully",
+        "deleteFailed": "Failed to delete role"
+      }
+    },
+    "users": {
+      "title": "User Management",
+      "subtitle": "Administer accounts, hierarchy roles, and monitor user activity logs within the system.",
+      "addUser": "Add Member",
+      "stats": {
+        "total": "Total Members",
+        "totalDesc": "Registered accounts in the system",
+        "active": "Active",
+        "activeDesc": "Online, active accounts",
+        "suspended": "Suspended",
+        "suspendedDesc": "Temporarily suspended due to violations or request",
+        "inactive": "Deactivated",
+        "inactiveDesc": "Permanently deactivated accounts"
+      },
+      "toolbar": {
+        "searchPlaceholder": "Search users (name, email, phone...)",
+        "roleAll": "Role: All",
+        "statusAll": "Status: All"
+      },
+      "table": {
+        "user": "User",
+        "role": "Role",
+        "status": "Status",
+        "created": "Date Created",
+        "actions": "Actions",
+        "loading": "Loading user list...",
+        "noRecords": "No members found matching the filter.",
+        "you": "You",
+        "noRole": "No Role",
+        "viewDetail": "View Details",
+        "suspend": "Suspend Account",
+        "activate": "Activate Account",
+        "delete": "Delete Account",
+        "pagination": "Showing {start}-{end} of {total} members"
+      },
+      "drawer": {
+        "title": "User Details",
+        "tabInfo": "Info",
+        "tabRoles": "Role & Permissions",
+        "tabLogs": "Activity Logs",
+        "info": {
+          "name": "Full Name",
+          "username": "Username",
+          "email": "Email Address",
+          "phone": "Phone Number",
+          "phoneEmpty": "Not Provided",
+          "language": "Language",
+          "timezone": "Timezone",
+          "rbac": "Role Access Configuration",
+          "rbacDesc": "Changing the role will instantly adjust the user's access privileges across the system.",
+          "rbacSelfWarning": "* You cannot change your own role to prevent administrative lockout."
+        },
+        "permissions": {
+          "title": "Role Permission Matrix Table",
+          "roleLabel": "Role: {name}",
+          "moduleHeader": "Management Module",
+          "read": "View",
+          "create": "Add",
+          "update": "Edit",
+          "delete": "Delete",
+          "desc": "* User privileges are inherited directly from their role. To adjust privileges, please edit the role settings in the \"Roles & permissions\" page.",
+          "modules": {
+            "wallet": "Overview (Dashboard)",
+            "transaction": "Cashflow (Transactions)",
+            "budget": "Reports (Reports & Budgets)",
+            "category": "Categories"
+          }
+        },
+        "logs": {
+          "title": "Member Activity Logs",
+          "noRecords": "No activities recorded for this member."
+        }
+      },
+      "createModal": {
+        "title": "Add New Member",
+        "lastName": "Last Name",
+        "lastNamePlaceholder": "John",
+        "firstName": "First Name",
+        "firstNamePlaceholder": "Doe",
+        "email": "Email Address",
+        "emailPlaceholder": "johndoe@finlo.vn",
+        "username": "Username",
+        "usernamePlaceholder": "johndoe",
+        "password": "Initial Password",
+        "passwordPlaceholder": "••••••••",
+        "phone": "Phone Number (optional)",
+        "phonePlaceholder": "0912345678",
+        "role": "Initial Assigned Role",
+        "roleSelect": "Select Role",
+        "cancel": "Cancel",
+        "submit": "Save Account"
+      },
+      "messages": {
+        "fetchFailed": "Failed to load user list",
+        "fetchDetailsFailed": "Failed to load user details",
+        "statusSuccess": "User status updated successfully",
+        "statusFailed": "Failed to update status",
+        "roleSuccess": "User role updated successfully",
+        "roleFailed": "Failed to change role",
+        "confirmDelete": "Are you sure you want to delete this member? This action will suspend the account and archive their data.",
+        "deleteSelfError": "You cannot delete your own account!",
+        "deleteSuccess": "User deleted successfully",
+        "deleteFailed": "Failed to delete user",
+        "emailExists": "Email already exists in the system",
+        "usernameExists": "Username already exists in the system",
+        "createFailed": "Failed to add member",
+        "createSuccess": "New member added successfully!",
+        "systemError": "A system error occurred"
+      }
+    }
   }
 }

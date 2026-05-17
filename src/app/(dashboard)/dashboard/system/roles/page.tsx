@@ -1,8 +1,13 @@
 import { RolesManagement } from '@/components/system/roles-management'
 
-export const metadata = {
-  title: 'Vai trò & Quyền hạn - Finlo Admin',
-  description: 'Quản lý danh sách vai trò và thiết lập ma trận phân quyền hệ thống.',
+import { getTranslations } from 'next-intl/server'
+
+export async function generateMetadata() {
+  const t = await getTranslations('system.roles')
+  return {
+    title: `${t('title')} - Finlo Admin`,
+    description: t('subtitle'),
+  }
 }
 
 export default function SystemRolesPage() {

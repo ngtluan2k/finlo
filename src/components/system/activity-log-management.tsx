@@ -1,20 +1,13 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useTranslations, useLocale } from 'next-intl'
 import {
   Activity,
   Search,
   Loader2,
   ChevronLeft,
   ChevronRight,
-  Shield,
-  Key,
-  Database,
-  PlusCircle,
-  AlertTriangle,
-  LogOut,
-  Calendar,
-  Lock,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -41,6 +34,10 @@ type ActivityLog = {
 }
 
 export function ActivityLogManagement() {
+  const t = useTranslations('system.activityLog')
+  const tCommon = useTranslations('system.common')
+  const locale = useLocale()
+
   const [logs, setLogs] = useState<ActivityLog[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
@@ -82,21 +79,7 @@ export function ActivityLogManagement() {
 
   // Format action text
   const formatActionName = (action: string) => {
-    const map: Record<string, string> = {
-      LOGIN: 'Đăng nhập',
-      UPDATE_PROFILE: 'Cập nhật hồ sơ',
-      UPDATE_USER_STATUS: 'Thay đổi trạng thái',
-      CHANGE_ROLE: 'Thay đổi vai trò',
-      CREATE_USER: 'Tạo tài khoản mới',
-      DELETE_USER: 'Xóa tài khoản',
-      EXPORT_REPORT: 'Xuất báo cáo tài chính',
-      APPROVE_BUDGET: 'Duyệt ngân sách chi tiêu',
-      CREATE_TRANSACTION: 'Ghi nhận giao dịch',
-      UPDATE_ROLE_PERMISSIONS: 'Cập nhật ma trận quyền',
-      CREATE_ROLE: 'Tạo vai trò mới',
-      DELETE_ROLE: 'Xóa vai trò hệ thống',
-    }
-    return map[action] || action
+    return tCommon.has(`actions.${action}`) ? tCommon(`actions.${action}`) : action
   }
 
   // Get action style and icon based on category
@@ -120,9 +103,9 @@ export function ActivityLogManagement() {
     <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 text-zinc-900 dark:text-zinc-50 pb-10">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold">Nhật ký hoạt động</h1>
+        <h1 className="text-2xl font-bold">{t('title')}</h1>
         <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-          Tra cứu lịch sử kiểm toán của các quản trị viên và nhân viên. Giám sát các biến động hệ thống bảo mật thời gian thực.
+          {t('subtitle')}
         </p>
       </div>
 
@@ -132,7 +115,7 @@ export function ActivityLogManagement() {
           <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-zinc-400" />
           <input
             type="text"
-            placeholder="Tìm kiếm theo hành động, người dùng, chi tiết..."
+            placeholder={t('placeholder')}
             value={search}
             onChange={(e) => {
               setSearch(e.target.value)
@@ -149,11 +132,11 @@ export function ActivityLogManagement() {
           <table className="w-full border-collapse text-left">
             <thead>
               <tr className="border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/30 text-xs font-semibold uppercase tracking-wider text-zinc-500">
-                <th className="p-4">Thành viên</th>
-                <th className="p-4">Hành động</th>
-                <th className="p-4">Chi tiết sự kiện</th>
-                <th className="p-4">Địa chỉ IP</th>
-                <th className="p-4">Thời gian</th>
+                <th className="p-4">{t('table.member')}</th>
+                <th className="p-4">{t('table.action')}</th>
+                <th className="p-4">{t('table.details')}</th>
+                <th className="p-4">{t('table.ip')}</th>
+                <th className="p-4">{t('table.time')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
@@ -161,13 +144,13 @@ export function ActivityLogManagement() {
                 <tr>
                   <td colSpan={5} className="p-8 text-center">
                     <Loader2 className="size-6 animate-spin text-zinc-400 mx-auto" />
-                    <p className="text-sm text-zinc-500 mt-2">Đang tải lịch sử nhật ký...</p>
+                    <p className="text-sm text-zinc-500 mt-2">{t('table.loading')}</p>
                   </td>
                 </tr>
               ) : logs.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="p-8 text-center text-sm text-zinc-500">
-                    Chưa ghi nhận sự kiện hoạt động nào phù hợp.
+                    {t('table.noRecords')}
                   </td>
                 </tr>
               ) : (
@@ -206,7 +189,7 @@ export function ActivityLogManagement() {
 
                     {/* Details Column */}
                     <td className="p-4 text-zinc-650 dark:text-zinc-300 max-w-xs break-words">
-                      {log.details || 'Không có mô tả thêm.'}
+                      {log.details || t('table.noDetails')}
                     </td>
 
                     {/* IP Column */}
@@ -216,7 +199,7 @@ export function ActivityLogManagement() {
 
                     {/* Timestamp Column */}
                     <td className="p-4 text-xs text-zinc-500 whitespace-nowrap">
-                      {new Date(log.createdAt).toLocaleString('vi-VN')}
+                      {new Date(log.createdAt).toLocaleString(locale === 'vi' ? 'vi-VN' : 'en-US')}
                     </td>
                   </tr>
                 ))
@@ -229,7 +212,11 @@ export function ActivityLogManagement() {
         {totalCount > limit && (
           <div className="flex items-center justify-between border-t border-zinc-200 p-4 dark:border-zinc-800">
             <span className="text-xs text-zinc-500">
-              Đang xem {Math.min(totalCount, (page - 1) * limit + 1)}-{Math.min(totalCount, page * limit)} trong số {totalCount} sự kiện
+              {t('table.pagination', {
+                start: Math.min(totalCount, (page - 1) * limit + 1),
+                end: Math.min(totalCount, page * limit),
+                total: totalCount,
+              })}
             </span>
             <div className="flex items-center gap-2">
               <button

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useTranslations, useLocale } from 'next-intl'
 import { toast } from 'sonner'
 import {
   Shield,
@@ -73,6 +74,10 @@ type ActivityLog = {
 const PREDEFINED_SYSTEM_ROLES = ['SUPER_ADMIN', 'ADMIN', 'CHIEF_ACCOUNTANT', 'ACCOUNTANT', 'CASHIER', 'USER']
 
 export function RolesManagement() {
+  const t = useTranslations('system.roles')
+  const tCommon = useTranslations('system.common')
+  const locale = useLocale()
+
   // Tabs & Navigation
   const [activeTab, setActiveTab] = useState<'roles' | 'logs'>('roles')
 
@@ -146,7 +151,7 @@ export function RolesManagement() {
         }
       }
     } catch (error) {
-      toast.error('Không thể tải danh sách vai trò hoặc quyền')
+      toast.error(t('messages.fetchFailed'))
       console.error(error)
     } finally {
       if (showLoading) setLoading(false)
@@ -168,7 +173,7 @@ export function RolesManagement() {
       setLogs(data.logs || [])
       setLogsTotal(data.totalCount || 0)
     } catch (error) {
-      toast.error('Không thể tải nhật ký hoạt động')
+      toast.error(t('messages.fetchLogsFailed'))
       console.error(error)
     } finally {
       setLogsLoading(false)
@@ -202,13 +207,13 @@ export function RolesManagement() {
   // Group permissions by module
   const getGroupedPermissions = () => {
     const modules: Record<string, { label: string; permissions: Permission[] }> = {
-      wallet: { label: 'Tổng quan (Dashboard)', permissions: [] },
-      transaction: { label: 'Thu chi (Transactions)', permissions: [] },
-      budget: { label: 'Báo cáo (Reports & Budgets)', permissions: [] },
-      category: { label: 'Danh mục (Categories)', permissions: [] },
-      user: { label: 'Người dùng (System Users)', permissions: [] },
-      role: { label: 'Vai trò & Quyền (RBAC Roles)', permissions: [] },
-      permission: { label: 'Hệ thống (Platform Settings)', permissions: [] },
+      wallet: { label: t('drawer.modules.wallet'), permissions: [] },
+      transaction: { label: t('drawer.modules.transaction'), permissions: [] },
+      budget: { label: t('drawer.modules.budget'), permissions: [] },
+      category: { label: t('drawer.modules.category'), permissions: [] },
+      user: { label: t('drawer.modules.user'), permissions: [] },
+      role: { label: t('drawer.modules.role'), permissions: [] },
+      permission: { label: t('drawer.modules.permission'), permissions: [] },
     }
 
     permissions.forEach((p) => {
@@ -237,10 +242,10 @@ export function RolesManagement() {
         body: JSON.stringify(roleForm),
       })
       if (!res.ok) throw new Error()
-      toast.success('Cập nhật thông tin vai trò thành công!')
+      toast.success(t('messages.updateSuccess'))
       fetchAllRolesAndPermissions(false)
     } catch {
-      toast.error('Cập nhật thông tin vai trò thất bại')
+      toast.error(t('messages.updateFailed'))
     } finally {
       setSavingRoleDetails(false)
     }
@@ -257,10 +262,10 @@ export function RolesManagement() {
         body: JSON.stringify({ permissionIds: checkedPermissionIds }),
       })
       if (!res.ok) throw new Error()
-      toast.success('Cập nhật ma trận phân quyền thành công!')
+      toast.success(t('messages.updateMatrixSuccess'))
       fetchAllRolesAndPermissions(false)
     } catch {
-      toast.error('Cập nhật quyền hạn thất bại')
+      toast.error(t('messages.updateMatrixFailed'))
     } finally {
       setSavingPermissions(false)
     }
@@ -288,18 +293,18 @@ export function RolesManagement() {
       const data = await res.json()
       if (!res.ok) {
         if (data.code === 'ROLE_CODE_EXISTS') {
-          toast.error('Mã vai trò đã tồn tại trong hệ thống')
+          toast.error(t('messages.codeExists'))
         } else {
-          toast.error('Tạo vai trò thất bại')
+          toast.error(t('messages.createFailed'))
         }
         return
       }
-      toast.success('Tạo vai trò mới thành công!')
+      toast.success(t('messages.createSuccess'))
       setCreateModalOpen(false)
       setCreateForm({ code: '', name: '', description: '', level: 10 })
       fetchAllRolesAndPermissions(true)
     } catch {
-      toast.error('Lỗi hệ thống khi tạo vai trò')
+      toast.error(t('messages.systemError'))
     } finally {
       setCreating(false)
     }
@@ -309,18 +314,16 @@ export function RolesManagement() {
   const handleDeleteRole = async (role: Role) => {
     setActionMenuOpen(null)
     if (PREDEFINED_SYSTEM_ROLES.includes(role.code)) {
-      toast.error(`Vai trò hệ thống "${role.name}" được bảo vệ và không thể xóa.`)
+      toast.error(t('messages.protectedRole', { name: translateRoleName(role.code, role.name) }))
       return
     }
 
     if (role.userCount > 0) {
-      toast.error(
-        `Không thể xóa vai trò này vì đang có ${role.userCount} thành viên được gán. Vui lòng chuyển vai trò của họ trước.`
-      )
+      toast.error(t('messages.assignedMembers', { count: role.userCount }))
       return
     }
 
-    if (!confirm(`Bạn có chắc chắn muốn xóa vai trò "${role.name}" khỏi hệ thống?`)) {
+    if (!confirm(t('messages.confirmDelete', { name: translateRoleName(role.code, role.name) }))) {
       return
     }
 
@@ -329,14 +332,14 @@ export function RolesManagement() {
         method: 'DELETE',
       })
       if (!res.ok) throw new Error()
-      toast.success('Xóa vai trò thành công')
+      toast.success(t('messages.deleteSuccess'))
       if (editingRole?.id === role.id) {
         setDrawerOpen(false)
         setEditingRole(null)
       }
       fetchAllRolesAndPermissions(true)
     } catch {
-      toast.error('Xóa vai trò thất bại')
+      toast.error(t('messages.deleteFailed'))
     }
   }
 
@@ -381,23 +384,14 @@ export function RolesManagement() {
     return user.username.slice(0, 2).toUpperCase()
   }
 
+  // Translate role name
+  const translateRoleName = (code: string, fallbackName: string) => {
+    return tCommon.has(`roles.${code}`) ? tCommon(`roles.${code}`) : fallbackName
+  }
+
   // Format activity action nicely
   const formatAction = (action: string) => {
-    const actionTranslations: Record<string, string> = {
-      LOGIN: 'Đăng nhập',
-      UPDATE_PROFILE: 'Cập nhật hồ sơ',
-      UPDATE_USER_STATUS: 'Đổi trạng thái tài khoản',
-      CHANGE_ROLE: 'Đổi vai trò',
-      CREATE_USER: 'Tạo tài khoản',
-      DELETE_USER: 'Xóa tài khoản',
-      EXPORT_REPORT: 'Xuất báo cáo',
-      APPROVE_BUDGET: 'Duyệt ngân sách',
-      CREATE_TRANSACTION: 'Ghi nhận giao dịch',
-      CREATE_ROLE: 'Tạo vai trò',
-      UPDATE_ROLE_PERMISSIONS: 'Cấu hình quyền',
-      DELETE_ROLE: 'Xóa vai trò',
-    }
-    return actionTranslations[action] || action
+    return tCommon.has(`actions.${action}`) ? tCommon(`actions.${action}`) : action
   }
 
   // Role Badge Styling
@@ -423,9 +417,9 @@ export function RolesManagement() {
       {/* 1. Header (Redesigned matching premium mockup) */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Vai trò & quyền</h1>
+          <h1 className="text-2xl font-bold tracking-tight">{t('title')}</h1>
           <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-            Quản lý các vai trò và phân quyền trong hệ thống
+            {t('subtitle')}
           </p>
         </div>
         <div className="flex items-center gap-3 self-end sm:self-center">
@@ -433,7 +427,7 @@ export function RolesManagement() {
             <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-zinc-400" />
             <input
               type="text"
-              placeholder="Tìm kiếm vai trò..."
+              placeholder={t('searchPlaceholder')}
               value={rolesSearch}
               onChange={(e) => {
                 setRolesSearch(e.target.value)
@@ -450,7 +444,7 @@ export function RolesManagement() {
             className="flex items-center gap-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-xs font-semibold shadow transition cursor-pointer"
           >
             <Plus className="size-4" />
-            Thêm vai trò
+            {t('addRole')}
           </button>
         </div>
       </div>
@@ -466,7 +460,7 @@ export function RolesManagement() {
               : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
           )}
         >
-          Danh sách vai trò
+          {t('tabList')}
           {activeTab === 'roles' && (
             <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 dark:bg-blue-400 rounded-full" />
           )}
@@ -480,7 +474,7 @@ export function RolesManagement() {
               : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
           )}
         >
-          Nhật ký thay đổi
+          {t('tabLogs')}
           {activeTab === 'logs' && (
             <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 dark:bg-blue-400 rounded-full" />
           )}
@@ -495,9 +489,9 @@ export function RolesManagement() {
             <Users className="size-6" />
           </div>
           <div>
-            <p className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">Tổng số vai trò</p>
+            <p className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">{t('stats.total')}</p>
             <h3 className="text-2xl font-bold mt-0.5">{stats.total}</h3>
-            <p className="text-[10px] text-zinc-400 mt-0.5">Vai trò trong hệ thống</p>
+            <p className="text-[10px] text-zinc-400 mt-0.5">{t('stats.totalDesc')}</p>
           </div>
         </div>
 
@@ -507,9 +501,9 @@ export function RolesManagement() {
             <ShieldCheck className="size-6" />
           </div>
           <div>
-            <p className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">Vai trò đang hoạt động</p>
+            <p className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">{t('stats.active')}</p>
             <h3 className="text-2xl font-bold text-emerald-600 dark:text-emerald-500 mt-0.5">{stats.active}</h3>
-            <p className="text-[10px] text-zinc-400 mt-0.5">Đang được sử dụng</p>
+            <p className="text-[10px] text-zinc-400 mt-0.5">{t('stats.activeDesc')}</p>
           </div>
         </div>
 
@@ -519,9 +513,9 @@ export function RolesManagement() {
             <Lock className="size-6" />
           </div>
           <div>
-            <p className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">Vai trò hệ thống</p>
+            <p className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">{t('stats.system')}</p>
             <h3 className="text-2xl font-bold mt-0.5 text-amber-600 dark:text-amber-550">{stats.system}</h3>
-            <p className="text-[10px] text-zinc-400 mt-0.5">Không thể xóa</p>
+            <p className="text-[10px] text-zinc-400 mt-0.5">{t('stats.systemDesc')}</p>
           </div>
         </div>
 
@@ -531,9 +525,9 @@ export function RolesManagement() {
             <UserPlus className="size-6" />
           </div>
           <div>
-            <p className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">Vai trò tùy chỉnh</p>
+            <p className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">{t('stats.custom')}</p>
             <h3 className="text-2xl font-bold mt-0.5 text-purple-600 dark:text-purple-400">{stats.custom}</h3>
-            <p className="text-[10px] text-zinc-400 mt-0.5">Có thể chỉnh sửa, xóa</p>
+            <p className="text-[10px] text-zinc-400 mt-0.5">{t('stats.customDesc')}</p>
           </div>
         </div>
       </div>
@@ -546,7 +540,7 @@ export function RolesManagement() {
               <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-zinc-400" />
               <input
                 type="text"
-                placeholder="Tìm kiếm theo tên vai trò, mô tả..."
+                placeholder={t('searchPlaceholder')}
                 value={rolesSearch}
                 onChange={(e) => {
                   setRolesSearch(e.target.value)
@@ -565,14 +559,14 @@ export function RolesManagement() {
                 }}
                 className="rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm focus:outline-none dark:border-zinc-800 dark:bg-[#0c0c0e] text-zinc-700 dark:text-zinc-300"
               >
-                <option value="ALL">Trạng thái: Tất cả</option>
-                <option value="ACTIVE">Đang hoạt động</option>
-                <option value="INACTIVE">Đã tắt</option>
+                <option value="ALL">{tCommon('statuses.all')}</option>
+                <option value="ACTIVE">{tCommon('statuses.ACTIVE')}</option>
+                <option value="INACTIVE">{tCommon('statuses.INACTIVE')}</option>
               </select>
 
               <button className="flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-[#0c0c0e] dark:text-zinc-300 dark:hover:bg-zinc-900/40">
                 <SlidersHorizontal className="size-4" />
-                Bộ lọc
+                {tCommon('filter')}
               </button>
 
               <button
@@ -590,12 +584,12 @@ export function RolesManagement() {
               <table className="w-full border-collapse text-left text-sm">
                 <thead>
                   <tr className="border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/30 text-xs font-semibold uppercase tracking-wider text-zinc-500">
-                    <th className="p-4 pl-6">Tên vai trò</th>
-                    <th className="p-4">Mô tả</th>
-                    <th className="p-4">Loại vai trò</th>
-                    <th className="p-4">Số người dùng</th>
-                    <th className="p-4">Trạng thái</th>
-                    <th className="p-4 text-center pr-6">Thao tác</th>
+                    <th className="p-4 pl-6">{t('table.name')}</th>
+                    <th className="p-4">{t('table.description')}</th>
+                    <th className="p-4">{t('table.type')}</th>
+                    <th className="p-4">{t('table.userCount', { count: '' }).replace('()', '').trim()}</th>
+                    <th className="p-4">{t('table.status')}</th>
+                    <th className="p-4 text-center pr-6">{t('table.action')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
@@ -603,13 +597,13 @@ export function RolesManagement() {
                     <tr>
                       <td colSpan={6} className="p-12 text-center">
                         <Loader2 className="size-6 animate-spin text-zinc-400 mx-auto" />
-                        <p className="text-sm text-zinc-500 mt-2">Đang tải cấu hình vai trò & quyền hạn...</p>
+                        <p className="text-sm text-zinc-500 mt-2">{t('table.loading')}</p>
                       </td>
                     </tr>
                   ) : paginatedRoles.length === 0 ? (
                     <tr>
                       <td colSpan={6} className="p-12 text-center text-sm text-zinc-500">
-                        Không tìm thấy vai trò nào khớp với bộ lọc.
+                        {t('table.noRecords')}
                       </td>
                     </tr>
                   ) : (
@@ -635,7 +629,7 @@ export function RolesManagement() {
                               </div>
                               <div>
                                 <span className="font-semibold text-zinc-950 dark:text-zinc-50 block leading-tight">
-                                  {role.name}
+                                  {translateRoleName(role.code, role.name)}
                                 </span>
                                 <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider mt-0.5 block">
                                   {role.code}
@@ -645,8 +639,8 @@ export function RolesManagement() {
                           </td>
 
                           {/* Description */}
-                          <td className="p-4 text-zinc-600 dark:text-zinc-400 max-w-xs truncate">
-                            {role.description || 'Không có mô tả chi tiết'}
+                          <td className="p-4 text-zinc-650 dark:text-zinc-400 max-w-xs truncate">
+                            {role.description || tCommon('noDetails')}
                           </td>
 
                           {/* Role Type Tag */}
@@ -657,13 +651,13 @@ export function RolesManagement() {
                                 ? "bg-blue-500/10 text-blue-600 border-blue-500/20 dark:bg-blue-550/20 dark:text-blue-400"
                                 : "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 dark:bg-emerald-500/20 dark:text-emerald-400"
                             )}>
-                              {isSys ? 'Hệ thống' : 'Tùy chỉnh'}
+                              {isSys ? tCommon('roles.system') : tCommon('roles.custom')}
                             </span>
                           </td>
 
                           {/* User Count */}
                           <td className="p-4 text-zinc-700 dark:text-zinc-300 font-medium">
-                            {role.userCount} người dùng
+                            {t('table.userCount', { count: role.userCount })}
                           </td>
 
                           {/* Status Badge */}
@@ -678,7 +672,7 @@ export function RolesManagement() {
                                 "size-1.5 rounded-full shrink-0",
                                 isAct ? "bg-emerald-500 dark:bg-emerald-450" : "bg-zinc-400"
                               )} />
-                              {isAct ? 'Đang hoạt động' : 'Đã tắt'}
+                              {isAct ? tCommon('statuses.ACTIVE') : tCommon('statuses.INACTIVE')}
                             </span>
                           </td>
 
@@ -688,7 +682,7 @@ export function RolesManagement() {
                               <div className="flex items-center justify-center gap-1">
                                 <button
                                   onClick={() => handleOpenDrawer(role, 'permissions')}
-                                  title="Quản lý ma trận quyền hạn"
+                                  title={t('table.matrixTooltip')}
                                   className="p-1.5 rounded-lg hover:bg-zinc-100 text-zinc-400 hover:text-zinc-700 transition dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
                                 >
                                   <Eye className="size-4" />
@@ -708,14 +702,14 @@ export function RolesManagement() {
                                     className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-zinc-750 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-800 transition"
                                   >
                                     <Info className="size-3.5" />
-                                    Xem chi tiết
+                                    {t('table.viewDetail')}
                                   </button>
                                   <button
                                     onClick={() => handleOpenDrawer(role, 'permissions')}
                                     className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-950/20 transition"
                                   >
                                     <ShieldAlert className="size-3.5" />
-                                    Phân quyền
+                                    {t('table.setPermissions')}
                                   </button>
                                   {!isSys && (
                                     <button
@@ -723,7 +717,7 @@ export function RolesManagement() {
                                       className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/20 border-t border-zinc-100 dark:border-zinc-800/80 transition"
                                     >
                                       <Trash2 className="size-3.5" />
-                                      Xóa vai trò
+                                      {t('table.deleteRole')}
                                     </button>
                                   )}
                                 </div>
@@ -742,7 +736,11 @@ export function RolesManagement() {
             {totalRolesCount > rolesLimit && (
               <div className="flex items-center justify-between border-t border-zinc-200 p-4 dark:border-zinc-800">
                 <span className="text-xs text-zinc-500">
-                  Hiển thị {Math.min(totalRolesCount, (rolesPage - 1) * rolesLimit + 1)} - {Math.min(totalRolesCount, rolesPage * rolesLimit)} trong {totalRolesCount} vai trò
+                  {t('table.pagination', {
+                    start: Math.min(totalRolesCount, (rolesPage - 1) * rolesLimit + 1),
+                    end: Math.min(totalRolesCount, rolesPage * rolesLimit),
+                    total: totalRolesCount,
+                  })}
                 </span>
                 <div className="flex items-center gap-2">
                   <button
@@ -775,7 +773,7 @@ export function RolesManagement() {
               <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-zinc-400" />
               <input
                 type="text"
-                placeholder="Tìm theo người dùng, hành động..."
+                placeholder={t('logs.searchPlaceholder')}
                 value={logsSearch}
                 onChange={(e) => {
                   setLogsSearch(e.target.value)
@@ -797,11 +795,11 @@ export function RolesManagement() {
               <table className="w-full border-collapse text-left text-sm">
                 <thead>
                   <tr className="border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/30 text-xs font-semibold uppercase tracking-wider text-zinc-500">
-                    <th className="p-4 pl-6">Người thực hiện</th>
-                    <th className="p-4">Hành động</th>
-                    <th className="p-4">Chi tiết thay đổi</th>
-                    <th className="p-4">Địa chỉ IP</th>
-                    <th className="p-4 pr-6">Thời gian</th>
+                    <th className="p-4 pl-6">{t('logs.table.user')}</th>
+                    <th className="p-4">{t('logs.table.action')}</th>
+                    <th className="p-4">{t('logs.table.details')}</th>
+                    <th className="p-4">{t('logs.table.ip')}</th>
+                    <th className="p-4 pr-6">{t('logs.table.time')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
@@ -809,13 +807,13 @@ export function RolesManagement() {
                     <tr>
                       <td colSpan={5} className="p-12 text-center">
                         <Loader2 className="size-6 animate-spin text-zinc-400 mx-auto" />
-                        <p className="text-sm text-zinc-500 mt-2">Đang tải nhật ký hoạt động...</p>
+                        <p className="text-sm text-zinc-500 mt-2">{t('logs.table.loading')}</p>
                       </td>
                     </tr>
                   ) : logs.length === 0 ? (
                     <tr>
                       <td colSpan={5} className="p-12 text-center text-sm text-zinc-500">
-                        Không tìm thấy nhật ký hoạt động nào.
+                        {t('logs.table.noRecords')}
                       </td>
                     </tr>
                   ) : (
@@ -851,8 +849,8 @@ export function RolesManagement() {
                           </td>
 
                           {/* Details */}
-                          <td className="p-4 text-zinc-600 dark:text-zinc-450 max-w-sm truncate">
-                            {log.details || 'Không có mô tả chi tiết'}
+                          <td className="p-4 text-zinc-650 dark:text-zinc-450 max-w-sm truncate">
+                            {log.details || tCommon('noDetails')}
                           </td>
 
                           {/* IP Address */}
@@ -862,7 +860,7 @@ export function RolesManagement() {
 
                           {/* Timestamp */}
                           <td className="p-4 pr-6 text-zinc-550 dark:text-zinc-400 text-xs">
-                            {new Date(log.createdAt).toLocaleString('vi-VN', {
+                            {new Date(log.createdAt).toLocaleString(locale === 'vi' ? 'vi-VN' : 'en-US', {
                               year: 'numeric',
                               month: '2-digit',
                               day: '2-digit',
@@ -883,7 +881,11 @@ export function RolesManagement() {
             {logsTotal > logsLimit && (
               <div className="flex items-center justify-between border-t border-zinc-200 p-4 dark:border-zinc-800">
                 <span className="text-xs text-zinc-500">
-                  Hiển thị {Math.min(logsTotal, (logsPage - 1) * logsLimit + 1)} - {Math.min(logsTotal, logsPage * logsLimit)} trong {logsTotal} bản ghi nhật ký
+                  {t('logs.table.pagination', {
+                    start: Math.min(logsTotal, (logsPage - 1) * logsLimit + 1),
+                    end: Math.min(logsTotal, logsPage * logsLimit),
+                    total: logsTotal,
+                  })}
                 </span>
                 <div className="flex items-center gap-2">
                   <button
@@ -935,20 +937,20 @@ export function RolesManagement() {
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
-                    {editingRole.name}
+                    {translateRoleName(editingRole.code, editingRole.name)}
                   </h3>
                   <div className="flex items-center gap-2 mt-1">
                     <span className="text-[10px] uppercase font-bold tracking-wider text-zinc-400">
-                      Mã: {editingRole.code}
+                      {t('drawer.code', { code: editingRole.code })}
                     </span>
                     <span className="size-1 rounded-full bg-zinc-300 dark:bg-zinc-700" />
                     <span className={cn(
                       "text-[9px] uppercase font-bold px-1.5 py-0.5 rounded border leading-none shadow-inner",
                       isSystemRole(editingRole.code)
                         ? "bg-blue-500/10 text-blue-600 border-blue-500/20 dark:bg-blue-550/20 dark:text-blue-400"
-                        : "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 dark:bg-emerald-500/20 dark:text-emerald-400"
+                        : "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 dark:bg-emerald-550/20 dark:text-emerald-450"
                     )}>
-                      {isSystemRole(editingRole.code) ? 'Hệ thống' : 'Tùy chỉnh'}
+                      {isSystemRole(editingRole.code) ? tCommon('roles.system') : tCommon('roles.custom')}
                     </span>
                   </div>
                 </div>
@@ -961,7 +963,7 @@ export function RolesManagement() {
                     ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 dark:bg-emerald-550/20 dark:text-emerald-400"
                     : "bg-zinc-500/10 text-zinc-500 border-zinc-500/20 dark:bg-zinc-500/20 dark:text-zinc-400"
                 )}>
-                  {editingRole.status === 'ACTIVE' ? 'Hoạt động' : 'Tắt'}
+                  {editingRole.status === 'ACTIVE' ? tCommon('statuses.ACTIVE') : tCommon('statuses.INACTIVE')}
                 </span>
                 <button
                   onClick={() => setDrawerOpen(false)}
@@ -983,7 +985,7 @@ export function RolesManagement() {
                     : "hover:text-zinc-950 dark:hover:text-zinc-100"
                 )}
               >
-                Thông tin vai trò
+                {t('drawer.tabInfo')}
                 {drawerTab === 'info' && (
                   <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 dark:bg-blue-400 rounded-full" />
                 )}
@@ -997,7 +999,7 @@ export function RolesManagement() {
                     : "hover:text-zinc-950 dark:hover:text-zinc-100"
                 )}
               >
-                Ma trận quyền hạn
+                {t('drawer.tabMatrix')}
                 {drawerTab === 'permissions' && (
                   <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 dark:bg-blue-400 rounded-full" />
                 )}
@@ -1011,7 +1013,7 @@ export function RolesManagement() {
                 <form onSubmit={handleSaveRoleDetails} className="space-y-5">
                   <div className="rounded-xl border border-zinc-200 p-4 bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-900/20 space-y-4">
                     <div>
-                      <label className="text-xs font-semibold text-zinc-500 mb-1 block dark:text-zinc-400">Tên vai trò</label>
+                      <label className="text-xs font-semibold text-zinc-500 mb-1 block dark:text-zinc-400">{t('drawer.form.name')}</label>
                       <input
                         type="text"
                         required
@@ -1024,7 +1026,7 @@ export function RolesManagement() {
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="text-xs font-semibold text-zinc-500 mb-1 block dark:text-zinc-400">Cấp bậc (Level)</label>
+                        <label className="text-xs font-semibold text-zinc-500 mb-1 block dark:text-zinc-400">{t('drawer.form.level')}</label>
                         <input
                           type="number"
                           min="1"
@@ -1038,13 +1040,13 @@ export function RolesManagement() {
                       </div>
                       <div className="flex flex-col justify-center">
                         <span className="text-[10px] text-zinc-400 italic leading-tight mt-3 block">
-                          * Level dùng để so sánh quyền hạn. Chỉ vai trò cấp cao mới gán được vai trò cấp dưới.
+                          {t('drawer.form.levelDesc')}
                         </span>
                       </div>
                     </div>
 
                     <div>
-                      <label className="text-xs font-semibold text-zinc-500 mb-1 block dark:text-zinc-400">Mô tả chi tiết</label>
+                      <label className="text-xs font-semibold text-zinc-500 mb-1 block dark:text-zinc-400">{t('drawer.form.description')}</label>
                       <textarea
                         disabled={isSystemRole(editingRole.code)}
                         value={roleForm.description}
@@ -1059,8 +1061,8 @@ export function RolesManagement() {
                     <div className="flex items-center gap-3 text-blue-600 dark:text-blue-400">
                       <Users className="size-5 shrink-0" />
                       <div>
-                        <span className="font-bold block">{editingRole.userCount} thành viên</span>
-                        <span className="text-xs text-zinc-500 dark:text-zinc-400">Đang được gán vai trò này</span>
+                        <span className="font-bold block">{t('drawer.form.userCount', { count: editingRole.userCount })}</span>
+                        <span className="text-xs text-zinc-500 dark:text-zinc-400">{t('drawer.form.userCountDesc')}</span>
                       </div>
                     </div>
                   </div>
@@ -1077,7 +1079,7 @@ export function RolesManagement() {
                         ) : (
                           <Edit3 className="size-3.5" />
                         )}
-                        Lưu thông tin vai trò
+                        {t('drawer.form.saveInfo')}
                       </button>
                     </div>
                   )}
@@ -1087,7 +1089,7 @@ export function RolesManagement() {
                 <div className="space-y-6 flex flex-col h-full">
                   <div className="flex items-center justify-between shrink-0">
                     <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                      Tích chọn các ô dưới đây để gán quyền thao tác cụ thể cho vai trò này.
+                      {t('drawer.matrix.subtitle')}
                     </p>
                     <button
                       onClick={handleSaveRolePermissions}
@@ -1099,16 +1101,16 @@ export function RolesManagement() {
                       ) : (
                         <Save className="size-3.5" />
                       )}
-                      Lưu cấu hình
+                      {t('drawer.matrix.save')}
                     </button>
                   </div>
 
                   {editingRole.code === 'SUPER_ADMIN' ? (
                     <div className="flex flex-col items-center justify-center p-8 border border-dashed border-indigo-500/30 rounded-2xl bg-indigo-500/5 text-center mt-4">
                       <ShieldAlert className="size-12 text-indigo-500 mb-3 animate-pulse" />
-                      <h4 className="font-bold text-zinc-900 dark:text-zinc-100">Đặc quyền Super Admin tối cao</h4>
+                      <h4 className="font-bold text-zinc-900 dark:text-zinc-100">{t('drawer.matrix.superAdminTitle')}</h4>
                       <p className="text-xs text-zinc-500 text-center max-w-sm mt-1 leading-relaxed">
-                        Vai trò <strong>Super Administrator</strong> sở hữu toàn bộ các đặc quyền của hệ thống nhằm bảo toàn tính toàn vẹn của nền tảng và không thể bị sửa đổi.
+                        {t('drawer.matrix.superAdminDesc')}
                       </p>
                     </div>
                   ) : (
@@ -1145,7 +1147,7 @@ export function RolesManagement() {
                                 onClick={handleToggleGroup}
                                 className="text-[10px] font-bold text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 uppercase tracking-wider"
                               >
-                                {isAllChecked ? 'Hủy chọn tất cả' : 'Chọn tất cả'}
+                                {isAllChecked ? t('drawer.matrix.uncheckAll') : t('drawer.matrix.checkAll')}
                               </button>
                             </div>
 
@@ -1207,7 +1209,7 @@ export function RolesManagement() {
           {/* Modal Content */}
           <div className="relative z-10 w-full max-w-md rounded-2xl border border-zinc-200 bg-white p-6 shadow-2xl dark:border-zinc-800 dark:bg-[#0c0c0e] animate-in zoom-in-95 duration-200">
             <div className="flex items-center justify-between border-b border-zinc-150 pb-4 dark:border-zinc-800">
-              <h3 className="text-base font-bold text-zinc-950 dark:text-zinc-50">Thêm vai trò hệ thống mới</h3>
+              <h3 className="text-base font-bold text-zinc-950 dark:text-zinc-50">{t('modal.title')}</h3>
               <button
                 onClick={() => setCreateModalOpen(false)}
                 className="p-1 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-400 transition"
@@ -1218,32 +1220,32 @@ export function RolesManagement() {
 
             <form onSubmit={handleCreateRole} className="space-y-4 mt-4">
               <div>
-                <label className="text-xs font-semibold text-zinc-500 mb-1 block dark:text-zinc-400">Tên vai trò</label>
+                <label className="text-xs font-semibold text-zinc-500 mb-1 block dark:text-zinc-400">{t('modal.name')}</label>
                 <input
                   type="text"
                   required
                   value={createForm.name}
                   onChange={(e) => setCreateForm({ ...createForm, name: e.target.value })}
-                  placeholder="Kế toán trưởng"
+                  placeholder={t('modal.namePlaceholder')}
                   className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-zinc-800 dark:bg-zinc-900/50"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-zinc-500 mb-1 block dark:text-zinc-400">Mã vai trò (IN HOA)</label>
+                <label className="text-xs font-semibold text-zinc-500 mb-1 block dark:text-zinc-400">{t('modal.code')}</label>
                 <input
                   type="text"
                   required
                   value={createForm.code}
                   onChange={(e) => setCreateForm({ ...createForm, code: e.target.value })}
-                  placeholder="CHIEF_ACCOUNTANT"
+                  placeholder={t('modal.codePlaceholder')}
                   className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-zinc-800 dark:bg-zinc-900/50"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-xs font-semibold text-zinc-500 mb-1 block dark:text-zinc-400">Cấp bậc (Level)</label>
+                  <label className="text-xs font-semibold text-zinc-500 mb-1 block dark:text-zinc-400">{t('modal.level')}</label>
                   <input
                     type="number"
                     min="1"
@@ -1256,17 +1258,17 @@ export function RolesManagement() {
                 </div>
                 <div className="flex flex-col justify-end">
                   <span className="text-[10px] text-zinc-400 italic block mb-1">
-                    * Cấp bậc cao hơn có thể quản lý được cấp bậc thấp hơn.
+                    *{t('modal.levelDesc')}
                   </span>
                 </div>
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-zinc-500 mb-1 block dark:text-zinc-400">Mô tả vai trò</label>
+                <label className="text-xs font-semibold text-zinc-500 mb-1 block dark:text-zinc-400">{t('modal.description')}</label>
                 <textarea
                   value={createForm.description}
                   onChange={(e) => setCreateForm({ ...createForm, description: e.target.value })}
-                  placeholder="Vai trò quản lý phê duyệt ngân sách và đối soát thu chi."
+                  placeholder={t('modal.descriptionPlaceholder')}
                   rows={3}
                   className="w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-zinc-800 dark:bg-zinc-900/50 resize-none"
                 />
@@ -1278,7 +1280,7 @@ export function RolesManagement() {
                   onClick={() => setCreateModalOpen(false)}
                   className="rounded-xl border border-zinc-200 px-4 py-2 text-sm font-semibold hover:bg-zinc-50 transition cursor-pointer dark:border-zinc-800 dark:hover:bg-zinc-900"
                 >
-                  Hủy
+                  {tCommon('cancel')}
                 </button>
                 <button
                   type="submit"
@@ -1286,7 +1288,7 @@ export function RolesManagement() {
                   className="flex items-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-sm font-semibold shadow transition cursor-pointer disabled:opacity-50"
                 >
                   {creating && <Loader2 className="size-4 animate-spin" />}
-                  Tạo vai trò
+                  {t('modal.create')}
                 </button>
               </div>
             </form>
